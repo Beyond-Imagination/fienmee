@@ -1,0 +1,20 @@
+{
+    "name": "server",
+    "version": "0.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "dev": "cross-env NODE_ENV=development nodemon"
+    },
+    "private": true,
+    "dependencies": {
+        "cross-env": "^7.0.3",
+        "express": "^4.21.1"
+    },
+    "devDependencies": {
+        "@types/express": "^5.0.0",
+        "nodemon": "^3.1.7",
+        "swc-node": "^1.0.0"
+    }
+}
