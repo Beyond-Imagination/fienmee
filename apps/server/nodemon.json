@@ -1,12 +1,6 @@
 {
-    "watch": [
-        "src",
-        ".env"
-    ],
+    "watch": ["src", ".env"],
     "ext": "js,ts,json",
-    "ignore": [
-        "src/logs/*",
-        "src/**/*.{spec,test}.ts"
-    ],
+    "ignore": ["src/logs/*", "src/**/*.{spec,test}.ts"],
     "exec": "swc-node src/app.ts"
 }
