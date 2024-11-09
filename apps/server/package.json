@@ -7,8 +7,8 @@
         "start": "pnpm build && node dist/src/app.js",
         "dev": "cross-env NODE_ENV=development nodemon",
         "build": "rm -rf dist && swc src -d dist --source-maps --copy-files",
-        "test": "echo \"Error: no test specified\" && exit 1",
-        "lint": "eslint --ext .ts src/"
+        "lint": "eslint --ext .ts src/",
+        "test": "jest --passWithNoTests"
     },
     "private": true,
     "dependencies": {
@@ -22,6 +22,7 @@
         "@swc/helpers": "^0.5.13",
         "@types/express": "^5.0.0",
         "nodemon": "^3.1.7",
-        "swc-node": "^1.0.0"
+        "swc-node": "^1.0.0",
+        "@types/jest": "^29.5.14"
     }
 }
