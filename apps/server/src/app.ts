@@ -1,12 +1,18 @@
-import express from 'express'
+import '@/config'
+import Server from '@/server'
+import { logger } from '@/utils/logger'
+;(async () => {
+    const server = new Server()
 
-const app = express()
-const port = 3000
+    server.listen()
 
-app.get('/', (req, res) => {
-    res.send('Hello World!')
-})
+    async function shutdown() {
+        logger.info('gracefully shutdown fienmee')
+        await server.close()
+        logger.info('shutdown complete')
+        process.exit()
+    }
 
-app.listen(port, () => {
-    console.log(`Example app listening on port ${port}`)
-})
+    process.on('SIGINT', shutdown)
+    process.on('SIGTERM', shutdown)
+})()

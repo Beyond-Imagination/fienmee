@@ -12,17 +12,28 @@
     },
     "private": true,
     "dependencies": {
+        "compression": "^1.7.5",
+        "cors": "^2.8.5",
         "cross-env": "^7.0.3",
-        "express": "^4.21.1"
+        "dotenv": "^16.4.5",
+        "express": "^4.21.1",
+        "express-winston": "^4.2.0",
+        "helmet": "^8.0.0",
+        "hpp": "^0.2.3",
+        "winston": "^3.16.0",
+        "winston-daily-rotate-file": "^5.0.0"
     },
     "devDependencies": {
         "@swc-node/register": "^1.10.9",
         "@swc/cli": "^0.5.0",
         "@swc/core": "^1.9.1",
         "@swc/helpers": "^0.5.13",
+        "@types/compression": "^1.7.5",
+        "@types/cors": "^2.8.17",
         "@types/express": "^5.0.0",
+        "@types/hpp": "^0.2.6",
+        "@types/jest": "^29.5.14",
         "nodemon": "^3.1.7",
-        "swc-node": "^1.0.0",
-        "@types/jest": "^29.5.14"
+        "swc-node": "^1.0.0"
     }
 }
