@@ -1,4 +1,5 @@
 {
+    "extends": "../../tsconfig.base.json",
     "compileOnSave": false,
     "compilerOptions": {
         "target": "es2017",
@@ -19,7 +20,7 @@
         "esModuleInterop": true,
         "resolveJsonModule": true,
         "importHelpers": true,
-        "baseUrl": "src",
+        "baseUrl": "../../apps/server/src",
         "paths": {
             "@/*": ["*"]
         }
