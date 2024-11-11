@@ -1,9 +1,9 @@
-import { logger } from 'express-winston';
 import mongoose from 'mongoose'
 import { DB_URI, DB_NAME } from '@/config'
+import { logger } from '@/utils/logger'
 
 export async function connect() {
-    await mongoose.connect(DB_URI, { dbName: DB_NAME});
+    await mongoose.connect(DB_URI, { dbName: DB_NAME })
     logger.info(`successfully connect mongo db. DB_NAME=${DB_NAME}`)
 }
 
