@@ -15,7 +15,7 @@ export class Schedule extends TimeStamps {
     @prop()
     public name: string
 
-    @prop()
+    @prop({ validate: { validator: v => v.type === 'Point' && v.coordinates?.length === 2 } })
     public location: {
         type: string
         coordinates: number[]
