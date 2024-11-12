@@ -1,8 +1,7 @@
-import { getModelForClass, prop, index } from '@typegoose/typegoose'
+import { getModelForClass, prop } from '@typegoose/typegoose'
 import mongoose from 'mongoose'
 import { TimeStamps } from '@typegoose/typegoose/lib/defaultClasses'
 
-@index({ location: '2dsphere' })
 export class Schedule extends TimeStamps {
     public _id: mongoose.Types.ObjectId
 
