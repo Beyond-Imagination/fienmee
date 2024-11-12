@@ -1,7 +1,8 @@
 import mongoose from 'mongoose'
 import { getModelForClass, prop } from '@typegoose/typegoose'
+import { TimeStamps } from '@typegoose/typegoose/lib/defaultClasses'
 
-export class Enquiry {
+export class Enquiry extends TimeStamps {
     public _id: mongoose.Types.ObjectId
 
     @prop({ required: true })
@@ -12,9 +13,6 @@ export class Enquiry {
 
     @prop()
     public body: string
-
-    @prop({ default: new Date() })
-    public createdAt: Date
 
     public toJSON(): object {
         return {
