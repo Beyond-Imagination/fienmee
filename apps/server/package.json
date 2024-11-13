@@ -18,6 +18,7 @@
         "cross-env": "^7.0.3",
         "dotenv": "^16.4.5",
         "express": "^4.21.1",
+        "express-asyncify": "^2.1.2",
         "express-winston": "^4.2.0",
         "helmet": "^8.0.0",
         "hpp": "^0.2.3",
