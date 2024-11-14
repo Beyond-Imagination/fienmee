@@ -22,6 +22,7 @@
         "express-winston": "^4.2.0",
         "helmet": "^8.0.0",
         "hpp": "^0.2.3",
+        "mongoose": "^8.8.1",
         "winston": "^3.16.0",
         "winston-daily-rotate-file": "^5.0.0"
     },
@@ -35,7 +36,6 @@
         "@types/express": "^5.0.0",
         "@types/hpp": "^0.2.6",
         "@types/jest": "^29.5.14",
-        "mongoose": "^8.8.1",
         "nodemon": "^3.1.7",
         "swc-node": "^1.0.0"
     }

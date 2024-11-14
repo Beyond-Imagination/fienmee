@@ -80,6 +80,9 @@ importers:
       hpp:
         specifier: ^0.2.3
         version: 0.2.3
+      mongoose:
+        specifier: ^8.8.1
+        version: 8.8.1(socks@2.8.3)
       winston:
         specifier: ^3.16.0
         version: 3.16.0
@@ -114,9 +117,6 @@ importers:
       '@types/jest':
         specifier: ^29.5.14
         version: 29.5.14
-      mongoose:
-        specifier: ^8.8.1
-        version: 8.8.1(socks@2.8.3)
       nodemon:
         specifier: ^3.1.7
         version: 3.1.7
