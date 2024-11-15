@@ -3,6 +3,7 @@ import mongoose from 'mongoose'
 import { TimeStamps } from '@typegoose/typegoose/lib/defaultClasses'
 
 import { User } from '@/models/user'
+import { Events } from '@/models/event'
 
 export class Schedule extends TimeStamps {
     public _id: mongoose.Types.ObjectId
@@ -10,7 +11,7 @@ export class Schedule extends TimeStamps {
     @prop({ required: true, ref: User })
     public authorId: mongoose.Types.ObjectId
 
-    @prop({ required: true })
+    @prop({ required: true, ref: Events })
     public eventId: string
 
     @prop()
