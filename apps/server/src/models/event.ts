@@ -1,21 +1,16 @@
 import { getModelForClass, prop } from '@typegoose/typegoose'
 import mongoose from 'mongoose'
 import { TimeStamps } from '@typegoose/typegoose/lib/defaultClasses'
-
 import { User } from '@/models/user'
-import { Events } from '@/models/event'
 
-export class Schedule extends TimeStamps {
+export class Events extends TimeStamps {
     public _id: mongoose.Types.ObjectId
-
-    @prop({ required: true, ref: User })
-    public authorId: mongoose.Types.ObjectId
-
-    @prop({ required: true, ref: Events })
-    public eventId: string
 
     @prop()
     public name: string
+
+    @prop()
+    public address: string
 
     @prop({ validate: { validator: v => v.type === 'Point' && v.coordinates?.length === 2 } })
     public location: {
@@ -24,22 +19,34 @@ export class Schedule extends TimeStamps {
     }
 
     @prop()
-    public address: string
-
-    @prop({ required: true })
     public startDate: Date
 
-    @prop({ required: true })
+    @prop()
     public endDate: Date
 
     @prop()
     public description: string
 
     @prop()
-    public images: string[]
+    public photo: string[]
+
+    @prop({ ref: User })
+    public likes: mongoose.Types.ObjectId[]
 
     @prop()
     public createdAt: Date
+
+    @prop()
+    public cost: number
+
+    @prop()
+    public comments: mongoose.Types.ObjectId[]
+
+    @prop()
+    public category: string[]
+
+    @prop()
+    public targetAudience: string[]
 }
 
-export const ScheduleModel = getModelForClass(Schedule)
+export const EventsModel = getModelForClass(Events)
