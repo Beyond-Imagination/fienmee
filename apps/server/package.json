@@ -36,8 +36,6 @@
         "@types/express": "^5.0.0",
         "@types/hpp": "^0.2.6",
         "@types/jest": "^29.5.14",
-        "@types/multer": "^1.4.12",
-        "multer": "1.4.5-lts.1",
         "nodemon": "^3.1.7",
         "swc-node": "^1.0.0"
     }
