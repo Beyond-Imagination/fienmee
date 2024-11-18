@@ -32,6 +32,7 @@ export const logout = (req: Request, res: Response) => {
             throw new LogoutFailedException()
         }
         res.clearCookie('connect.sid')
+        res.status(200).send()
     })
 }
 
