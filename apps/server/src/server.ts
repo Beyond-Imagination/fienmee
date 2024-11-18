@@ -6,8 +6,13 @@ import helmet from 'helmet'
 import cors from 'cors'
 
 import { logger, loggerMiddleware } from '@/utils/logger'
-import { NODE_ENV, PORT } from '@/config'
-import controllers from '@/controllers'
+import { NODE_ENV, PORT, SESSION_SECRET } from '@/config'
+import auth from './routers/v1/auth'
+import session from 'express-session'
+import enquiries from './routers/v1/enquiries'
+import passport from 'passport'
+import configurePassport from '@/config/passport'
+import { NotFoundRouteException } from './exceptions/NotFoundRouteException'
 
 export default class Server {
     app: express.Application
@@ -17,7 +22,8 @@ export default class Server {
         this.app = express()
 
         this.setPreMiddleware()
-        this.setController()
+        this.setPassport()
+        this.setRoutes()
         this.setPostMiddleware()
     }
 
@@ -31,11 +37,37 @@ export default class Server {
         this.app.use(loggerMiddleware)
     }
 
-    setController() {
-        this.app.use('/v1/enquiry', controllers.v1.enquiries)
+    setPassport() {
+        this.app.use(
+            session({
+                secret: SESSION_SECRET,
+                resave: false,
+                saveUninitialized: false,
+                cookie: {
+                    secure: NODE_ENV === 'production',
+                    httpOnly: true,
+                    maxAge: 1000 * 60 * 60 * 24,
+                    sameSite: 'lax',
+                },
+            }),
+        )
+
+        this.app.use(passport.initialize())
+        this.app.use(passport.session())
+
+        configurePassport(passport)
     }
 
-    setPostMiddleware() {}
+    setRoutes() {
+        this.app.use('/v1/auth', auth)
+        this.app.use('/v1/enquiry', enquiries)
+    }
+
+    setPostMiddleware() {
+        this.app.use((_req, res) => {
+            throw new NotFoundRouteException()
+        })
+    }
 
     public listen() {
         this.server = this.app.listen(PORT, () => {

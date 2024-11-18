@@ -1,12 +1,9 @@
-import express, { Request, Response } from 'express'
-import asyncify from 'express-asyncify'
+import { Request, Response } from 'express'
 
 import { EnquiryModel } from '@/models/enquiry'
 
-const router = asyncify(express.Router())
-
 // TODO: add verify user middleware
-router.post('/', async (req: Request, res: Response) => {
+export const createEnquiry = async (req: Request, res: Response) => {
     const enquiry = await EnquiryModel.create({
         userId: req.user._id,
         title: req.body.title,
@@ -15,6 +12,4 @@ router.post('/', async (req: Request, res: Response) => {
     res.status(200).json({
         enquiryId: enquiry._id,
     })
-})
-
-export default router
+}
