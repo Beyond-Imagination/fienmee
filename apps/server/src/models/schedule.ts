@@ -12,7 +12,7 @@ export class Schedule extends TimeStamps {
     public authorId: mongoose.Types.ObjectId
 
     @prop({ required: true, ref: Events })
-    public eventId: string
+    public eventId: mongoose.Types.ObjectId
 
     @prop()
     public name: string
