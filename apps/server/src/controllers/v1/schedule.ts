@@ -6,19 +6,16 @@ const router = asyncify(express.Router())
 
 // TODO: add validator(eventId, authorId)
 router.post('/', async (req: Request, res: Response) => {
-    const { title, eventId, startDate, endDate, address, location, description, savedImageUrls } = req.body
+    const { title, eventId, startDate, endDate, address, location, description, images } = req.body
     const schedule = await ScheduleModel.create({
         name: title,
         eventId: eventId,
         startDate: startDate,
         endDate: endDate,
         address: address,
-        location: {
-            type: 'Point',
-            coordinates: [location.longitude, location.latitude],
-        },
+        location: location,
         description: description,
-        images: savedImageUrls,
+        images: images,
     })
     res.status(201).json({
         scheduleId: schedule._id,
