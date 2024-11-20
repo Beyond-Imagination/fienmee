@@ -6,9 +6,9 @@ const router = asyncify(express.Router())
 
 // TODO: add validator(eventId, authorId)
 router.post('/', async (req: Request, res: Response) => {
-    const { title, eventId, startDate, endDate, address, location, description, images } = req.body
+    const { name, eventId, startDate, endDate, address, location, description, images } = req.body
     const schedule = await ScheduleModel.create({
-        name: title,
+        name: name,
         eventId: eventId,
         startDate: startDate,
         endDate: endDate,
