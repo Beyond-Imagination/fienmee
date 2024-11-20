@@ -33,6 +33,7 @@ export default class Server {
 
     setController() {
         this.app.use('/v1/enquiry', controllers.v1.enquiries)
+        this.app.use('/v1/events', controllers.v1.events)
     }
 
     setPostMiddleware() {}
