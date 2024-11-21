@@ -8,6 +8,7 @@ import cors from 'cors'
 import { logger, loggerMiddleware } from '@/utils/logger'
 import { NODE_ENV, PORT } from '@/config'
 import controllers from '@/controllers'
+import middlewares from '@/middlewares'
 
 export default class Server {
     app: express.Application
@@ -34,9 +35,12 @@ export default class Server {
     setController() {
         this.app.use('/v1/enquiry', controllers.v1.enquiries)
         this.app.use('/v1/events', controllers.v1.events)
+        this.app.use('/v1/schedule', controllers.v1.schedule)
     }
 
-    setPostMiddleware() {}
+    setPostMiddleware() {
+        this.app.use(middlewares.error)
+    }
 
     public listen() {
         this.server = this.app.listen(PORT, () => {
