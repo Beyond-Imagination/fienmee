@@ -38,4 +38,10 @@ router.put('/:id', async (req: Request, res: Response) => {
     res.sendStatus(204)
 })
 
+router.delete('/:id', async (req: Request, res: Response) => {
+    // TODO : Delete comments
+    await EventsModel.deleteOne({ _id: req.params.id })
+    res.sendStatus(200)
+})
+
 export default router
