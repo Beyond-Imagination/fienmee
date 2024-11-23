@@ -20,4 +20,22 @@ router.post('/', async (req: Request, res: Response) => {
     res.sendStatus(204)
 })
 
+router.put('/:id', async (req: Request, res: Response) => {
+    await EventsModel.updateOne(
+        { _id: req.params.id },
+        {
+            name: req.body.name,
+            location: req.body.location,
+            startDate: req.body.date,
+            endDate: req.body.endDate,
+            photo: req.body.photo,
+            cost: req.body.cost,
+            description: req.body.description,
+            category: req.body.category,
+            targetAudience: req.body.targetAudience,
+        },
+    )
+    res.sendStatus(204)
+})
+
 export default router
