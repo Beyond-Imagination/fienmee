@@ -22,4 +22,17 @@ router.post('/', async (req: Request, res: Response) => {
     })
 })
 
+// todo: jwt 에서 user의 identifier 추출 후 미들웨어로 포함
+router.get('/', async (req: Request, res: Response) => {
+    const DEFAULT_PAGE_OFFSET = 0
+    const DEFAULT_LIMIT = 10
+
+    let { page, limit } = req.params
+    page = page ?? DEFAULT_PAGE_OFFSET
+    limit = limit ?? DEFAULT_LIMIT
+
+    const userId = req.body.userId
+    return await ScheduleModel.findByUserId(userId, { page, limit })
+})
+
 export default router

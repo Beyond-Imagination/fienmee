@@ -1,11 +1,15 @@
-import { getModelForClass, prop } from '@typegoose/typegoose'
+import { getModelForClass, plugin, prop, ReturnModelType } from '@typegoose/typegoose'
+import mongoosePaginate from 'mongoose-paginate-v2'
 import mongoose from 'mongoose'
 import { TimeStamps } from '@typegoose/typegoose/lib/defaultClasses'
 
 import { User } from '@/models/user'
 import { Events } from '@/models/event'
 
+@plugin(mongoosePaginate)
 export class Schedule extends TimeStamps {
+    static paginate: mongoose.PaginateModel<typeof Schedule>['paginate']
+
     public _id: mongoose.Types.ObjectId
 
     @prop({ required: true, ref: User })
@@ -40,6 +44,17 @@ export class Schedule extends TimeStamps {
 
     @prop()
     public createdAt: Date
+
+    public static async findByUserId(
+        this: ReturnModelType<typeof Schedule>,
+        userId: string,
+        options: {
+            page: number
+            limit: number
+        },
+    ) {
+        return await this.paginate({ authorId: userId }, options)
+    }
 }
 
 export const ScheduleModel = getModelForClass(Schedule)
