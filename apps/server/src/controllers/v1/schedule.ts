@@ -27,13 +27,21 @@ router.post('/', async (req: Request, res: Response) => {
 router.get('/', async (req: Request, res: Response) => {
     const DEFAULT_PAGE_OFFSET = 0
     const DEFAULT_LIMIT = 10
+    const DEFAULT_FROM_DATE = new Date(0)
+    const DEFAULT_TO_DATE = new Date()
 
-    let { page, limit } = req.query
-    page = page ?? DEFAULT_PAGE_OFFSET
-    limit = limit ?? DEFAULT_LIMIT
+    const options = {
+        page: req.query.page || DEFAULT_PAGE_OFFSET,
+        limit: req.query.limit || DEFAULT_LIMIT,
+    }
+
+    const filterOption = {
+        from: req.query.from || DEFAULT_FROM_DATE,
+        to: req.query.to || DEFAULT_TO_DATE,
+    }
 
     const userId = req.body.userId
-    const schedules = await ScheduleModel.findByUserId(userId, { page, limit })
+    const schedules = await ScheduleModel.findByUserId(userId, filterOption, options)
 
     res.status(200).json(schedules)
 })

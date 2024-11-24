@@ -48,12 +48,16 @@ export class Schedule extends TimeStamps {
     public static async findByUserId(
         this: ReturnModelType<typeof Schedule>,
         userId: string,
+        filterOption: {
+            from: Date
+            to: Date
+        },
         options: {
             page: number
             limit: number
         },
     ) {
-        return await this.paginate({ authorId: userId }, options)
+        return await this.paginate({ authorId: userId, startDate: { $lte: filterOption.to }, endDate: { $gte: filterOption.from } }, options)
     }
 }
 
