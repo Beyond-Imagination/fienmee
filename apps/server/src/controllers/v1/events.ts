@@ -44,4 +44,25 @@ router.delete('/:id', async (req: Request, res: Response) => {
     res.sendStatus(200)
 })
 
+router.get('/:id', async (req: Request, res: Response) => {
+    const event = await EventsModel.findById(req.params.id)
+
+    // TODO: add isLiked
+    res.status(200).json({
+        _id: event._id,
+        name: event.name,
+        location: event.location,
+        startDate: event.startDate,
+        endDate: event.endDate,
+        photo: event.photo,
+        likeCount: event.likes.length,
+        createdAt: event.createdAt,
+        cost: event.cost,
+        description: event.description,
+        commentCount: event.comments.length,
+        category: event.category,
+        targetAudience: event.targetAudience,
+    })
+})
+
 export default router
