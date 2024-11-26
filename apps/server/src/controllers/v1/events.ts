@@ -47,7 +47,7 @@ router.delete('/:id', async (req: Request, res: Response) => {
 router.get('/:id', async (req: Request, res: Response) => {
     const event = await EventsModel.findById(req.params.id)
 
-    res.status(200).json(event.toJSON())
+    res.status(200).json(event)
 })
 
 export default router
