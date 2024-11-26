@@ -47,6 +47,25 @@ export class Events extends TimeStamps {
 
     @prop()
     public targetAudience: string[]
+
+    public toJSON(): object {
+        // TODO: add isLiked
+        return {
+            _id: this._id,
+            name: this.name,
+            location: this.location,
+            startDate: this.startDate,
+            endDate: this.endDate,
+            photo: this.photo,
+            likeCount: this.likes.length,
+            createdAt: this.createdAt,
+            cost: this.cost,
+            description: this.description,
+            commentCount: this.comments.length,
+            category: this.category,
+            targetAudience: this.targetAudience,
+        }
+    }
 }
 
 export const EventsModel = getModelForClass(Events)
