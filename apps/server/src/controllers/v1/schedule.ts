@@ -25,19 +25,14 @@ router.post('/', async (req: Request, res: Response) => {
 
 // todo: jwt 에서 user의 identifier 추출 후 미들웨어로 포함
 router.get('/', async (req: Request, res: Response) => {
-    const DEFAULT_PAGE_OFFSET = 0
-    const DEFAULT_LIMIT = 10
-    const DEFAULT_FROM_DATE = new Date(0)
-    const DEFAULT_TO_DATE = new Date()
-
     const options = {
-        page: req.query.page || DEFAULT_PAGE_OFFSET,
-        limit: req.query.limit || DEFAULT_LIMIT,
+        page: req.query.page || 0,
+        limit: req.query.limit || 100,
     }
 
     const filterOption = {
-        from: req.query.from || DEFAULT_FROM_DATE,
-        to: req.query.to || DEFAULT_TO_DATE,
+        from: req.query.from || new Date(0),
+        to: req.query.to || new Date(),
     }
 
     const userId = req.body.userId
