@@ -13,8 +13,10 @@ const styles = StyleSheet.create({
     },
     text: {
         textAlign: 'center',
+        textAlignVertical: 'center',
         fontSize: 20,
         paddingLeft: 20,
+        paddingBottom: 5,
         width: '70%',
     },
 })
