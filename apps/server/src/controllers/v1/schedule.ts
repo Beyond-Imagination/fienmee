@@ -44,7 +44,7 @@ router.get('/', async (req: Request, res: Response) => {
 router.put('/:id', async (req: Request, res: Response) => {
     // todo: 일정의 authorId와 실제 jwt에 포함된 userId가 같은지 검증하는 middleware 추가
     const { id } = req.params
-    const { name, startDate, endDate, description, images, location } = req.body
+    const { name, startDate, endDate, description, images, location, address } = req.body
     const updated = await ScheduleModel.findOneAndUpdate(
         { _id: id },
         {
@@ -52,6 +52,7 @@ router.put('/:id', async (req: Request, res: Response) => {
             startDate: startDate,
             endDate: endDate,
             description: description,
+            address: address,
             location: location,
             images: images,
         },
