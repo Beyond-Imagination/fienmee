@@ -6,10 +6,13 @@
  */
 
 import React from 'react'
-import { SafeAreaView, useColorScheme } from 'react-native'
+import { useColorScheme } from 'react-native'
 import { WebView } from 'react-native-webview'
+import { NavigationContainer } from '@react-navigation/native'
+import { createNativeStackNavigator } from '@react-navigation/native-stack'
 
 import { Colors } from 'react-native/Libraries/NewAppScreen'
+import LoginScreen from '../pages/login.tsx'
 
 function App(): React.JSX.Element {
     const isDarkMode = useColorScheme() === 'dark'
@@ -17,11 +20,31 @@ function App(): React.JSX.Element {
     const backgroundStyle = {
         backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
     }
+    const Stack = createNativeStackNavigator()
 
     return (
-        <SafeAreaView style={backgroundStyle}>
-            <WebView source={{ uri: 'http://192.168.0.5:3000/' }} containerStyle={{ flex: 0, width: '100%', height: '100%' }} />
-        </SafeAreaView>
+        <NavigationContainer>
+            <Stack.Navigator
+                screenOptions={{
+                    contentStyle: backgroundStyle,
+                }}
+            >
+                {/*TODO: make page file*/}
+                <Stack.Screen
+                    name="WebView"
+                    component={() => {
+                        return <WebView source={{ uri: 'http://192.168.0.6:3000/' }} containerStyle={{ flex: 0, width: '100%', height: '100%' }} />
+                    }}
+                />
+                <Stack.Screen
+                    name="LoginView"
+                    component={LoginScreen}
+                    options={{
+                        headerShown: false,
+                    }}
+                />
+            </Stack.Navigator>
+        </NavigationContainer>
     )
 }
 
