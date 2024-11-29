@@ -44,7 +44,7 @@ router.get('/', async (req: Request, res: Response) => {
 router.delete('/:id', async (req: Request, res: Response) => {
     // TODO: 작성자가 jwt에 있는 userId와 일치하는지 검증하는 middleware 추가
     await ScheduleModel.deleteOne({ _id: req.params.id })
-    res.status(202).end()
+    res.status(204).end()
 })
 
 export default router
