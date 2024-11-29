@@ -1,9 +1,13 @@
-import { getModelForClass, prop } from '@typegoose/typegoose'
+import { getModelForClass, plugin, prop, ReturnModelType } from '@typegoose/typegoose'
 import mongoose from 'mongoose'
 import { TimeStamps } from '@typegoose/typegoose/lib/defaultClasses'
 import { User } from '@/models/user'
+import mongoosePaginate from 'mongoose-paginate-v2'
 
+@plugin(mongoosePaginate)
 export class Events extends TimeStamps {
+    static paginate: mongoose.PaginateModel<typeof Events>['paginate']
+
     public _id: mongoose.Types.ObjectId
 
     @prop()
@@ -65,6 +69,10 @@ export class Events extends TimeStamps {
             category: this.category,
             targetAudience: this.targetAudience,
         }
+    }
+
+    public static async findByCategory(this: ReturnModelType<typeof Events>, category: string, options: object) {
+        return await this.paginate({ category: { $in: [category] } }, options)
     }
 }
 
