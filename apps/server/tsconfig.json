@@ -22,7 +22,8 @@
         "importHelpers": true,
         "baseUrl": "../../apps/server/src",
         "paths": {
-            "@/*": ["*"]
+            "@/*": ["*"],
+            "tslib": ["../../node_modules/tslib/tslib.d.ts"]
         }
     },
     "include": ["src/**/*.ts", "src/**/*.json", ".env"],
