@@ -50,4 +50,24 @@ router.get('/:id', async (req: Request, res: Response) => {
     res.status(200).json(event)
 })
 
+router.get('/category/:category', async (req: Request, res: Response) => {
+    const options = { sort: { createdAt: -1 }, page: Number(req.query.page) || 1, limit: Number(req.query.limit) || 10 }
+    const category = req.params.category
+    const result = await EventsModel.findByCategory(category, options)
+
+    const events = result.docs.map(event => ({ ...event.toJSON() }))
+
+    res.status(200).json({
+        events: events,
+        page: {
+            totalDocs: result.totalDocs,
+            totalPages: result.totalPages,
+            hasNextPage: result.hasNextPage,
+            hasPrevPage: result.hasPrevPage,
+            page: result.page,
+            limit: result.limit,
+        },
+    })
+})
+
 export default router
