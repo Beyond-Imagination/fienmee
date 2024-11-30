@@ -72,7 +72,7 @@ export class Events extends TimeStamps {
     }
 
     public static async findByCategory(this: ReturnModelType<typeof Events>, category: string, options: object) {
-        return await this.paginate({ category: { $in: [category] } }, options)
+        return await this.paginate({ category: category }, options)
     }
 }
 
