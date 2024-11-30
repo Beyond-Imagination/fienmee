@@ -1,9 +1,9 @@
 import enquiries from './enquiries'
 import events from './events'
-import schedule from './schedule'
+import schedules from './schedules'
 
 export default {
     enquiries,
     events,
-    schedule,
+    schedules,
 }
