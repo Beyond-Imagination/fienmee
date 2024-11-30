@@ -1,9 +1,9 @@
-import express, { Request, Response } from 'express'
+import express, { Request, Response, Router } from 'express'
 import asyncify from 'express-asyncify'
 
 import { EnquiryModel } from '@/models/enquiry'
 
-const router = asyncify(express.Router())
+const router: Router = asyncify(express.Router())
 
 // TODO: add verify user middleware
 router.post('/', async (req: Request, res: Response) => {

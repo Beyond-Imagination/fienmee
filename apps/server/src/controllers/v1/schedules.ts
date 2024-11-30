@@ -1,8 +1,8 @@
 import asyncify from 'express-asyncify'
-import express, { Request, Response } from 'express'
+import express, { Request, Response, Router } from 'express'
 import { ScheduleModel } from '@/models/schedule'
 
-const router = asyncify(express.Router())
+const router: Router = asyncify(express.Router())
 
 // TODO: add validator(eventId, authorId)
 router.post('/', async (req: Request, res: Response) => {
