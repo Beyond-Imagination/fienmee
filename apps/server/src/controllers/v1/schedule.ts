@@ -45,6 +45,24 @@ router.delete('/:id', async (req: Request, res: Response) => {
     // TODO: 작성자가 jwt에 있는 userId와 일치하는지 검증하는 middleware 추가
     await ScheduleModel.deleteOne({ _id: req.params.id })
     res.sendStatus(204)
+
+router.put('/:id', async (req: Request, res: Response) => {
+    // todo: 일정의 authorId와 실제 jwt에 포함된 userId가 같은지 검증하는 middleware 추가
+    const { id } = req.params
+    const { name, startDate, endDate, description, images, location, address } = req.body
+    const updated = await ScheduleModel.findOneAndUpdate(
+        { _id: id },
+        {
+            name: name,
+            startDate: startDate,
+            endDate: endDate,
+            description: description,
+            address: address,
+            location: location,
+            images: images,
+        },
+    )
+    res.status(200).json(updated)
 })
 
 export default router
