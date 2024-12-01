@@ -7,5 +7,10 @@ declare global {
             _routeBlacklists: { body: string[] }
             user: User
         }
+        interface Response {
+            meta: {
+                error?: Error
+            }
+        }
     }
 }

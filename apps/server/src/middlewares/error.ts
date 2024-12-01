@@ -9,8 +9,7 @@ const errorMiddleware = (error: APIError, req: Request, res: Response, next: Nex
         if (!(error instanceof APIError)) {
             error = new InternalServerError(error)
         }
-        // TODO: Response에 meta field 추가
-        res.meta.error = error
+        res.meta = res.meta ? { ...res.meta, error } : { error }
         res.status(error.statusCode).json({
             message: error.message,
             code: error.errorCode,
