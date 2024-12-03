@@ -7,3 +7,11 @@ export class UnauthorizedSchedule extends APIError {
         Error.captureStackTrace(this, UnauthorizedSchedule)
     }
 }
+
+export class InvalidRequestFormat extends APIError {
+    constructor(cause: Error | string = null) {
+        super(400, 40000, 'invalid request format', cause)
+        Object.setPrototypeOf(this, InvalidRequestFormat.prototype)
+        Error.captureStackTrace(this, InvalidRequestFormat)
+    }
+}
