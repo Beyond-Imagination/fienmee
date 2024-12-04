@@ -1,6 +1,7 @@
 export interface IEvent {
     _id: string
     name: string
+    address: string
     location: {
         type: string
         coordinates: number[]
