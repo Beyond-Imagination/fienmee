@@ -47,8 +47,7 @@ router.delete('/:id', middlewares.schedules.verifyAuthorMiddleware, async (req: 
     res.sendStatus(204)
 })
 
-router.put('/:id', async (req: Request, res: Response) => {
-    // todo: 일정의 authorId와 실제 jwt에 포함된 userId가 같은지 검증하는 middleware 추가
+router.put('/:id', middlewares.schedules.verifyAuthorMiddleware, async (req: Request, res: Response) => {
     const { id } = req.params
     const { name, startDate, endDate, description, images, location, address } = req.body
     const updated = await ScheduleModel.findOneAndUpdate(
