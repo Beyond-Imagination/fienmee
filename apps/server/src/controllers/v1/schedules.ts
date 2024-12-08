@@ -1,6 +1,7 @@
 import asyncify from 'express-asyncify'
 import express, { Request, Response, Router } from 'express'
 import { ScheduleModel } from '@/models/schedule'
+import middlewares from '@/middlewares'
 
 const router: Router = asyncify(express.Router())
 
@@ -41,14 +42,12 @@ router.get('/', async (req: Request, res: Response) => {
     res.status(200).json(schedules)
 })
 
-router.delete('/:id', async (req: Request, res: Response) => {
-    // TODO: 작성자가 jwt에 있는 userId와 일치하는지 검증하는 middleware 추가
+router.delete('/:id', middlewares.schedules.verifyAuthorMiddleware, async (req: Request, res: Response) => {
     await ScheduleModel.deleteOne({ _id: req.params.id })
     res.sendStatus(204)
 })
 
-router.put('/:id', async (req: Request, res: Response) => {
-    // todo: 일정의 authorId와 실제 jwt에 포함된 userId가 같은지 검증하는 middleware 추가
+router.put('/:id', middlewares.schedules.verifyAuthorMiddleware, async (req: Request, res: Response) => {
     const { id } = req.params
     const { name, startDate, endDate, description, images, location, address } = req.body
     const updated = await ScheduleModel.findOneAndUpdate(
