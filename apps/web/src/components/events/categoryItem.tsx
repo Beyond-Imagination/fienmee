@@ -27,7 +27,7 @@ export function CategoryItem({ category, isFavorites }: Props) {
         return (
             <Link className="flex flex-row w-full items-center justify-start p-4 gap-4" href={`/events/category?name=${category}`}>
                 <BaseCategoryIcon width={40} height={40} isFavorites={isFavorites} />
-                <div className="text-3xl text-center">{category}</div>
+                <div className="text-3xl text-center pt-1">{category}</div>
             </Link>
         )
     }
