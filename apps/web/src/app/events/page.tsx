@@ -1,3 +1,5 @@
+'use client'
+
 import { CategoryItem } from '@/components/events/categoryItem'
 
 export default function Page() {
