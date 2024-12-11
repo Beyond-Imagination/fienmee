@@ -17,9 +17,9 @@ export class User extends TimeStamps {
 
     public toJSON() {
         return {
+            _id: this._id,
             nickname: this.nickname,
             provider: this.provider,
-            providerId: this.providerId,
         }
     }
 
