@@ -1,9 +1,9 @@
 import { APIError } from '@/types/errors/error'
 
-export class HttpClientException extends APIError {
+export class OAuthUserInfoException extends APIError {
     constructor(cause: Error | string = null) {
         super(422, 4220, 'auth http client exception', cause)
-        Object.setPrototypeOf(this, HttpClientException.prototype)
-        Error.captureStackTrace(this, HttpClientException)
+        Object.setPrototypeOf(this, OAuthUserInfoException.prototype)
+        Error.captureStackTrace(this, OAuthUserInfoException)
     }
 }

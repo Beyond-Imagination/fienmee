@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { HttpClientException } from '@/types/errors'
+import { OAuthUserInfoException } from '@/types/errors'
 import { User } from '@/models/user'
 import jwt from 'jsonwebtoken'
 import { JWT_PRIVATE_KEY } from '@/config'
@@ -24,7 +24,7 @@ export class Kakao {
                 'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8',
             },
         }).catch(e => {
-            throw new HttpClientException(e)
+            throw new OAuthUserInfoException(e)
         })
 
         return {
