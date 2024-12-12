@@ -13,7 +13,6 @@
     "private": true,
     "dependencies": {
         "@typegoose/typegoose": "^12.9.0",
-        "@types/jsonwebtoken": "^9.0.7",
         "axios": "^1.7.9",
         "compression": "^1.7.5",
         "cors": "^2.8.5",
@@ -40,6 +39,7 @@
         "@types/express": "^5.0.0",
         "@types/hpp": "^0.2.6",
         "@types/jest": "^29.5.14",
+        "@types/jsonwebtoken": "^9.0.7",
         "nodemon": "^3.1.7",
         "swc-node": "^1.0.0"
     }

@@ -142,9 +142,6 @@ importers:
       '@typegoose/typegoose':
         specifier: ^12.9.0
         version: 12.9.0(mongoose@8.8.1(socks@2.8.3))
-      '@types/jsonwebtoken':
-        specifier: ^9.0.7
-        version: 9.0.7
       axios:
         specifier: ^1.7.9
         version: 1.7.9
@@ -218,6 +215,9 @@ importers:
       '@types/jest':
         specifier: ^29.5.14
         version: 29.5.14
+      '@types/jsonwebtoken':
+        specifier: ^9.0.7
+        version: 9.0.7
       nodemon:
         specifier: ^3.1.7
         version: 3.1.7
