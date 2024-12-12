@@ -1,7 +1,8 @@
 import asyncify from 'express-asyncify'
 import express, { Request, Response } from 'express'
-import { IUserInfo, JWTProvider, Kakao, OAuthPayload } from '@/utils/auth'
+import { IUserInfo, JWTProvider, OAuthPayload } from '@/utils/auth'
 import { User, UserModel } from '@/models/user'
+import Kakao from '@/types/provider/kakao'
 
 const router = asyncify(express.Router())
 

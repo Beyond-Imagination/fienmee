@@ -1,5 +1,3 @@
-import axios from 'axios'
-import { OAuthUserInfoException } from '@/types/errors'
 import { User } from '@/models/user'
 import jwt from 'jsonwebtoken'
 import { JWT_PRIVATE_KEY } from '@/config'
@@ -13,26 +11,6 @@ export interface IUserInfo {
     nickname: string
     provider: string
     providerId: string
-}
-
-export class Kakao {
-    public static async getUserInfo(payload: OAuthPayload) {
-        const { data } = await axios('https://kapi.kakao.com/v2/user/me', {
-            method: 'GET',
-            headers: {
-                Authorization: `Bearer ${payload.accessToken}`,
-                'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8',
-            },
-        }).catch(e => {
-            throw new OAuthUserInfoException(e)
-        })
-
-        return {
-            nickname: data.kakao_account.profile.nickname,
-            provider: 'KAKAO',
-            providerId: data.id,
-        }
-    }
 }
 
 export class JWTProvider {
