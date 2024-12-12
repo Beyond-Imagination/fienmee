@@ -23,12 +23,12 @@ export class User extends TimeStamps {
         }
     }
 
-    public static async loadOrCreateUser(this: ReturnModelType<typeof User>, info: IUserInfo) {
-        let user = await this.findOne({ providerId: info.providerId }).exec()
-        if (!user) {
-            user = await this.create(info)
-        }
-        return user
+    public static async loadUser(this: ReturnModelType<typeof User>, info: IUserInfo) {
+        return await this.findOne({ providerId: info.providerId }).exec()
+    }
+
+    public static async createUser(this: ReturnModelType<typeof User>, info: IUserInfo) {
+        return await this.create(info)
     }
 }
 

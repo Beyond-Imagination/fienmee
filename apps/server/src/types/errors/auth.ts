@@ -7,3 +7,19 @@ export class OAuthUserInfoException extends APIError {
         Error.captureStackTrace(this, OAuthUserInfoException)
     }
 }
+
+export class KakaoLoginFailedException extends APIError {
+    constructor(cause: Error | string = null) {
+        super(404, 4040, 'Failed to login with kakao login information', cause)
+        Object.setPrototypeOf(this, KakaoLoginFailedException.prototype)
+        Error.captureStackTrace(this, KakaoLoginFailedException)
+    }
+}
+
+export class KakaoRegisterFailedException extends APIError {
+    constructor(cause: Error | string = null) {
+        super(400, 4000, 'Failed to register user information', cause)
+        Object.setPrototypeOf(this, KakaoRegisterFailedException)
+        Error.captureStackTrace(this, KakaoRegisterFailedException)
+    }
+}
