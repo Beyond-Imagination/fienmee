@@ -5,8 +5,7 @@ import middlewares from '@/middlewares'
 
 const router: Router = asyncify(express.Router())
 
-// TODO: add validator(eventId, authorId)
-router.post('/', async (req: Request, res: Response) => {
+router.post('/', middlewares.schedules.addScheduleMiddleware, async (req: Request, res: Response) => {
     const { name, eventId, authorId, startDate, endDate, address, location, description, images } = req.body
     const schedule = await ScheduleModel.create({
         name: name,
