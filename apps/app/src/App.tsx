@@ -10,6 +10,7 @@ import { useColorScheme } from 'react-native'
 import { WebView } from 'react-native-webview'
 import { NavigationContainer } from '@react-navigation/native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
+import config from 'react-native-config'
 
 import { Colors } from 'react-native/Libraries/NewAppScreen'
 import LoginScreen from '../pages/login.tsx'
@@ -33,7 +34,7 @@ function App(): React.JSX.Element {
                 <Stack.Screen
                     name="WebView"
                     component={() => {
-                        return <WebView source={{ uri: 'http://192.168.0.6:3000/' }} containerStyle={{ flex: 0, width: '100%', height: '100%' }} />
+                        return <WebView source={{ uri: config.FE_URL }} containerStyle={{ flex: 0, width: '100%', height: '100%' }} />
                     }}
                 />
                 <Stack.Screen
