@@ -1,7 +1,7 @@
 import mongoose from 'mongoose'
 import { TimeStamps } from '@typegoose/typegoose/lib/defaultClasses'
 import { getModelForClass, prop, ReturnModelType } from '@typegoose/typegoose'
-import { IUserInfo } from '@/utils/auth'
+import { IUserCredentials, IUserInfo } from '@/utils/auth'
 
 export class User extends TimeStamps {
     public _id: mongoose.Types.ObjectId
@@ -14,6 +14,12 @@ export class User extends TimeStamps {
 
     @prop()
     public providerId: string
+
+    @prop()
+    public providerAccessToken: string
+
+    @prop()
+    public providerRefreshToken: string
 
     public toJSON() {
         return {
@@ -29,6 +35,13 @@ export class User extends TimeStamps {
 
     public static async createUser(this: ReturnModelType<typeof User>, info: IUserInfo) {
         return await this.create(info)
+    }
+
+    public static async setProviderCredentials(this: ReturnModelType<typeof User>, credentials: IUserCredentials) {
+        return await this.findOneAndUpdate(
+            { providerId: credentials.providerId },
+            { providerAccessToken: credentials.providerAccessToken, providerRefreshToken: credentials.providerRefreshToken },
+        ).exec()
     }
 }
 

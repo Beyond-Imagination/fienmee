@@ -17,6 +17,11 @@ router.post('/login', async (req: Request, res: Response) => {
         const user: User = await UserModel.loadUser(userInfo)
         if (!user) throw new KakaoLoginFailedException(new Error(`not found ${userInfo.providerId}`))
         const jwt = JWTProvider.issueJwt(user)
+        await UserModel.setProviderCredentials({
+            providerId: userInfo.providerId,
+            providerAccessToken: oauthPayload.accessToken,
+            providerRefreshToken: oauthPayload.refreshToken,
+        })
         res.status(200).json({
             accessToken: jwt,
         })
@@ -30,6 +35,11 @@ router.post('/register', async (req: Request, res: Response) => {
         const registerInfo: IUserInfo = await Kakao.getUserInfo(oauthRegisterPayload)
         const user: User = await UserModel.createUser(registerInfo)
         const jwt = JWTProvider.issueJwt(user)
+        await UserModel.setProviderCredentials({
+            providerId: registerInfo.providerId,
+            providerAccessToken: oauthRegisterPayload.accessToken,
+            providerRefreshToken: oauthRegisterPayload.refreshToken,
+        })
         res.status(200).json({
             accessToken: jwt,
         })

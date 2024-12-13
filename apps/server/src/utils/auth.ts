@@ -4,6 +4,7 @@ import { JWT_PRIVATE_KEY } from '@/config'
 
 export interface OAuthPayload {
     accessToken: string
+    refreshToken: string
     provider: string
 }
 
@@ -11,6 +12,12 @@ export interface IUserInfo {
     nickname: string
     provider: string
     providerId: string
+}
+
+export interface IUserCredentials {
+    providerId: string
+    providerAccessToken: string
+    providerRefreshToken: string
 }
 
 export class JWTProvider {
