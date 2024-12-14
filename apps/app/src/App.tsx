@@ -13,7 +13,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import config from 'react-native-config'
 
 import { Colors } from 'react-native/Libraries/NewAppScreen'
-import LoginScreen from '../pages/login.tsx'
+import LoginScreen from './pages/Login.tsx'
 
 function App(): React.JSX.Element {
     const isDarkMode = useColorScheme() === 'dark'
@@ -26,20 +26,24 @@ function App(): React.JSX.Element {
     return (
         <NavigationContainer>
             <Stack.Navigator
+                id={'root'}
                 screenOptions={{
                     contentStyle: backgroundStyle,
                 }}
             >
                 {/*TODO: make page file*/}
                 <Stack.Screen
+                    name="LoginView"
+                    component={LoginScreen}
+                    options={{
+                        headerShown: false,
+                    }}
+                />
+                <Stack.Screen
                     name="WebView"
                     component={() => {
                         return <WebView source={{ uri: config.FE_URL }} containerStyle={{ flex: 0, width: '100%', height: '100%' }} />
                     }}
-                />
-                <Stack.Screen
-                    name="LoginView"
-                    component={LoginScreen}
                     options={{
                         headerShown: false,
                     }}
