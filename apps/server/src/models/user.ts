@@ -29,8 +29,8 @@ export class User extends TimeStamps {
         }
     }
 
-    public static async loadUser(this: ReturnModelType<typeof User>, info: IUserInfo) {
-        return await this.findOne({ providerId: info.providerId }).exec()
+    public static async findByProviderId(this: ReturnModelType<typeof User>, providerId: string) {
+        return await this.findOne({ providerId: providerId }).exec()
     }
 
     public static async createUser(this: ReturnModelType<typeof User>, info: IUserInfo) {

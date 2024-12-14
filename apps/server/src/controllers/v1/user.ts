@@ -14,7 +14,7 @@ router.post('/login', async (req: Request, res: Response) => {
     // ==> split the code as service, and adding handler for controller logic
     if (oauthPayload.provider === 'KAKAO') {
         const userInfo: IUserInfo = await Kakao.getUserInfo(oauthPayload)
-        const user: User = await UserModel.loadUser(userInfo)
+        const user: User = await UserModel.findByProviderId(userInfo.providerId)
         if (!user) throw new KakaoLoginFailedException(new Error(`not found ${userInfo.providerId}`))
         const jwt = JWTProvider.issueJwt(user)
         await UserModel.setProviderCredentials({
