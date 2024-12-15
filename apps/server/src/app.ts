@@ -10,7 +10,6 @@ import Scheduler from '@/scheduler'
 
     scheduler.run()
     server.listen()
-
     async function shutdown() {
         logger.info('gracefully shutdown fienmee')
         await Promise.all([server.close, scheduler.stop, db.close()])

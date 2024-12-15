@@ -1,8 +1,8 @@
 import { getSeoulData } from '@/utils/seoul.data'
-import { ICulturalEvent } from '@/types/seoul.data'
-import { EventsModel } from '@/models/event'
 import { logger } from '@/utils/logger'
+import { ICulturalEvent } from '@/types/seoul.data'
 import { SeoulDataUpdateError } from '@/types/errors'
+import { EventsModel } from '@/models/event'
 
 const BATCH_SIZE = 1000
 
