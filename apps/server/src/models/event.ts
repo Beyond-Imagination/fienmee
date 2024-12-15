@@ -42,7 +42,7 @@ export class Events extends TimeStamps {
     public createdAt: Date
 
     @prop()
-    public cost: number
+    public cost: string
 
     @prop()
     public comments: mongoose.Types.ObjectId[]

@@ -2,16 +2,18 @@ import '@/config'
 import Server from '@/server'
 import { logger } from '@/utils/logger'
 import * as db from '@/models/connector'
-import { fetchAndSaveSeoulData } from '@/controllers/v1/databatch'
+import Scheduler from '@/scheduler'
 ;(async () => {
     await db.connect()
     const server = new Server()
+    const scheduler = new Scheduler()
+
+    scheduler.run()
     server.listen()
-    await fetchAndSaveSeoulData()
+
     async function shutdown() {
         logger.info('gracefully shutdown fienmee')
-        await server.close()
-        await db.close()
+        await Promise.all([server.close, scheduler.stop, db.close()])
         logger.info('shutdown complete')
         process.exit()
     }

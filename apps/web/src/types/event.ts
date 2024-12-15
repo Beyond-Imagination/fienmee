@@ -10,7 +10,7 @@ export interface IEvent {
     endDate: Date
     description: string
     photo: string[]
-    cost: number
+    cost: string
     likeCount: number
     commentCount: number
     category: string[]
