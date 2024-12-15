@@ -1,6 +1,6 @@
 import { User } from '@/models/user'
 import jwt from 'jsonwebtoken'
-import { JWT_PRIVATE_KEY } from '@/config'
+import { JWT_SECRET } from '@/config'
 
 export interface OAuthPayload {
     accessToken: string
@@ -22,6 +22,6 @@ export interface IUserCredentials {
 
 export class JWTProvider {
     public static issueJwt(user: User): string {
-        return jwt.sign({ issuer: 'FIENMEE', user: user }, JWT_PRIVATE_KEY, { expiresIn: '30m' })
+        return jwt.sign({ issuer: 'FIENMEE', user: user }, JWT_SECRET, { expiresIn: '30m' })
     }
 }
