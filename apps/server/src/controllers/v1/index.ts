@@ -1,11 +1,11 @@
 import enquiries from './enquiries'
 import events from './events'
 import schedules from './schedules'
-import user from './user'
+import users from './users'
 
 export default {
     enquiries,
     events,
     schedules,
-    user,
+    users,
 }
