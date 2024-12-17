@@ -3,6 +3,7 @@ import { ScheduleModel } from '@/models/schedule'
 import { InvalidRequestFormat, UnauthorizedSchedule } from '@/types/errors/schedule'
 import { EventsModel } from '@/models/event'
 import { UserModel } from '@/models/user'
+import { UnknownUserError } from '@/types/errors'
 
 export const verifyAuthorMiddleware = async (req: Request, res: Response, next: NextFunction) => {
     const authorId = (await ScheduleModel.findOne({ _id: req.params.id }).exec())?.authorId
@@ -25,7 +26,10 @@ const verifyEventId = async (req: Request, res: Response, next: NextFunction) =>
 }
 
 const verifyAuthorId = async (req: Request, res: Response, next: NextFunction) => {
-    const { authorId } = req.body
+    const authorId = req.user?._id
+    if (!authorId) {
+        throw new UnknownUserError(new Error(`req.user is not initialized`))
+    }
     const target = await UserModel.findOne({ _id: authorId }).exec()
     if (!target) {
         throw new InvalidRequestFormat(new Error(`not found author => id: ${authorId}`))

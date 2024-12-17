@@ -18,6 +18,7 @@ export default class Server {
         this.app = express()
 
         this.setPreMiddleware()
+        this.setAuthRequiredController()
         this.setController()
         this.setPostMiddleware()
     }
@@ -32,10 +33,14 @@ export default class Server {
         this.app.use(loggerMiddleware)
     }
 
+    setAuthRequiredController() {
+        const auth = middlewares.auth.verifyToken
+        this.app.use('/v1/schedules', auth, controllers.v1.schedules)
+    }
+
     setController() {
         this.app.use('/v1/users', controllers.v1.users)
         this.app.use('/v1/events', controllers.v1.events)
-        this.app.use('/v1/schedules', controllers.v1.schedules)
         this.app.use('/v1/enquiries', controllers.v1.enquiries)
     }
 
