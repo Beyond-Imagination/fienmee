@@ -12,7 +12,8 @@ import Scheduler from '@/scheduler'
     server.listen()
     async function shutdown() {
         logger.info('gracefully shutdown fienmee')
-        await Promise.all([server.close, scheduler.stop, db.close()])
+        await Promise.all([server.close, scheduler.stop])
+        await db.close()
         logger.info('shutdown complete')
         process.exit()
     }
