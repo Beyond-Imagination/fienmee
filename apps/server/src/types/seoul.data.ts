@@ -23,7 +23,7 @@ export interface ICulturalEvent {
     HMPG_ADDR: string // 문화포털상세 URL
 }
 
-export interface IGetSeoulDateResponse {
+export interface IGetSeoulDataResponse {
     culturalEventInfo: {
         list_total_count: number
         RESULT: {

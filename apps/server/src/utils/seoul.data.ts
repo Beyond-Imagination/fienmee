@@ -1,8 +1,8 @@
 import { SEOUL_API_KEY, SEOUL_API_URL } from '@/config'
 import { SeoulDataServerError } from '@/types/errors'
-import { IGetSeoulDateResponse } from '@/types/seoul.data'
+import { IGetSeoulDataResponse } from '@/types/seoul.data'
 
-export async function getSeoulData(start_index: number, end_index: number): Promise<IGetSeoulDateResponse> {
+export async function getSeoulData(start_index: number, end_index: number): Promise<IGetSeoulDataResponse> {
     const res = await fetch(`${SEOUL_API_URL}/${SEOUL_API_KEY}/json/culturalEventInfo/${start_index}/${end_index}`, {
         method: 'GET',
         headers: {
@@ -12,5 +12,5 @@ export async function getSeoulData(start_index: number, end_index: number): Prom
     if (!res.ok) {
         throw new SeoulDataServerError()
     }
-    return (await res.json()) as IGetSeoulDateResponse
+    return (await res.json()) as IGetSeoulDataResponse
 }
