@@ -2,7 +2,7 @@
 addReviewers: true
 
 # Set to true to add assignees to pull requests
-addAssignees: true
+addAssignees: author
 
 # A list of reviewers to be added to pull requests (GitHub username)
 reviewers:
@@ -11,6 +11,7 @@ reviewers:
     - joonamin
     - yuchem2
     - chsjen492
+    - HeesooJun
 
 # A list of keywords to be skipped the process that add reviewers if pull requests include it
 #skipKeywords:

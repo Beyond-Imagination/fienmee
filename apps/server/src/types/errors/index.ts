@@ -1,4 +1,4 @@
 export * from './error'
 export * from './server'
 export * from './databatch'
-export * from './auth'
+export * from './oauth'
