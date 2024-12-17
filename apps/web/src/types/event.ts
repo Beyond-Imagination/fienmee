@@ -29,3 +29,8 @@ export interface IGetEventsByCategoryResponse {
     }
     events: IEvent[]
 }
+
+export interface IGetEventCategoriesResponse {
+    categories: string[]
+    favoriteCategories: string[]
+}
