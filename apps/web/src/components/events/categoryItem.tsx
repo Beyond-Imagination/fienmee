@@ -10,9 +10,7 @@ interface Props {
 
 export function CategoryItem({ category, isFavorites }: Props) {
     const { setCategory } = categoryStore()
-    const onClick = () => {
-        setCategory(category)
-    }
+    const onClick = () => setCategory(category)
     // TODO: change category names
     if (category === '내가 등록한 행사') {
         return (
@@ -37,4 +35,13 @@ export function CategoryItem({ category, isFavorites }: Props) {
             </Link>
         )
     }
+}
+
+export function CategoryItemSkeleton() {
+    return (
+        <div className="flex flex-row w-full items-center justify-start p-4 gap-4">
+            <div className="w-12 h-10 bg-gray-300 animate-pulse rounded-full" />
+            <div className="w-full h-10 bg-gray-300 rounded animate-pulse" />
+        </div>
+    )
 }
