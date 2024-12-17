@@ -51,7 +51,7 @@ router.get('/:id', async (req: Request, res: Response) => {
 })
 
 router.get('/category/:category', async (req: Request, res: Response) => {
-    const options = { sort: { createdAt: -1 }, page: Number(req.query.page) || 1, limit: Number(req.query.limit) || 10 }
+    const options = { sort: { startDate: 1, endDate: 1, createdAt: -1 }, page: Number(req.query.page) || 1, limit: Number(req.query.limit) || 10 }
     const category = req.params.category
     const result = await EventsModel.findByCategory(category, options)
 
