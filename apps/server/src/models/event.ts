@@ -83,7 +83,6 @@ export class Events extends TimeStamps {
 
     // TODO: caching
     public static async findCategories(this: ReturnModelType<typeof Events>) {
-        // TODO: exclude user favorite categories
         return await this.distinct('category', {}).exec()
     }
 }
