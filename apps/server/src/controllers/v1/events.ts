@@ -10,7 +10,7 @@ router.get('/categories', async (req: Request, res: Response) => {
     const categories = await EventsModel.findCategories()
 
     res.status(200).json({
-        favoritesCategories: [''],
+        favoriteCategories: [],
         categories: categories,
     })
 })

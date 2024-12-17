@@ -9,7 +9,6 @@ import { categoryStore } from '@/store'
 export default function Page() {
     const router = useRouter()
     const { category, setCategory } = categoryStore()
-
     const onClick = () => {
         router.back()
         setCategory('')
