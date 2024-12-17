@@ -80,6 +80,12 @@ export class Events extends TimeStamps {
     ): Promise<mongoose.PaginateResult<mongoose.PaginateDocument<typeof Events, object, object, mongoose.PaginateOptions>>> {
         return await this.paginate({ category: category }, options)
     }
+
+    // TODO: caching
+    public static async findCategories(this: ReturnModelType<typeof Events>) {
+        // TODO: exclude user favorite categories
+        return await this.distinct('category', {}).exec()
+    }
 }
 
 export const EventsModel = getModelForClass(Events)

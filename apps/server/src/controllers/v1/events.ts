@@ -5,6 +5,16 @@ import { EventsModel } from '@/models/event'
 
 const router: Router = asyncify(express.Router())
 
+router.get('/categories', async (req: Request, res: Response) => {
+    // TODO: find user favorite categories
+    const categories = await EventsModel.findCategories()
+
+    res.status(200).json({
+        favoritesCategories: [''],
+        categories: categories,
+    })
+})
+
 router.post('/', async (req: Request, res: Response) => {
     await EventsModel.create({
         name: req.body.name,
