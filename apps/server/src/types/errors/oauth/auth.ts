@@ -1,0 +1,17 @@
+import { APIError } from '@/types/errors'
+
+export class UnknownUserError extends APIError {
+    constructor(cause: Error | string = null) {
+        super(404, 4100, 'unknown user error', cause)
+        Object.setPrototypeOf(this, UnknownUserError.prototype)
+        Error.captureStackTrace(this, UnknownUserError)
+    }
+}
+
+export class UnknownProviderError extends APIError {
+    constructor(cause: Error | string = null) {
+        super(404, 4100, 'unknown oauth provider error', cause)
+        Object.setPrototypeOf(this, UnknownProviderError.prototype)
+        Error.captureStackTrace(this, UnknownProviderError)
+    }
+}

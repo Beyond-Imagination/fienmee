@@ -33,10 +33,10 @@ export default class Server {
     }
 
     setController() {
-        this.app.use('/v1/enquiries', controllers.v1.enquiries)
+        this.app.use('/v1/users', controllers.v1.users)
         this.app.use('/v1/events', controllers.v1.events)
         this.app.use('/v1/schedules', controllers.v1.schedules)
-        this.app.use('/v1/user', controllers.v1.user)
+        this.app.use('/v1/enquiries', controllers.v1.enquiries)
     }
 
     setPostMiddleware() {
