@@ -4,7 +4,7 @@ import { JWT_SECRET } from '@/config'
 import { MissingTokenError, UnauthorizedTokenError } from '@/types/errors/jwt/auth'
 
 export const verifyToken = (req: Request, res: Response, next: NextFunction) => {
-    const token = req.headers['authorization']?.split(' ')[1]
+    const token = req.headers['authorization']?.split(' ')?.[1]
     if (!token) {
         throw new MissingTokenError(new Error('check the "authorization" header field'))
     }
