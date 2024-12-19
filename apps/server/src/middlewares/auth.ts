@@ -1,19 +1,25 @@
 import jwt from 'jsonwebtoken'
 import { NextFunction, Request, Response } from 'express'
 import { JWT_SECRET } from '@/config'
-import { MissingTokenError, UnauthorizedTokenError } from '@/types/errors/jwt/auth'
+import { UnauthorizedTokenError } from '@/types/errors/jwt/auth'
+import { UserModel } from '@/models/user'
+import { UnknownUserError } from '@/types/errors'
 
-export const verifyToken = (req: Request, res: Response, next: NextFunction) => {
+export const verifyToken = async (req: Request, res: Response, next: NextFunction) => {
     const token = req.headers['authorization']?.split(' ')?.[1]
     if (!token) {
-        throw new MissingTokenError(new Error('check the "authorization" header field'))
+        next(new UnauthorizedTokenError('fill the "authorization" header field'))
     }
 
-    jwt.verify(token, JWT_SECRET, { issuer: 'FIENMEE' }, (err, decoded) => {
-        if (err) {
-            throw new UnauthorizedTokenError(err)
+    try {
+        const decoded = jwt.verify(token, JWT_SECRET, { issuer: 'FIENMEE' })
+        const user = await UserModel.findOne({ _id: decoded.userId }).exec()
+        if (!user) {
+            throw new UnknownUserError()
         }
-        req.user = decoded.user
+        req.user = user
         next()
-    })
+    } catch (e) {
+        next(new UnauthorizedTokenError(e))
+    }
 }

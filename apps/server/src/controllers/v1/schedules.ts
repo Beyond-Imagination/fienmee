@@ -10,7 +10,7 @@ router.post('/', middlewares.schedules.addScheduleMiddleware, async (req: Reques
     const schedule = await ScheduleModel.create({
         name: name,
         eventId: eventId,
-        authorId: req.user._id.toString()
+        authorId: req.user._id.toString(),
         startDate: startDate,
         endDate: endDate,
         address: address,
