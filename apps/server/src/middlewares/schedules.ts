@@ -28,7 +28,7 @@ const verifyEventId = async (req: Request, res: Response, next: NextFunction) =>
 const verifyAuthorId = async (req: Request, res: Response, next: NextFunction) => {
     const authorId = req.user?._id
     if (!authorId) {
-        throw new UnknownUserError(new Error(`req.user is not initialized`))
+        throw new UnknownUserError('req.user is not initialized')
     }
     const target = await UserModel.findOne({ _id: authorId }).exec()
     if (!target) {
