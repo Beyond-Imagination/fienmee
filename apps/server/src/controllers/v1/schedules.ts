@@ -34,7 +34,7 @@ router.get('/', async (req: Request, res: Response) => {
         to: new Date(req.query.to as string) || new Date(),
     }
 
-    const userId = req.user?._id as string
+    const userId = req.user?._id.toString()
     const schedules = await ScheduleModel.findByUserId(userId, filterOption, options)
 
     res.status(200).json(schedules)
