@@ -12,7 +12,7 @@ export const verifyToken = async (req: Request, res: Response, next: NextFunctio
     }
 
     try {
-        const decoded = jwt.verify(token, JWT_SECRET, { issuer: 'FIENMEE' })
+        const decoded = jwt.verify(token, JWT_SECRET)
         const user = await UserModel.findOne({ _id: decoded.userId }).exec()
         if (!user) {
             throw new UnknownUserError()
