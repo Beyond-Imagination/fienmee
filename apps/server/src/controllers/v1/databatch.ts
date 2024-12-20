@@ -55,10 +55,10 @@ async function saveSeoulData(data: Array<ICulturalEvent>, today: string): Promis
 }
 
 export async function fetchAndSaveSeoulData(): Promise<void> {
-    const temp = await getSeoulData(1, 1)
-    const dataCount = temp.culturalEventInfo.list_total_count
+    let index = 0
+    let dataCount = 1000
     const today = new Date()
-    for (let index = 0; index < Math.ceil(dataCount / BATCH_SIZE); index++) {
+    while (index < Math.ceil(dataCount / BATCH_SIZE)) {
         const st = index * BATCH_SIZE + 1
         const end = Math.min((index + 1) * BATCH_SIZE, dataCount)
         const result = await getSeoulData(st, end)
@@ -66,5 +66,9 @@ export async function fetchAndSaveSeoulData(): Promise<void> {
             return
         }
         await new Promise(resolve => setTimeout(resolve, 500)) // 각 요청마다 500ms 간격 추가 (동시 요청 불가능)
+        if (index === 0) {
+            dataCount = result.culturalEventInfo.list_total_count
+        }
+        index++
     }
 }
