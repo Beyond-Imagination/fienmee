@@ -5,6 +5,40 @@ import { EventsModel } from '@/models/event'
 
 const router: Router = asyncify(express.Router())
 
+router.get('/categories', async (req: Request, res: Response) => {
+    // TODO: find user favorite categories
+    // TODO: remove hard coding after discussion
+    const categories = [
+        '경관',
+        '교육',
+        '국악',
+        '기타',
+        '독주',
+        '독창회',
+        '무용',
+        '문화',
+        '뮤지컬',
+        '미술',
+        '시민화합',
+        '역사',
+        '연극',
+        '영화',
+        '예술',
+        '오페라',
+        '자연',
+        '전시',
+        '전통',
+        '체험',
+        '축제',
+        '콘서트',
+        '클래식',
+    ]
+    res.status(200).json({
+        favoritesCategories: [''],
+        categories: categories,
+    })
+})
+
 router.post('/', async (req: Request, res: Response) => {
     await EventsModel.create({
         name: req.body.name,
