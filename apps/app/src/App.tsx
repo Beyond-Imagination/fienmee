@@ -25,7 +25,6 @@ function App(): React.JSX.Element {
     return (
         <NavigationContainer>
             <Stack.Navigator
-                id={'root'}
                 screenOptions={{
                     contentStyle: backgroundStyle,
                 }}
