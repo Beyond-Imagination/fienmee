@@ -1,4 +1,4 @@
-import { getSeoulData } from '@/utils/seoul.data'
+import { getSeoulData } from '@/services/seoul/seoul.data'
 import { logger } from '@/utils/logger'
 import { ICulturalEvent } from '@/types/seoul.data'
 import { SeoulDataUpdateError } from '@/types/errors'

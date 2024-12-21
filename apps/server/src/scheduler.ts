@@ -1,6 +1,6 @@
 import schedule from 'node-schedule'
 
-import { fetchAndSaveSeoulData } from '@/controllers/v1/databatch'
+import { fetchAndSaveSeoulData } from '@/services/seoul/databatch'
 import { logger } from '@/utils/logger'
 
 export default class DateBatchScheduler {
