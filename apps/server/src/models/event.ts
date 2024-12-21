@@ -39,10 +39,10 @@ export class Events extends TimeStamps {
     public likes: mongoose.Types.ObjectId[]
 
     @prop()
-    public createdAt: Date
+    public registeredAt: Date
 
     @prop()
-    public cost: number
+    public cost: string
 
     @prop()
     public comments: mongoose.Types.ObjectId[]
