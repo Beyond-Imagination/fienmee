@@ -30,7 +30,7 @@ export function EventList({ category }: { category: string }) {
         return (
             <div className="h-full w-full">
                 <div className="h-full w-full px-2 mt-4">
-                    {Array.from({ length: 5 }, (_, index) => (
+                    {Array.from({ length: 10 }, (_, index) => (
                         <Event event={undefined} key={index} />
                     ))}
                 </div>
@@ -65,7 +65,7 @@ export function EventList({ category }: { category: string }) {
 const useEventsByCategoryQuery = ({ category, startPage }: useEventsByCategoryQueryProps) => {
     const { data, isLoading, isError, fetchNextPage, isFetchingNextPage } = useInfiniteQuery<IGetEventsByCategoryResponse>({
         queryKey: ['events', category],
-        queryFn: ({ pageParam }) => getEventsByCategory(category, pageParam as number, 5),
+        queryFn: ({ pageParam }) => getEventsByCategory(category, pageParam as number, 10),
         initialPageParam: startPage,
         getNextPageParam: lastPage => {
             if (lastPage.page.hasNextPage) {
