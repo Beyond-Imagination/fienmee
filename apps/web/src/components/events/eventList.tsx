@@ -24,7 +24,7 @@ export function EventList({ category }: { category: string }) {
             console.log('무한 스크롤 요청중')
             fetchNextPage()
         }
-    }, [inView])
+    }, [inView, fetchNextPage])
 
     if (isLoading) {
         return (
