@@ -6,6 +6,14 @@ import { categoryStore } from '@/store'
 export default function Page() {
     const { category } = categoryStore()
 
+    if (!category) {
+        return (
+            <div className="h-screen flex items-center justify-center px-4">
+                <div className="text-lg text-center">잘못된 접근입니다.</div>
+            </div>
+        )
+    }
+
     return (
         <div className="h-min-screen items-center justify-items-center min-h-screen bg-inherit overflow-hidden">
             {/*TODO: Remove temporary header*/}
