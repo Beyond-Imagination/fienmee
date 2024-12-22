@@ -1,10 +1,24 @@
 'use client'
 
-import { CategoryItem } from '@/components/events/categoryItem'
 import { useSuspenseQuery } from '@tanstack/react-query'
+
+import { CategoryItem } from '@/components/events/categoryItem'
 import { getEventsCategories } from '@/api/event'
+import { useEffect, useState } from 'react'
 
 export default function Page() {
+    const [isClient, setIsClient] = useState(false)
+
+    useEffect(() => {
+        setIsClient(true)
+    }, [])
+
+    if (isClient) {
+        return <PageComponent />
+    }
+}
+
+function PageComponent() {
     const { data } = useSuspenseQuery({
         queryKey: ['categories'],
         queryFn: () => getEventsCategories(),
