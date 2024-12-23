@@ -2,10 +2,9 @@ import asyncify from 'express-asyncify'
 import express, { Request, Response, Router } from 'express'
 import { ScheduleModel } from '@/models/schedule'
 import middlewares from '@/middlewares'
-import { verifyToken } from '@/middlewares/auth'
 
 const router: Router = asyncify(express.Router())
-router.use(verifyToken)
+router.use(middlewares.auth)
 
 router.post('/', middlewares.schedules.addScheduleMiddleware, async (req: Request, res: Response) => {
     const { name, eventId, startDate, endDate, address, location, description, images } = req.body
