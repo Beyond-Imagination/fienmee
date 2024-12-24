@@ -5,7 +5,6 @@ import { categoryStore } from '@/store'
 
 export default function Page() {
     const { category } = categoryStore()
-
     if (!category) {
         return (
             <div className="h-screen flex items-center justify-center px-4">
@@ -16,7 +15,6 @@ export default function Page() {
 
     return (
         <div className="h-min-screen items-center justify-items-center min-h-screen bg-inherit overflow-hidden">
-            {/*TODO: Remove temporary header*/}
             <div className="w-full h-full bg-inherit mt-24 overflow-y-auto">
                 <EventList category={category} />
             </div>

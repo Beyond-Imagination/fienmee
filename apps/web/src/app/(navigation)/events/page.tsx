@@ -1,9 +1,29 @@
 'use client'
 
+import { useSuspenseQuery } from '@tanstack/react-query'
+
 import { CategoryItem } from '@/components/events/categoryItem'
+import { getEventsCategories } from '@/api/event'
+import { useEffect, useState } from 'react'
 
 export default function Page() {
-    // TODO: add get category names
+    const [isClient, setIsClient] = useState(false)
+
+    useEffect(() => {
+        setIsClient(true)
+    }, [])
+
+    if (isClient) {
+        return <PageComponent />
+    }
+}
+
+function PageComponent() {
+    const { data } = useSuspenseQuery({
+        queryKey: ['categories'],
+        queryFn: () => getEventsCategories(),
+        refetchOnWindowFocus: false,
+    })
     return (
         <div className="grid justify-items-center px-8 mt-6">
             <div className="grid border-b gap-4 w-full py-2 border-gray-300">
@@ -11,17 +31,21 @@ export default function Page() {
                 <CategoryItem category={'인기 행사'} isFavorites={false} />
             </div>
             {/*User Favorites Categories*/}
-            <div className="grid border-b gap-4 w-full py-2 border-gray-300">
-                <CategoryItem category={'축제'} isFavorites={true} />
-                <CategoryItem category={'축제'} isFavorites={true} />
-                <CategoryItem category={'축제'} isFavorites={true} />
-            </div>
+            {data.favoriteCategories.length > 0 && (
+                <div className="grid border-b gap-4 w-full py-2 border-gray-300">
+                    {data.favoriteCategories.map((category, index) => (
+                        <CategoryItem key={`favoriteCategory${index}`} category={category} isFavorites={true} />
+                    ))}
+                </div>
+            )}
             {/*Other Categories*/}
-            <div className="grid border-b gap-4 w-full py-2 border-gray-300">
-                <CategoryItem category={'축제'} isFavorites={false} />
-                <CategoryItem category={'축제'} isFavorites={false} />
-                <CategoryItem category={'축제'} isFavorites={false} />
-            </div>
+            {data.categories.length > 0 && (
+                <div className="grid border-b gap-4 w-full py-2 border-gray-300">
+                    {data.categories.map((category, index) => (
+                        <CategoryItem key={`category${index}`} category={category} isFavorites={false} />
+                    ))}
+                </div>
+            )}
         </div>
     )
 }

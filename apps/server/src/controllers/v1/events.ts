@@ -34,7 +34,7 @@ router.get('/categories', async (req: Request, res: Response) => {
         '클래식',
     ]
     res.status(200).json({
-        favoritesCategories: [''],
+        favoriteCategories: [],
         categories: categories,
     })
 })

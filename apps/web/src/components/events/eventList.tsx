@@ -24,13 +24,13 @@ export function EventList({ category }: { category: string }) {
             console.log('무한 스크롤 요청중')
             fetchNextPage()
         }
-    }, [inView])
+    }, [inView, fetchNextPage])
 
     if (isLoading) {
         return (
             <div className="h-full w-full">
                 <div className="h-full w-full px-2 mt-4">
-                    {Array.from({ length: 6 }, (_, index) => (
+                    {Array.from({ length: 10 }, (_, index) => (
                         <Event event={undefined} key={index} />
                     ))}
                 </div>
@@ -65,7 +65,7 @@ export function EventList({ category }: { category: string }) {
 const useEventsByCategoryQuery = ({ category, startPage }: useEventsByCategoryQueryProps) => {
     const { data, isLoading, isError, fetchNextPage, isFetchingNextPage } = useInfiniteQuery<IGetEventsByCategoryResponse>({
         queryKey: ['events', category],
-        queryFn: ({ pageParam }) => getEventsByCategory(category, pageParam as number, 6),
+        queryFn: ({ pageParam }) => getEventsByCategory(category, pageParam as number, 10),
         initialPageParam: startPage,
         getNextPageParam: lastPage => {
             if (lastPage.page.hasNextPage) {
