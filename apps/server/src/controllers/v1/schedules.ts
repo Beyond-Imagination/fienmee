@@ -4,13 +4,14 @@ import { ScheduleModel } from '@/models/schedule'
 import middlewares from '@/middlewares'
 
 const router: Router = asyncify(express.Router())
+router.use(middlewares.auth.verifyToken)
 
 router.post('/', middlewares.schedules.addScheduleMiddleware, async (req: Request, res: Response) => {
-    const { name, eventId, authorId, startDate, endDate, address, location, description, images } = req.body
+    const { name, eventId, startDate, endDate, address, location, description, images } = req.body
     const schedule = await ScheduleModel.create({
         name: name,
         eventId: eventId,
-        authorId: authorId,
+        authorId: req.user._id.toString(),
         startDate: startDate,
         endDate: endDate,
         address: address,
@@ -23,7 +24,6 @@ router.post('/', middlewares.schedules.addScheduleMiddleware, async (req: Reques
     })
 })
 
-// todo: jwt 에서 user의 identifier 추출 후 미들웨어로 포함
 router.get('/', async (req: Request, res: Response) => {
     const options = {
         page: Number(req.query.page) || 0,
@@ -35,7 +35,7 @@ router.get('/', async (req: Request, res: Response) => {
         to: new Date(req.query.to as string) || new Date(),
     }
 
-    const userId = req.body.userId
+    const userId = req.user?._id.toString()
     const schedules = await ScheduleModel.findByUserId(userId, filterOption, options)
 
     res.status(200).json(schedules)
