@@ -1,37 +1,57 @@
-import Link from 'next/link'
+'use client'
+
+import React, { useState } from 'react'
+import { usePathname } from 'next/navigation'
+
+import {
+    AddEventButtonIcon,
+    AddScheduleButtonIcon,
+    CalenderNavigationIcon,
+    CategoryNavigationIcon,
+    HomeNavigationIcon,
+    MyInfoNavigationIcon,
+    NavigationPlusIcon,
+} from '@/components/icon'
+import { NavigationItem } from '@/components/navigation/navigationItem'
 
 export function Navigation() {
-    // TODO: css 정리 (버튼, 글자 크기)
-    // TODO: svg 추가
+    const pathname = usePathname()
+    const [isVisible, setIsVisible] = useState(false)
+
     return (
-        <div className="fixed bottom-0 left-0 z-50 w-full h-16 bg-white border-t border-gray-200 dark:bg-gray-700 dark:border-gray-600">
-            <div className="grid h-full max-w-lg grid-cols-4 mx-auto font-medium">
-                <Link href={'/'} className="inline-flex flex-col items-center justify-center px-5 hover:bg-gray-50 dark:hover:bg-gray-800 group">
-                    <span className="text-sm text-gray-500 dark:text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-500">홈</span>
-                </Link>
-                <Link
-                    href={'/schedule'}
-                    className="inline-flex flex-col items-center justify-center px-5 hover:bg-gray-50 dark:hover:bg-gray-800 group"
-                >
-                    <span className="text-sm text-gray-500 dark:text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-500">캘린더</span>
-                </Link>
-                <Link
-                    href={'/events'}
-                    className="inline-flex flex-col items-center justify-center px-5 hover:bg-gray-50 dark:hover:bg-gray-800 group"
-                >
-                    <span className="text-sm text-gray-500 dark:text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-500">
-                        카테고리
-                    </span>
-                </Link>
-                <Link
-                    type="button"
-                    href={'/setting'}
-                    className="inline-flex flex-col items-center justify-center px-5 hover:bg-gray-50 dark:hover:bg-gray-800 group"
-                >
-                    <span className="text-sm text-gray-500 dark:text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-500">
-                        마이페이지
-                    </span>
-                </Link>
+        <div className="fixed flex flex-col items-center justify-center bottom-0 left-0 z-50 w-full">
+            <div
+                className={`fixed grid grid-cols-2 w-48 h-48 z-30 bg-white rounded-full shadow-[0_-1px_4px_rgba(0,0,0,0.25)] transition-all duration-700 pb-16 ${isVisible ? 'opacity-100 -translate-y-16' : 'opacity-0 translate-y-10'}`}
+            >
+                <div className="absolute top-5 h-1/3 left-1/2 w-[1px] bg-gray-300" />
+                <NavigationItem uri={'/events/register'} text={'행사 등록'} isClicked={false}>
+                    <AddEventButtonIcon width={32} height={32} />
+                </NavigationItem>
+                <NavigationItem uri={'/events/register'} text={'내 일정'} isClicked={false}>
+                    <AddScheduleButtonIcon width={32} height={32} />
+                </NavigationItem>
+            </div>
+            <div className="grid h-32 max-w-lg grid-cols-5 mx-auto font-medium bg-white shadow-[0_-1px_4px_rgba(0,0,0,0.25)] z-40">
+                <NavigationItem uri={'/'} text={'홈'} isClicked={pathname === '/'}>
+                    <HomeNavigationIcon isClicked={pathname === '/'} width={48} height={48} />
+                </NavigationItem>
+                <NavigationItem uri={'/schedule'} text={'캘린더'} isClicked={pathname === '/schedule'}>
+                    <CalenderNavigationIcon isClicked={pathname === '/schedule'} width={48} height={48} />
+                </NavigationItem>
+                <div className="inline-flex flex-col items-center justify-center p-2">
+                    <button
+                        className="w-20 h-20 inline-flex flex-col items-center justify-center bg-transparent shadow-[0_4px_4px_rgba(0,0,0,0.25)] rounded-full"
+                        onClick={() => setIsVisible(!isVisible)}
+                    >
+                        <NavigationPlusIcon width={22} height={22} />
+                    </button>
+                </div>
+                <NavigationItem uri={'/events'} text={'카테고리'} isClicked={pathname === '/events'}>
+                    <CategoryNavigationIcon isClicked={pathname === '/events'} width={48} height={48} />
+                </NavigationItem>
+                <NavigationItem uri={'/setting'} text={'마이페이지'} isClicked={pathname === '/setting'}>
+                    <MyInfoNavigationIcon isClicked={pathname === '/setting'} width={48} height={48} />
+                </NavigationItem>
             </div>
         </div>
     )
