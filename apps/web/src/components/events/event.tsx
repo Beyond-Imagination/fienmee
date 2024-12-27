@@ -34,7 +34,7 @@ export default function Event({ event }: Props) {
                 <div className="text-lg text-gray-600">{`${formatDate(event.startDate)}~${formatDate(event.endDate)}`}</div>
                 <div className="text-lg text-gray-600">{event.address}</div>
             </div>
-            <div className="flex justify-center items-center w-28 h-28 bg-[#D9D9D9] overflow-hidden me-2">
+            <div className="flex justify-center items-center w-28 bg-[#D9D9D9] overflow-hidden me-2">
                 {/*TODO: change image tag*/}
                 <img src={event.photo[0]} alt="대표 사진" className="w-full h-full object-cover" />
             </div>

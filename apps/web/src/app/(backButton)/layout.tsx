@@ -5,7 +5,7 @@ export default function BackButtonLayout({ children }: { children: React.ReactNo
     return (
         <div className="w-full h-full">
             <PageTitleHeader />
-            <div className="pt-24 w-full h-full">{children}</div>
+            <div className="w-full h-full">{children}</div>
         </div>
     )
 }

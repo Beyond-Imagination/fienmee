@@ -6,7 +6,7 @@ export default function NavigationLayout({ children }: { children: React.ReactNo
     return (
         <div className="w-full h-full">
             <LogoHeader />
-            <div className="pt-24 w-full h-full">{children}</div>
+            <div className="w-full h-full pb-36">{children}</div>
             <Navigation />
         </div>
     )
