@@ -1,11 +1,11 @@
 'use client'
 
 import { EventList } from '@/components/events/eventList'
-import { categoryStore } from '@/store'
+import { titleStore } from '@/store'
 
 export default function Page() {
-    const { category } = categoryStore()
-    if (!category) {
+    const { title } = titleStore()
+    if (!title) {
         return (
             <div className="h-screen flex items-center justify-center px-4">
                 <div className="text-lg text-center">잘못된 접근입니다.</div>
@@ -16,7 +16,7 @@ export default function Page() {
     return (
         <div className="h-min-screen items-center justify-items-center min-h-screen bg-inherit overflow-hidden">
             <div className="w-full h-full bg-inherit mt-24 overflow-y-auto">
-                <EventList category={category} />
+                <EventList category={title} />
             </div>
         </div>
     )

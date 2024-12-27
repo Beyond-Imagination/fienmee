@@ -4,9 +4,9 @@ import { Navigation } from '@/components/navigation'
 
 export default function NavigationLayout({ children }: { children: React.ReactNode }) {
     return (
-        <div>
+        <div className="w-full h-full">
             <LogoHeader />
-            {children}
+            <div className="pt-24 w-full h-full">{children}</div>
             <Navigation />
         </div>
     )
