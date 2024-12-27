@@ -14,8 +14,8 @@ export default function Page() {
     }
 
     return (
-        <div className="h-min-screen items-center justify-items-center min-h-screen bg-inherit overflow-hidden">
-            <div className="w-full h-full bg-inherit mt-24 overflow-y-auto">
+        <div className="h-min-screen items-center justify-items-center min-h-screen bg-inherit">
+            <div className="w-full h-full bg-inherit">
                 <EventList category={title} />
             </div>
         </div>
