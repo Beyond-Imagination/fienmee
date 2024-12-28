@@ -2,16 +2,20 @@
 
 import { useRouter } from 'next/navigation'
 
-import { titleStore } from '@/store'
+import { categoryStore, titleStore } from '@/store'
 import { BackButtonIcon } from '@/components/icon'
 
 export function PageTitleHeader() {
     const router = useRouter()
+    const { category, setCategory } = categoryStore()
     const { title, setTitle } = titleStore()
 
     const onClick = () => {
         router.back()
         setTitle('')
+        if (category) {
+            setCategory('')
+        }
     }
 
     return (
