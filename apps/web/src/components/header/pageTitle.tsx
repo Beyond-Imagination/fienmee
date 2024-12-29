@@ -2,20 +2,16 @@
 
 import { useRouter } from 'next/navigation'
 
-import { categoryStore, titleStore } from '@/store'
+import { categoryStore } from '@/store'
 import { BackButtonIcon } from '@/components/icon'
 
 export function PageTitleHeader() {
     const router = useRouter()
     const { category, setCategory } = categoryStore()
-    const { title, setTitle } = titleStore()
 
     const onClick = () => {
         router.back()
-        setTitle('')
-        if (category) {
-            setCategory('')
-        }
+        setCategory('')
     }
 
     return (
@@ -23,7 +19,7 @@ export function PageTitleHeader() {
             <button className="absolute z-1 ps-4" onClick={onClick}>
                 <BackButtonIcon width={30} height={30} />
             </button>
-            <span className="text-3xl text-center font-semibold w-full">{title}</span>
+            <span className="text-3xl text-center font-semibold w-full">{category}</span>
         </div>
     )
 }

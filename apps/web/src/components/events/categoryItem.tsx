@@ -3,7 +3,7 @@
 import Link from 'next/link'
 
 import { BaseCategoryIcon, HottestCategoryIcon, WrittenCategoryIcon } from '@/components/icon'
-import { categoryStore, titleStore } from '@/store'
+import { categoryStore } from '@/store'
 
 interface Props {
     category: string
@@ -12,10 +12,8 @@ interface Props {
 
 export function CategoryItem({ category, isFavorites }: Props) {
     const { setCategory } = categoryStore()
-    const { setTitle } = titleStore()
     const onClick = () => {
         setCategory(category)
-        setTitle(category)
     }
     // TODO: change category names
     if (category === '내가 등록한 행사') {
