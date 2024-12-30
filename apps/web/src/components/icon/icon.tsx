@@ -70,3 +70,24 @@ export function BaseCategoryIcon({ width, height, isFavorites }: BaseCategoryPro
         </svg>
     )
 }
+
+export function NotificationIcon({ width, height }: IconProps) {
+    return (
+        <svg width={width} height={height} viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path
+                d="M21 9.66663C21 7.54489 20.1571 5.51006 18.6569 4.00977C17.1566 2.50948 15.1217 1.66663 13 1.66663C10.8783 1.66663 8.84344 2.50948 7.34315 4.00977C5.84286 5.51006 5 7.54489 5 9.66663C5 19 1 21.6666 1 21.6666H25C25 21.6666 21 19 21 9.66663Z"
+                stroke="#FF9575"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+            />
+            <path
+                d="M15.5384 23C15.2674 23.4055 14.8784 23.7422 14.4104 23.9762C13.9424 24.2102 13.4118 24.3333 12.8717 24.3333C12.3317 24.3333 11.8011 24.2102 11.3331 23.9762C10.8651 23.7422 10.4761 23.4055 10.2051 23"
+                stroke="#FF9575"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+            />
+        </svg>
+    )
+}

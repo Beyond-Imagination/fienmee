@@ -13,9 +13,11 @@ import {
     NavigationPlusIcon,
 } from '@/components/icon'
 import { NavigationItem } from '@/components/navigation/navigationItem'
+import { categoryStore } from '@/store'
 
 export function Navigation() {
     const pathname = usePathname()
+    const { setCategory } = categoryStore()
     const [isVisible, setIsVisible] = useState(false)
 
     return (
@@ -24,10 +26,10 @@ export function Navigation() {
                 className={`fixed grid grid-cols-2 w-48 h-48 z-30 bg-white rounded-full shadow-[0_-1px_4px_rgba(0,0,0,0.25)] transition-all duration-700 pb-16 ${isVisible ? 'opacity-100 -translate-y-16' : 'opacity-0 translate-y-10'}`}
             >
                 <div className="absolute top-5 h-1/3 left-1/2 w-[1px] bg-gray-300" />
-                <NavigationItem uri={'/events/register'} text={'행사 등록'} isClicked={false}>
+                <NavigationItem uri={'/events/register'} text={'행사 등록'} isClicked={false} onClick={() => setCategory('행사 등록')}>
                     <AddEventButtonIcon width={32} height={32} />
                 </NavigationItem>
-                <NavigationItem uri={'/events/register'} text={'내 일정'} isClicked={false}>
+                <NavigationItem uri={'/schedule/register'} text={'일정 등록'} isClicked={false} onClick={() => setCategory('일정 등록')}>
                     <AddScheduleButtonIcon width={32} height={32} />
                 </NavigationItem>
             </div>

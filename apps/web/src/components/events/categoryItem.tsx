@@ -12,7 +12,9 @@ interface Props {
 
 export function CategoryItem({ category, isFavorites }: Props) {
     const { setCategory } = categoryStore()
-    const onClick = () => setCategory(category)
+    const onClick = () => {
+        setCategory(category)
+    }
     // TODO: change category names
     if (category === '내가 등록한 행사') {
         return (
