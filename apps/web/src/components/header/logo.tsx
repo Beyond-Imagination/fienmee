@@ -2,7 +2,7 @@ import { NotificationIcon, TextLogo } from '@/components/icon'
 
 export function LogoHeader() {
     return (
-        <div className="sticky top-0 left-0 flex flex-row items-center justify-between w-full pt-10 p-2 z-10 bg-white">
+        <div className="flex flex-row w-full items-center justify-between bg-white pt-10 p-2">
             <div className="ps-4">
                 <TextLogo width={150} height={48} />
             </div>

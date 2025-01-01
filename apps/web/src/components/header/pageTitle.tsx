@@ -15,7 +15,7 @@ export function PageTitleHeader() {
     }
 
     return (
-        <div className="sticky top-0 left-0 flex flex-row items-center w-full pt-10 p-2  z-10 bg-white">
+        <div className="flex flex-row items-center w-full bg-white pt-10 p-2">
             <button className="absolute z-1 ps-4" onClick={onClick}>
                 <BackButtonIcon width={30} height={30} />
             </button>
