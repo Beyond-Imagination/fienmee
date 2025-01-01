@@ -3,8 +3,7 @@ import mongoosePaginate from 'mongoose-paginate-v2'
 import mongoose from 'mongoose'
 import { TimeStamps } from '@typegoose/typegoose/lib/defaultClasses'
 
-import { User } from '@/models/user'
-import { Events } from '@/models/event'
+import { User, Events } from '@/models'
 
 @plugin(mongoosePaginate)
 export class Schedule extends TimeStamps {

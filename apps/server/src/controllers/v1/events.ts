@@ -1,7 +1,7 @@
 import express, { Request, Response, Router } from 'express'
 import asyncify from 'express-asyncify'
 
-import { EventsModel } from '@/models/event'
+import { EventsModel } from '@/models'
 
 const router: Router = asyncify(express.Router())
 

@@ -1,8 +1,6 @@
 import { NextFunction, Request, Response } from 'express'
-import { ScheduleModel } from '@/models/schedule'
+import { ScheduleModel, EventsModel, UserModel } from '@/models'
 import { InvalidRequestFormat, UnauthorizedSchedule } from '@/types/errors/schedule'
-import { EventsModel } from '@/models/event'
-import { UserModel } from '@/models/user'
 import { UnknownUserError } from '@/types/errors'
 
 export const verifyAuthorMiddleware = async (req: Request, res: Response, next: NextFunction) => {
