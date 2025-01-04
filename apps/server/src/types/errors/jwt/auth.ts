@@ -7,3 +7,11 @@ export class UnauthorizedTokenError extends APIError {
         Error.captureStackTrace(this, UnauthorizedTokenError)
     }
 }
+
+export class InvalidRequestTokenError extends APIError {
+    constructor(cause: Error | string = null) {
+        super(400, 4000, 'invalid request token', cause)
+        Object.setPrototypeOf(this, InvalidRequestTokenError.prototype)
+        Error.captureStackTrace(this, InvalidRequestTokenError)
+    }
+}
