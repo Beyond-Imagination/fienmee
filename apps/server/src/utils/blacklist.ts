@@ -6,7 +6,7 @@ import { InvalidRequestTokenError } from '@/types/errors/jwt/auth'
 const tokenBlackList = new LRUCache({ ttl: JWT_EXPIRES_IN_MS })
 
 export function addToBlackList(tokenInfo: ITokenInfo) {
-    if (!tokenInfo.accessToken && !tokenInfo.refreshToken) {
+    if (!tokenInfo || (!tokenInfo.accessToken && !tokenInfo.refreshToken)) {
         throw new InvalidRequestTokenError('At least one of the refresh token and access token must be provided.')
     }
 
