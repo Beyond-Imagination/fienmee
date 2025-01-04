@@ -1,7 +1,7 @@
 import '@/config'
 import Server from '@/server'
 import { logger } from '@/utils/logger'
-import * as db from '@/models'
+import * as db from '@/models/connector'
 import Scheduler from '@/scheduler'
 ;(async () => {
     await db.connect()
