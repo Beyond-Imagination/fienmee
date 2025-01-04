@@ -31,8 +31,8 @@ describe('token blacklist은', () => {
 
     describe('잘못된 입력 형식에 대해서', () => {
         it('error를 throw한다', () => {
-            expect(addToBlackList(case4)).toThrowError(InvalidRequestTokenError)
-            expect(addToBlackList(case5)).toThrowError(InvalidRequestTokenError)
+            expect(() => addToBlackList(case4)).toThrowError(InvalidRequestTokenError)
+            expect(() => addToBlackList(case5)).toThrowError(InvalidRequestTokenError)
         })
     })
 })
