@@ -1,6 +1,6 @@
 import asyncify from 'express-asyncify'
 import express, { Request, Response, Router } from 'express'
-import { ScheduleModel } from '@/models/schedule'
+import { ScheduleModel } from '@/models'
 import middlewares from '@/middlewares'
 
 const router: Router = asyncify(express.Router())

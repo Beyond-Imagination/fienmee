@@ -2,7 +2,7 @@ import jwt from 'jsonwebtoken'
 import { NextFunction, Request, Response } from 'express'
 import { JWT_SECRET } from '@/config'
 import { UnauthorizedTokenError } from '@/types/errors/jwt/auth'
-import { UserModel } from '@/models/user'
+import { UserModel } from '@/models'
 import { UnknownUserError } from '@/types/errors'
 
 export const verifyToken = async (req: Request, res: Response, next: NextFunction) => {

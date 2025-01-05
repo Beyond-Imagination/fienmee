@@ -2,7 +2,7 @@ import mongoose from 'mongoose'
 import { getModelForClass, prop } from '@typegoose/typegoose'
 import { TimeStamps } from '@typegoose/typegoose/lib/defaultClasses'
 
-import { User } from '@/models/user'
+import { User } from '@/models'
 
 export class Enquiry extends TimeStamps {
     public _id: mongoose.Types.ObjectId

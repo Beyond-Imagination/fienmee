@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken'
 
-import { User } from '@/models/user'
+import { User } from '@/models'
 import { JWT_SECRET } from '@/config'
 
 export function issueJwt(user: User): string {
