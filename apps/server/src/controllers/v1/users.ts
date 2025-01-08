@@ -24,9 +24,9 @@ router.post('/login', async (req: Request, res: Response) => {
     })
 })
 
-router.post('/logout', async (req: Request, res: Response) => {
-    const { accessToken, refreshToken } = req.body
-    await expireJwt({ accessToken, refreshToken })
+router.delete('/logout', async (req: Request, res: Response) => {
+    const jwt = req.headers['authorization']?.split(' ')?.[1]
+    await expireJwt(jwt)
     res.sendStatus(204)
 })
 

@@ -12,7 +12,7 @@ export const verifyToken = async (req: Request, res: Response, next: NextFunctio
         next(new UnauthorizedTokenError('fill the "authorization" header field'))
     }
 
-    if (isTokenInBlackList({ accessToken: token })) {
+    if (isTokenInBlackList(token)) {
         next(new UnauthorizedTokenError('Token of logged out user'))
     }
 

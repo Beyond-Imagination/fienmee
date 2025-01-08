@@ -10,17 +10,13 @@ export function issueJwt(user: User): string {
 }
 
 export function expireJwt(jwt: string) {
-    addToBlackList(jwt)
-}
-
-const tokenBlackList = new LRUCache({ ttl: JWT_EXPIRES_IN_MS })
-
-function addToBlackList(jwt: string) {
     if (!jwt) {
         throw new InvalidRequestTokenError('jwt must be provided')
     }
     tokenBlackList.set(`ACCESS_${jwt}`, new Date()) // 로그아웃 시점을 기록
 }
+
+const tokenBlackList = new LRUCache({ ttl: JWT_EXPIRES_IN_MS })
 
 export function isTokenInBlackList(jwt: string): boolean {
     if (!jwt) {
