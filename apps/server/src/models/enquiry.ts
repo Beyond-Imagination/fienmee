@@ -1,10 +1,9 @@
 import mongoose from 'mongoose'
-import { getModelForClass, prop } from '@typegoose/typegoose'
-import { TimeStamps } from '@typegoose/typegoose/lib/defaultClasses'
+import { getModelForClass, prop, defaultClasses } from '@typegoose/typegoose'
 
 import { User } from '@/models'
 
-export class Enquiry extends TimeStamps {
+export class Enquiry extends defaultClasses.TimeStamps {
     public _id: mongoose.Types.ObjectId
 
     @prop({ required: true, ref: User })
