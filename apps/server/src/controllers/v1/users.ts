@@ -3,7 +3,7 @@ import express, { Request, Response, Router } from 'express'
 
 import { loginRequest, registerRequest } from '@/types/api'
 import { UnknownUserError } from '@/types/errors/oauth'
-import { User, UserModel } from '@/models/user'
+import { User, UserModel } from '@/models'
 import { issueJwt, getOAuthUser, expireJwt } from '@/services/oauth'
 
 const router: Router = asyncify(express.Router())

@@ -1,12 +1,11 @@
-import { getModelForClass, plugin, prop, ReturnModelType } from '@typegoose/typegoose'
+import { getModelForClass, plugin, prop, ReturnModelType, defaultClasses } from '@typegoose/typegoose'
 import mongoosePaginate from 'mongoose-paginate-v2'
 import mongoose from 'mongoose'
-import { TimeStamps } from '@typegoose/typegoose/lib/defaultClasses'
 
 import { User, Events } from '@/models'
 
 @plugin(mongoosePaginate)
-export class Schedule extends TimeStamps {
+export class Schedule extends defaultClasses.TimeStamps {
     static paginate: mongoose.PaginateModel<typeof Schedule>['paginate']
 
     public _id: mongoose.Types.ObjectId
