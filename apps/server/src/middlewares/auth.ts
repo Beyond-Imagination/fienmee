@@ -4,7 +4,7 @@ import { JWT_SECRET } from '@/config'
 import { UnauthorizedTokenError } from '@/types/errors/jwt/auth'
 import { UserModel } from '@/models'
 import { UnknownUserError } from '@/types/errors'
-import { isTokenInBlackList } from '@/utils/blacklist'
+import { isTokenInBlackList } from '@/services/oauth'
 
 export const verifyToken = async (req: Request, res: Response, next: NextFunction) => {
     const token = req.headers['authorization']?.split(' ')?.[1]
