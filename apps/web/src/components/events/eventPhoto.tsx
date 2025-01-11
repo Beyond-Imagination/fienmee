@@ -1,6 +1,5 @@
 import { Swiper, SwiperSlide } from 'swiper/react'
 import { Pagination } from 'swiper/modules'
-import Image from 'next/image'
 import 'swiper/css'
 import 'swiper/css/pagination'
 
@@ -15,7 +14,8 @@ export default function EventPhoto({ photo, name }: Props) {
             {photo.map((photoUrl, index) => (
                 <SwiperSlide key={index}>
                     <div className="w-full h-full">
-                        <Image src={photoUrl} alt={`${name} ${index + 1}`} className="w-full h-full object-contain" />
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img src={photoUrl} alt={`${name} ${index + 1}`} className="w-full h-full object-contain" />
                     </div>
                 </SwiperSlide>
             ))}
