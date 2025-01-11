@@ -54,7 +54,6 @@ export function EventList({ category }: { category: string }) {
     return (
         <div className="h-full w-full">
             <div className="h-full w-full px-2 mt-4">
-                {/*TODO: add navigation to event detail page*/}
                 {data && data.pages.map(events => events.events.map(event => <Event event={event} key={event._id} />))}
             </div>
             {isFetchingNextPage ? <Event event={undefined} /> : <div ref={ref} />}

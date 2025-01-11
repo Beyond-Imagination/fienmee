@@ -1,3 +1,9 @@
-export default function EventDetail() {
-    return <div className="grid items-center justify-items-center min-h-screen">Event Detail</div>
+'use client'
+
+import { eventStore } from '@/store/event'
+import EventDetail from '@/components/events/eventDetail'
+export default function Page() {
+    const { event } = eventStore()
+
+    return <EventDetail event={event} />
 }
