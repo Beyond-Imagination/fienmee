@@ -94,20 +94,13 @@ export function NotificationIcon({ width, height }: IconProps) {
 
 export function ShareIcon({ width, height }: IconProps) {
     return (
-        <svg
-            width={width}
-            height={height}
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth="1.5"
-            stroke="currentColor"
-            className="size-6"
-        >
+        <svg width={width} height={height} xmlns="http://www.w3.org/2000/svg" fill="none">
             <path
+                stroke="#1E1E1E"
                 strokeLinecap="round"
                 strokeLinejoin="round"
-                d="M9 8.25H7.5a2.25 2.25 0 0 0-2.25 2.25v9a2.25 2.25 0 0 0 2.25 2.25h9a2.25 2.25 0 0 0 2.25-2.25v-9a2.25 2.25 0 0 0-2.25-2.25H15m0-3-3-3m0 0-3 3m3-3V15"
+                strokeWidth="2"
+                d="M1.69 9.6v6.666a1.667 1.667 0 0 0 1.667 1.667h10a1.666 1.666 0 0 0 1.667-1.667V9.6m-3.333-5L8.357 1.266m0 0L5.024 4.6m3.333-3.333V12.1"
             />
         </svg>
     )
@@ -115,20 +108,13 @@ export function ShareIcon({ width, height }: IconProps) {
 
 export function CommentIcon({ width, height }: IconProps) {
     return (
-        <svg
-            width={width}
-            height={height}
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth="1.5"
-            stroke="currentColor"
-            className="size-6"
-        >
+        <svg width={width} height={height} xmlns="http://www.w3.org/2000/svg" fill="none">
             <path
+                stroke="#1E1E1E"
                 strokeLinecap="round"
                 strokeLinejoin="round"
-                d="M2.25 12.76c0 1.6 1.123 2.994 2.707 3.227 1.087.16 2.185.283 3.293.369V21l4.076-4.076a1.526 1.526 0 0 1 1.037-.443 48.282 48.282 0 0 0 5.68-.494c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0 0 12 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018Z"
+                strokeWidth="2"
+                d="M16.571 11.662a1.667 1.667 0 0 1-1.666 1.667h-10L1.57 16.662V3.33a1.667 1.667 0 0 1 1.667-1.667h11.667A1.667 1.667 0 0 1 16.57 3.33v8.333Z"
             />
         </svg>
     )
@@ -136,20 +122,13 @@ export function CommentIcon({ width, height }: IconProps) {
 
 export function LikeIcon({ width, height }: IconProps) {
     return (
-        <svg
-            width={width}
-            height={height}
-            xmlns="http://www.w3.org/2000/svg"
-            fill="#FF9575"
-            viewBox="0 0 24 24"
-            strokeWidth="1.5"
-            stroke="#FF9575"
-            className="size-6"
-        >
+        <svg width={width} height={height} xmlns="http://www.w3.org/2000/svg" fill="none">
             <path
+                fill="#E31D5C"
+                stroke="#E31D5C"
                 strokeLinecap="round"
                 strokeLinejoin="round"
-                d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z"
+                d="M17.367 2.004a4.583 4.583 0 0 0-6.484 0L10 2.887l-.883-.883a4.584 4.584 0 0 0-6.484 6.483L10 15.854l7.367-7.367a4.581 4.581 0 0 0 0-6.483Z"
             />
         </svg>
     )
@@ -157,20 +136,13 @@ export function LikeIcon({ width, height }: IconProps) {
 
 export function UnlikeIcon({ width, height }: IconProps) {
     return (
-        <svg
-            width={width}
-            height={height}
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth="1.5"
-            stroke="currentColor"
-            className="size-6"
-        >
+        <svg width={width} height={height} xmlns="http://www.w3.org/2000/svg" fill="none">
             <path
+                stroke="#1E1E1E"
                 strokeLinecap="round"
                 strokeLinejoin="round"
-                d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z"
+                strokeWidth="2"
+                d="M17.367 2.613a4.583 4.583 0 0 0-6.484 0L10 3.497l-.883-.884a4.584 4.584 0 1 0-6.484 6.484L10 16.463l7.367-7.366a4.584 4.584 0 0 0 0-6.484Z"
             />
         </svg>
     )
