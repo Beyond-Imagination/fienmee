@@ -32,17 +32,19 @@ export default function Event({ event }: Props) {
     const { setEvent } = eventStore()
 
     return (
-        <Link href={`/events/detail`} onClick={() => setEvent(event)} className="block hover:bg-gray-100 transition duration-300">
-            <div className="flex justify-between items-start gap-4 px-4 mb-12">
-                <div className="flex flex-col w-2/3 ps-2 pt-2 gap-2">
-                    <div className="text-xl font-semibold">{event.name}</div>
-                    <div className="text-lg text-gray-600">{`${formatDate(event.startDate)}~${formatDate(event.endDate)}`}</div>
-                    <div className="text-lg text-gray-600">{event.address}</div>
-                </div>
-                <div className="flex justify-center items-center w-28 bg-[#D9D9D9] overflow-hidden me-2">
-                    {/*TODO: change image tag*/}
-                    <img src={event.photo[0]} alt="대표 사진" className="w-full h-full object-cover" />
-                </div>
+        <Link
+            href={`/events/detail`}
+            onClick={() => setEvent(event)}
+            className="block hover:bg-gray-100 transition duration-300 flex justify-between items-start gap-4 px-4 mb-12"
+        >
+            <div className="flex flex-col w-2/3 ps-2 pt-2 gap-2">
+                <div className="text-xl font-semibold">{event.name}</div>
+                <div className="text-lg text-gray-600">{`${formatDate(event.startDate)}~${formatDate(event.endDate)}`}</div>
+                <div className="text-lg text-gray-600">{event.address}</div>
+            </div>
+            <div className="flex justify-center items-center w-28 bg-[#D9D9D9] overflow-hidden me-2">
+                {/*TODO: change image tag*/}
+                <img src={event.photo[0]} alt="대표 사진" className="w-full h-full object-cover" />
             </div>
         </Link>
     )
