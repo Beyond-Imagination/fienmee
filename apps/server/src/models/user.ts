@@ -1,9 +1,8 @@
 import mongoose from 'mongoose'
-import { TimeStamps } from '@typegoose/typegoose/lib/defaultClasses'
-import { getModelForClass, prop, ReturnModelType } from '@typegoose/typegoose'
+import { getModelForClass, prop, ReturnModelType, defaultClasses } from '@typegoose/typegoose'
 import { IUser } from '@/types/oauth'
 
-export class User extends TimeStamps implements IUser {
+export class User extends defaultClasses.TimeStamps implements IUser {
     public _id: mongoose.Types.ObjectId
 
     @prop({ required: true })

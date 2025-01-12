@@ -3,8 +3,8 @@ import express, { Request, Response, Router } from 'express'
 
 import { loginRequest, registerRequest } from '@/types/api'
 import { UnknownUserError } from '@/types/errors/oauth'
-import { User, UserModel } from '@/models/user'
-import { issueJwt, getOAuthUser } from '@/services/oauth'
+import { User, UserModel } from '@/models'
+import { issueJwt, getOAuthUser, expireJwt } from '@/services/oauth'
 
 const router: Router = asyncify(express.Router())
 
@@ -22,6 +22,12 @@ router.post('/login', async (req: Request, res: Response) => {
     res.status(200).json({
         accessToken: jwt,
     })
+})
+
+router.delete('/logout', async (req: Request, res: Response) => {
+    const jwt = req.headers['authorization']?.split(' ')?.[1]
+    await expireJwt(jwt)
+    res.sendStatus(204)
 })
 
 router.post('/register', async (req: Request, res: Response) => {

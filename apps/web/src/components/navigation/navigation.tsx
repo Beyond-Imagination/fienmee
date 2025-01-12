@@ -21,7 +21,7 @@ export function Navigation() {
     const [isVisible, setIsVisible] = useState(false)
 
     return (
-        <div className="fixed flex flex-col items-center justify-center bottom-0 left-0 z-50 w-full">
+        <div className="flex flex-col items-center justify-center w-full">
             <div
                 className={`fixed grid grid-cols-2 w-48 h-48 z-30 bg-white rounded-full shadow-[0_-1px_4px_rgba(0,0,0,0.25)] transition-all duration-700 pb-16 ${isVisible ? 'opacity-100 -translate-y-16' : 'opacity-0 translate-y-10'}`}
             >
