@@ -14,7 +14,6 @@ export default function EventPhoto({ photo, name }: Props) {
             {photo.map((photoUrl, index) => (
                 <SwiperSlide key={index}>
                     <div className="w-full h-full">
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img src={photoUrl} alt={`${name} ${index + 1}`} className="w-full h-full object-contain" />
                     </div>
                 </SwiperSlide>
