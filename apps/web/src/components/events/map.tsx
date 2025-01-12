@@ -1,6 +1,6 @@
 import Script from 'next/script'
 import { Map, MapMarker } from 'react-kakao-maps-sdk'
-import { KAKAO_API_KEY } from '../../../config'
+import { KAKAO_API_KEY } from '@/config'
 
 export interface Props {
     lng: number
