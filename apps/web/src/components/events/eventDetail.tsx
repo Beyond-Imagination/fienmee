@@ -59,9 +59,9 @@ export default function EventDetail({ event }: Props) {
                     <p className="text-sm text-gray-700 whitespace-pre-wrap">{event.description}</p>
                 </div>
             </div>
-            <div className="flex justify-between mt-4 pt-4 border-t border-gray-200">
+            <div className="flex justify-between p-4 mt-4 pt-4 border-t border-gray-200">
                 {/* TODO: add like function */}
-                <button className="flex items-center p-4 space-x-3">
+                <button className="flex items-center space-x-3">
                     <UnlikeIcon width={20} height={20} />
                     <span className="text-sm">{event.likeCount}</span>
                 </button>
