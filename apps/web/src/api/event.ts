@@ -1,5 +1,5 @@
 import { IGetEventCategoriesResponse, IGetEventsByCategoryResponse } from '@/types/event'
-import { SERVER_URL } from '../../config'
+import { SERVER_URL } from '@/config'
 
 export async function getEventsByCategory(category: string, page: number, limit: number): Promise<IGetEventsByCategoryResponse> {
     const res = await fetch(`${SERVER_URL}/v1/events/category/${category}?page=${page}&limit=${limit}`, {
