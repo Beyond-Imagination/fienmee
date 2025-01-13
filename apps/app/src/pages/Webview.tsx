@@ -3,7 +3,7 @@ import { WebView } from 'react-native-webview'
 
 import { ENV, FE_URL } from '../config'
 
-export default function WebviewScreen() {
+export function WebviewScreen() {
     return (
         <WebView
             source={{ uri: FE_URL }}

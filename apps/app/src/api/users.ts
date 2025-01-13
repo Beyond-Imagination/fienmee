@@ -8,7 +8,7 @@ export async function login(request: loginRequest): Promise<loginResponse> {
     })
 
     if (!res.ok) {
-        throw new Error(`code: ${res.status}\ndescription: ${res.statusText}`)
+        throw await res.json()
     }
 
     return res.json()

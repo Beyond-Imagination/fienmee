@@ -11,8 +11,7 @@ import { NavigationContainer } from '@react-navigation/native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { Colors } from 'react-native/Libraries/NewAppScreen'
 
-import LoginScreen from './pages/Login'
-import WebviewScreen from './pages/Webview'
+import { LoginScreen, RegisterScreen, WebviewScreen } from './pages'
 
 function App(): React.JSX.Element {
     const isDarkMode = useColorScheme() === 'dark'
@@ -29,10 +28,16 @@ function App(): React.JSX.Element {
                     contentStyle: backgroundStyle,
                 }}
             >
-                {/*TODO: make page file*/}
                 <Stack.Screen
                     name="LoginView"
                     component={LoginScreen}
+                    options={{
+                        headerShown: false,
+                    }}
+                />
+                <Stack.Screen
+                    name="Register"
+                    component={RegisterScreen}
                     options={{
                         headerShown: false,
                     }}

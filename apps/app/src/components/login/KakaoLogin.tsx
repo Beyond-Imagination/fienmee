@@ -18,11 +18,10 @@ export function KakaoOauthLogin() {
             await setToken(accessToken)
             navigation.navigate('WebView')
         } catch (error) {
-            // TODO: login 실패 에러 확인후 회원가입페이지로 이동
-            console.error(error)
+            if (error.code === 4100) {
+                navigation.navigate('Register')
+            }
         }
-
-        navigation.navigate('WebView') // 임시 코드
     }
 
     return (
