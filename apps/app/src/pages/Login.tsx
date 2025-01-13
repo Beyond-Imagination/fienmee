@@ -1,6 +1,7 @@
 import { View, Text, StyleSheet, ScrollView } from 'react-native'
 import React from 'react'
-import { AppleOauthLogin, GoogleOauthLogin, KakaoOauthLogin, NaverOauthLogin } from '../components/OAuthButton.tsx'
+
+import { AppleOauthLogin, GoogleOauthLogin, KakaoOauthLogin, NaverOauthLogin } from '../components/login'
 
 const styles = StyleSheet.create({
     container: {
