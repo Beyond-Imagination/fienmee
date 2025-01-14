@@ -2,7 +2,7 @@ import { IEvent } from '@/types/event'
 import dayjs from 'dayjs'
 import 'dayjs/locale/ko'
 import { CommentIcon, ShareIcon, UnlikeIcon } from '@/components/icon'
-import { KakaoMap } from '@/components/events/map'
+import { EventMap } from '@/components/events/eventMap'
 import EventOption from '@/components/events/eventOption'
 import EventPhoto from '@/components/events/eventPhoto'
 
@@ -52,7 +52,7 @@ export default function EventDetail({ event }: Props) {
                 </div>
 
                 <div className="w-full h-[200px]">
-                    <KakaoMap lng={event.location.coordinates[0]} lat={event.location.coordinates[1]} />
+                    <EventMap lng={event.location.coordinates[0]} lat={event.location.coordinates[1]} />
                 </div>
 
                 <div className="mt-6">
