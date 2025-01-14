@@ -1,3 +1,5 @@
+import { loginRequest, loginResponse } from '@fienmee/types'
+
 import { BE_URL } from '../config'
 
 export async function login(request: loginRequest): Promise<loginResponse> {
@@ -12,15 +14,4 @@ export async function login(request: loginRequest): Promise<loginResponse> {
     }
 
     return res.json()
-}
-
-// TODO: type 선언 공통 패키지로 이동하기
-export interface loginRequest {
-    accessToken: string
-    refreshToken: string
-    provider: string
-}
-
-export interface loginResponse {
-    accessToken: string
 }

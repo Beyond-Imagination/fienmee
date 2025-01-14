@@ -1,4 +1,5 @@
-import { IGetEventCategoriesResponse, IGetEventsByCategoryResponse } from '@/types/event'
+import { IGetEventCategoriesResponse, IGetEventsByCategoryResponse } from '@fienmee/types'
+
 import { SERVER_URL } from '@/config'
 
 export async function getEventsByCategory(category: string, page: number, limit: number): Promise<IGetEventsByCategoryResponse> {
