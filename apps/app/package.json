@@ -26,6 +26,7 @@
         "@babel/core": "^7.25.2",
         "@babel/preset-env": "^7.25.3",
         "@babel/runtime": "^7.25.0",
+        "@fienmee/types": "workspace:^",
         "@jest/globals": "^29.7.0",
         "@react-native-community/cli": "15.0.1",
         "@react-native-community/cli-platform-android": "15.0.1",

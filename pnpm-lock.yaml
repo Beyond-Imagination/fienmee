@@ -97,6 +97,9 @@ importers:
       '@babel/runtime':
         specifier: ^7.25.0
         version: 7.26.0
+      '@fienmee/types':
+        specifier: workspace:^
+        version: link:../../packages/types
       '@jest/globals':
         specifier: ^29.7.0
         version: 29.7.0
@@ -203,6 +206,9 @@ importers:
         specifier: ^5.0.0
         version: 5.0.0(winston@3.16.0)
     devDependencies:
+      '@fienmee/types':
+        specifier: workspace:^
+        version: link:../../packages/types
       '@swc-node/register':
         specifier: ^1.10.9
         version: 1.10.9(@swc/core@1.9.1(@swc/helpers@0.5.13))(@swc/types@0.1.14)(typescript@5.6.3)
@@ -264,6 +270,9 @@ importers:
         specifier: ^5.0.2
         version: 5.0.2(@types/react@18.3.12)(react@19.0.0-rc-02c0e824-20241028)(use-sync-external-store@1.2.2(react@19.0.0-rc-02c0e824-20241028))
     devDependencies:
+      '@fienmee/types':
+        specifier: workspace:^
+        version: link:../../packages/types
       '@next/eslint-plugin-next':
         specifier: ^15.0.2
         version: 15.0.2
@@ -288,6 +297,8 @@ importers:
       typescript:
         specifier: ^5
         version: 5.6.3
+
+  packages/types: {}
 
 packages:
 
@@ -10271,7 +10282,7 @@ snapshots:
       ajv: 6.12.6
       chalk: 4.1.2
       cross-spawn: 7.0.3
-      debug: 4.3.7(supports-color@5.5.0)
+      debug: 4.4.0
       doctrine: 3.0.0
       escape-string-regexp: 4.0.0
       eslint-scope: 7.2.2
