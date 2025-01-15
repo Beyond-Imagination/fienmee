@@ -1,4 +1,4 @@
-import { IEvent } from '@/types/event'
+import { IEvent } from '@fienmee/types'
 import dayjs from 'dayjs'
 import 'dayjs/locale/ko'
 import { CommentIcon, ShareIcon, UnlikeIcon } from '@/components/icon'

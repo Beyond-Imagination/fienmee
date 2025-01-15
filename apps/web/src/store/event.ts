@@ -1,5 +1,5 @@
 import { create } from 'zustand'
-import { IEvent } from '@/types/event'
+import { IEvent } from '@fienmee/types'
 
 interface eventState {
     event: IEvent
