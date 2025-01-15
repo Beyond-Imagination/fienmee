@@ -21,6 +21,7 @@
         "zustand": "^5.0.2"
     },
     "devDependencies": {
+        "@fienmee/types": "workspace:^",
         "@next/eslint-plugin-next": "^15.0.2",
         "@types/node": "^20",
         "@types/react": "^18",

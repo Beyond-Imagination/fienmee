@@ -30,9 +30,10 @@ async function saveSeoulData(data: Array<ICulturalEvent>, today: string): Promis
                     },
                     startDate: new Date(event.STRTDATE),
                     endDate: new Date(event.END_DATE),
-                    describe: `프로그램 소개: ${event.PROGRAM}\n기타내용: ${event.ETC_DESC}\n상세정보보기: ${event.HMPG_ADDR}\n주최기관: ${event.ORG_NAME}(${event.ORG_LINK})`,
+                    // TODO: change url to hyperlink
+                    description: `프로그램 소개: ${event.PROGRAM}\n${event.ETC_DESC && `기타내용: ${event.ETC_DESC}\n`}${event.PLAYER && `공연자: ${event.PLAYER}\n`}\n상세정보보기: ${event.HMPG_ADDR}\n주최기관: ${event.ORG_NAME}(${event.ORG_LINK})`,
                     photo: [event.MAIN_IMG],
-                    cost: event.IS_FREE === '무료' ? 0 : event.USE_FEE,
+                    cost: event.IS_FREE === '무료' ? '무료' : event.USE_FEE,
                     category: event.CODENAME.split(/[\s\-/_\\]/),
                     targetAudience: [event.USE_TRGT],
                     registeredAt: new Date(event.RGSTDATE),

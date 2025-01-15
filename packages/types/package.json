@@ -1,0 +1,10 @@
+{
+    "name": "@fienmee/types",
+    "version": "0.0.0",
+    "description": "fienmee types",
+    "main": "index.ts",
+    "scripts": {
+        "test": ""
+    },
+    "private": true
+}

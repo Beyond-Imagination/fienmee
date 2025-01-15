@@ -4,8 +4,9 @@ import { useEffect } from 'react'
 import { useInfiniteQuery } from '@tanstack/react-query'
 import { useInView } from 'react-intersection-observer'
 
+import { IGetEventsByCategoryResponse } from '@fienmee/types'
+
 import { getEventsByCategory } from '@/api/event'
-import { IGetEventsByCategoryResponse } from '@/types/event'
 import Event from '@/components/events/event'
 
 interface useEventsByCategoryQueryProps {

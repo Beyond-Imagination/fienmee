@@ -1,4 +1,4 @@
-import { IEvent } from '@/types/event'
+import { IEvent } from '@fienmee/types'
 import Link from 'next/link'
 import { eventStore } from '@/store/event'
 

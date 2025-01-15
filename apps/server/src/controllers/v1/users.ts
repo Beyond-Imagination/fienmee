@@ -1,7 +1,8 @@
 import asyncify from 'express-asyncify'
 import express, { Request, Response, Router } from 'express'
 
-import { loginRequest, registerRequest } from '@/types/api'
+import { loginRequest, registerRequest } from '@fienmee/types'
+
 import { UnknownUserError } from '@/types/errors/oauth'
 import { User, UserModel } from '@/models'
 import { issueJwt, getOAuthUser, expireJwt } from '@/services/oauth'
