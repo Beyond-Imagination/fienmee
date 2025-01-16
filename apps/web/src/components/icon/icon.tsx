@@ -91,3 +91,71 @@ export function NotificationIcon({ width, height }: IconProps) {
         </svg>
     )
 }
+
+export function ShareIcon({ width, height }: IconProps) {
+    return (
+        <svg width={width} height={height} xmlns="http://www.w3.org/2000/svg" fill="none">
+            <path
+                stroke="#1E1E1E"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M1.69 9.6v6.666a1.667 1.667 0 0 0 1.667 1.667h10a1.666 1.666 0 0 0 1.667-1.667V9.6m-3.333-5L8.357 1.266m0 0L5.024 4.6m3.333-3.333V12.1"
+            />
+        </svg>
+    )
+}
+
+export function CommentIcon({ width, height }: IconProps) {
+    return (
+        <svg width={width} height={height} xmlns="http://www.w3.org/2000/svg" fill="none">
+            <path
+                stroke="#1E1E1E"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M16.571 11.662a1.667 1.667 0 0 1-1.666 1.667h-10L1.57 16.662V3.33a1.667 1.667 0 0 1 1.667-1.667h11.667A1.667 1.667 0 0 1 16.57 3.33v8.333Z"
+            />
+        </svg>
+    )
+}
+
+export function LikeIcon({ width, height }: IconProps) {
+    return (
+        <svg width={width} height={height} xmlns="http://www.w3.org/2000/svg" fill="none">
+            <path
+                fill="#E31D5C"
+                stroke="#E31D5C"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M17.367 2.004a4.583 4.583 0 0 0-6.484 0L10 2.887l-.883-.883a4.584 4.584 0 0 0-6.484 6.483L10 15.854l7.367-7.367a4.581 4.581 0 0 0 0-6.483Z"
+            />
+        </svg>
+    )
+}
+
+export function UnlikeIcon({ width, height }: IconProps) {
+    return (
+        <svg width={width} height={height} xmlns="http://www.w3.org/2000/svg" fill="none">
+            <path
+                stroke="#1E1E1E"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M17.367 2.613a4.583 4.583 0 0 0-6.484 0L10 3.497l-.883-.884a4.584 4.584 0 1 0-6.484 6.484L10 16.463l7.367-7.366a4.584 4.584 0 0 0 0-6.484Z"
+            />
+        </svg>
+    )
+}
+
+export function OptionIcon() {
+    return (
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="size-6">
+            <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M12 6.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5ZM12 12.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5ZM12 18.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5Z"
+            />
+        </svg>
+    )
+}

@@ -1,4 +1,6 @@
 import { IEvent } from '@fienmee/types'
+import Link from 'next/link'
+import { eventStore } from '@/store/event'
 
 interface Props {
     event: IEvent | undefined
@@ -27,8 +29,14 @@ export default function Event({ event }: Props) {
         )
     }
 
+    const { setEvent } = eventStore()
+
     return (
-        <div className="flex justify-between items-start gap-4 px-4 mb-12">
+        <Link
+            href={`/events/detail`}
+            onClick={() => setEvent(event)}
+            className="block hover:bg-gray-100 transition duration-300 flex justify-between items-start gap-4 px-4 mb-12"
+        >
             <div className="flex flex-col w-2/3 ps-2 pt-2 gap-2">
                 <div className="text-xl font-semibold">{event.name}</div>
                 <div className="text-lg text-gray-600">{`${formatDate(event.startDate)}~${formatDate(event.endDate)}`}</div>
@@ -38,6 +46,6 @@ export default function Event({ event }: Props) {
                 {/*TODO: change image tag*/}
                 <img src={event.photo[0]} alt="대표 사진" className="w-full h-full object-cover" />
             </div>
-        </div>
+        </Link>
     )
 }
