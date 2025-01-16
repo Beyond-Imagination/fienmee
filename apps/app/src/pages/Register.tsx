@@ -1,6 +1,16 @@
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native'
 import React from 'react'
 import { useNavigation } from '@react-navigation/native'
+import type { StaticScreenProps } from '@react-navigation/native'
+
+import { register } from '../api'
+import { setToken } from '../stores/token.ts'
+
+type props = StaticScreenProps<{
+    accessToken: string
+    refreshToken: string
+    provider: string
+}>
 
 const styles = StyleSheet.create({
     container: {
@@ -8,12 +18,22 @@ const styles = StyleSheet.create({
     },
 })
 
-export function RegisterScreen() {
+export function RegisterScreen({ route }: props) {
     const navigation = useNavigation()
 
-    const onPress = () => {
-        // TODO: implement logic
-        navigation.navigate('WebView')
+    const onPress = async () => {
+        try {
+            const { accessToken } = await register({
+                accessToken: route.params.accessToken,
+                refreshToken: route.params.refreshToken,
+                provider: route.params.provider,
+            })
+            await setToken(accessToken)
+            navigation.navigate('WebView')
+        } catch (error) {
+            console.log(error)
+            // TODO: error 페이지로 이동
+        }
     }
 
     return (
