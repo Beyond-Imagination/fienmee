@@ -19,7 +19,11 @@ export function KakaoOauthLogin() {
             navigation.navigate('WebView')
         } catch (error) {
             if (error.code === 4100) {
-                navigation.navigate('Register')
+                navigation.navigate('Register', {
+                    accessToken: token.accessToken,
+                    refreshToken: token.refreshToken,
+                    provider: 'KAKAO',
+                })
             }
         }
     }
