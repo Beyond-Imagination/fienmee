@@ -60,6 +60,7 @@ export class Events extends defaultClasses.TimeStamps {
         return {
             _id: this._id,
             name: this.name,
+            authorId: this.authorId,
             address: this.address,
             location: this.location,
             startDate: this.startDate,
