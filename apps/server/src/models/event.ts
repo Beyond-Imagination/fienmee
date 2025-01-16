@@ -13,6 +13,9 @@ export class Events extends defaultClasses.TimeStamps {
     @prop()
     public name: string
 
+    @prop({ ref: User })
+    public authorId: mongoose.Types.ObjectId
+
     @prop()
     public address: string
 
@@ -57,6 +60,7 @@ export class Events extends defaultClasses.TimeStamps {
         return {
             _id: this._id,
             name: this.name,
+            authorId: this.authorId,
             address: this.address,
             location: this.location,
             startDate: this.startDate,
@@ -78,6 +82,14 @@ export class Events extends defaultClasses.TimeStamps {
         options: mongoose.PaginateOptions,
     ): Promise<mongoose.PaginateResult<mongoose.PaginateDocument<typeof Events, object, object, mongoose.PaginateOptions>>> {
         return await this.paginate({ category: category }, options)
+    }
+
+    public static async findByAuthor(
+        this: ReturnModelType<typeof Events>,
+        author: mongoose.Types.ObjectId,
+        options: mongoose.PaginateOptions,
+    ): Promise<mongoose.PaginateResult<mongoose.PaginateDocument<typeof Events, object, object, mongoose.PaginateOptions>>> {
+        return await this.paginate({ authorId: author }, options)
     }
 }
 
