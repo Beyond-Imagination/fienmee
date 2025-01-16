@@ -263,6 +263,9 @@ importers:
       react-dom:
         specifier: 19.0.0-rc-02c0e824-20241028
         version: 19.0.0-rc-02c0e824-20241028(react@19.0.0-rc-02c0e824-20241028)
+      react-hook-form:
+        specifier: ^7.54.2
+        version: 7.54.2(react@19.0.0-rc-02c0e824-20241028)
       react-intersection-observer:
         specifier: ^9.13.1
         version: 9.13.1(react-dom@19.0.0-rc-02c0e824-20241028(react@19.0.0-rc-02c0e824-20241028))(react@19.0.0-rc-02c0e824-20241028)
@@ -5317,6 +5320,12 @@ packages:
     peerDependencies:
       react: '>=17.0.0'
 
+  react-hook-form@7.54.2:
+    resolution: {integrity: sha512-eHpAUgUjWbZocoQYUHposymRb4ZP6d0uwUnooL2uOybA9/3tPUvoAKqEWK1WaSiTxxOfTpffNZP7QwlnM3/gEg==}
+    engines: {node: '>=18.0.0'}
+    peerDependencies:
+      react: ^16.8.0 || ^17 || ^18 || ^19
+
   react-intersection-observer@9.13.1:
     resolution: {integrity: sha512-tSzDaTy0qwNPLJHg8XZhlyHTgGW6drFKTtvjdL+p6um12rcnp8Z5XstE+QNBJ7c64n5o0Lj4ilUleA41bmDoMw==}
     peerDependencies:
@@ -8364,9 +8373,7 @@ snapshots:
     transitivePeerDependencies:
       - '@babel/core'
       - '@babel/preset-env'
-      - bufferutil
       - supports-color
-      - utf-8-validate
 
   '@react-native/normalize-colors@0.76.3': {}
 
@@ -12690,6 +12697,10 @@ snapshots:
   react-freeze@1.0.4(react@18.3.1):
     dependencies:
       react: 18.3.1
+
+  react-hook-form@7.54.2(react@19.0.0-rc-02c0e824-20241028):
+    dependencies:
+      react: 19.0.0-rc-02c0e824-20241028
 
   react-intersection-observer@9.13.1(react-dom@19.0.0-rc-02c0e824-20241028(react@19.0.0-rc-02c0e824-20241028))(react@19.0.0-rc-02c0e824-20241028):
     dependencies:
