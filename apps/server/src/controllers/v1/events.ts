@@ -1,7 +1,9 @@
 import express, { Request, Response, Router } from 'express'
 import asyncify from 'express-asyncify'
+import mongoose from 'mongoose'
 
-import { EventsModel } from '@/models'
+import { Events, EventsModel } from '@/models'
+import { verifyToken } from '@/middlewares/auth'
 
 const router: Router = asyncify(express.Router())
 
@@ -84,10 +86,17 @@ router.get('/:id', async (req: Request, res: Response) => {
     res.status(200).json(event)
 })
 
-router.get('/category/:category', async (req: Request, res: Response) => {
+router.get('/category/:category', verifyToken, async (req: Request, res: Response) => {
     const options = { sort: { startDate: 1, endDate: 1, createdAt: -1 }, page: Number(req.query.page) || 1, limit: Number(req.query.limit) || 10 }
     const category = req.params.category
-    const result = await EventsModel.findByCategory(category, options)
+
+    let result: mongoose.PaginateResult<mongoose.PaginateDocument<typeof Events, object, object, mongoose.PaginateOptions>>
+    if (category === '내가 등록한 행사') {
+        result = await EventsModel.findByAuthor(req.user._id, options)
+    } else {
+        // TODO: add get hottest events
+        result = await EventsModel.findByCategory(category, options)
+    }
 
     const events = result.docs.map(event => ({ ...event.toJSON() }))
 
