@@ -5,6 +5,7 @@ import type { StaticScreenProps } from '@react-navigation/native'
 
 import { register } from '../api'
 import { setToken } from '../stores/token.ts'
+import { LoginScreenProps } from '../types'
 
 type props = StaticScreenProps<{
     accessToken: string
@@ -19,7 +20,7 @@ const styles = StyleSheet.create({
 })
 
 export function RegisterScreen({ route }: props) {
-    const navigation = useNavigation()
+    const navigation = useNavigation<LoginScreenProps['navigation']>()
 
     const onPress = async () => {
         try {

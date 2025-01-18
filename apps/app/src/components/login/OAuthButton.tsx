@@ -1,6 +1,7 @@
 import { Image, StyleSheet, TouchableOpacity, Text } from 'react-native'
 import React from 'react'
 import { useNavigation } from '@react-navigation/native'
+import { LoginScreenProps } from '../../types'
 
 const styles = StyleSheet.create({
     button: {
@@ -23,7 +24,7 @@ const styles = StyleSheet.create({
 })
 
 export function NaverOauthLogin() {
-    const navigation = useNavigation()
+    const navigation = useNavigation<LoginScreenProps['navigation']>()
     const onPress = () => {
         // TODO: implement logic
         navigation.navigate('WebView')
@@ -38,7 +39,7 @@ export function NaverOauthLogin() {
 }
 
 export function GoogleOauthLogin() {
-    const navigation = useNavigation()
+    const navigation = useNavigation<LoginScreenProps['navigation']>()
     const onPress = () => {
         // TODO: implement logic
         navigation.navigate('WebView')
@@ -57,7 +58,7 @@ export function GoogleOauthLogin() {
 }
 
 export function AppleOauthLogin() {
-    const navigation = useNavigation()
+    const navigation = useNavigation<LoginScreenProps['navigation']>()
     const onPress = () => {
         // TODO: implement logic
         navigation.navigate('WebView')

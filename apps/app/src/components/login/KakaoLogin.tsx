@@ -5,9 +5,10 @@ import { login as kakaoLogin } from '@react-native-seoul/kakao-login'
 
 import { login } from '../../api'
 import { setToken } from '../../stores/token'
+import { LoginScreenProps } from '../../types'
 
 export function KakaoOauthLogin() {
-    const navigation = useNavigation()
+    const navigation = useNavigation<LoginScreenProps['navigation']>()
     const onPress = async () => {
         const token = await kakaoLogin()
         try {
