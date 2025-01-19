@@ -66,6 +66,6 @@
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
 	<key>KAKAO_APP_KEY</key>
-    <string>6754084b45fdd747c58d0b8ce588e70b</string>
+	<string>6754084b45fdd747c58d0b8ce588e70b</string>
 </dict>
 </plist>
