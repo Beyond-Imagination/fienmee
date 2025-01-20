@@ -2,7 +2,7 @@ import { create } from 'zustand'
 
 interface CategoryStore {
     category: string
-    setCategory: (name: string) => void
+    setCategory: (category: string) => void
 }
 
 export const categoryStore = create<CategoryStore>(set => ({
