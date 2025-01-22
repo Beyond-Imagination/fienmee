@@ -7,6 +7,8 @@ import { QueryClientProvider, QueryClient } from '@tanstack/react-query'
 import { KAKAO_API_KEY } from '@/config'
 import Script from 'next/script'
 
+import { useBridge } from '@/hooks/bridges'
+
 const geistSans = localFont({
     src: './fonts/GeistVF.woff',
     variable: '--font-geist-sans',
@@ -35,6 +37,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
                 },
             }),
     )
+    useBridge()
     return (
         <html lang="en">
             <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
