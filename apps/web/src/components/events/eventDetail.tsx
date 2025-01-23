@@ -28,7 +28,7 @@ export default function EventDetail({ event }: Props) {
                 <div className="flex justify-between items-start">
                     <div className="text-xl font-bold">{event.name}</div>
                     <div className="relative">
-                        <EventOption />
+                        <EventOption eventId={event._id} />
                     </div>
                 </div>
 

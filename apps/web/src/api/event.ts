@@ -25,3 +25,15 @@ export async function getEventsCategories(): Promise<IGetEventCategoriesResponse
     }
     return res.json()
 }
+
+export async function deleteEventById(id: string): Promise<void> {
+    const res = await fetch(`${SERVER_URL}/v1/events/${id}`, {
+        method: 'DELETE',
+        // TODO: add authorization Header
+    })
+
+    if (!res.ok) {
+        throw new Error(`code: ${res.status}\ndescription: ${res.statusText}`)
+    }
+    return
+}
