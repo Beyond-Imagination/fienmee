@@ -4,12 +4,7 @@ const TOKEN_KEY = 'jwt'
 
 export async function setToken(token: string): Promise<void> {
     try {
-        await EncryptedStorage.setItem(
-            TOKEN_KEY,
-            JSON.stringify({
-                token: token,
-            }),
-        )
+        await EncryptedStorage.setItem(TOKEN_KEY, token)
     } catch (error) {
         // TODO: token 저장시 에러 발생 케이스. 호출한 곳에서 모바일 에러 페이지로 이동
         throw error
