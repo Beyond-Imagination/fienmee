@@ -3,6 +3,8 @@ import { Image, StyleSheet, Text, TouchableOpacity } from 'react-native'
 import React from 'react'
 import { login as kakaoLogin } from '@react-native-seoul/kakao-login'
 
+import { isErrorResponse } from '@fienmee/types'
+
 import { login } from '../../api'
 import { setToken } from '../../stores/token'
 import { LoginScreenProps } from '../../types'
@@ -19,12 +21,14 @@ export function KakaoOauthLogin() {
             await setToken(accessToken)
             navigation.navigate('WebView')
         } catch (error) {
-            if (error.code === 4100) {
+            if (isErrorResponse(error) && error.code === 4100) {
                 navigation.navigate('Register', {
                     accessToken: token.accessToken,
                     refreshToken: token.refreshToken,
                     provider: 'KAKAO',
                 })
+            } else {
+                // TODO: error page 로 이동
             }
         }
     }
