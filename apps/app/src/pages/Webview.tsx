@@ -1,8 +1,8 @@
 import React, { useRef } from 'react'
 import { WebView } from 'react-native-webview'
 
-import { ENV, FE_URL } from '../config'
-import { getToken } from '../stores/token.ts'
+import { ENV, FE_URL } from '@/config'
+import { getToken } from '@/stores/token'
 
 export function WebviewScreen() {
     const webViewRef = useRef<WebView>(null)

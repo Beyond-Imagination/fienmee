@@ -5,9 +5,9 @@ import { login as kakaoLogin } from '@react-native-seoul/kakao-login'
 
 import { isErrorResponse } from '@fienmee/types'
 
-import { login } from '../../api'
-import { setToken } from '../../stores/token'
-import { LoginScreenProps } from '../../types'
+import { login } from '@/api'
+import { setToken } from '@/stores/token'
+import { LoginScreenProps } from '@/types'
 
 export function KakaoOauthLogin() {
     const navigation = useNavigation<LoginScreenProps['navigation']>()

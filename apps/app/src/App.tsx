@@ -11,8 +11,8 @@ import { NavigationContainer } from '@react-navigation/native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { Colors } from 'react-native/Libraries/NewAppScreen'
 
-import { LoginScreen, RegisterScreen, WebviewScreen } from './pages'
-import { RootStackParamList } from './types'
+import { LoginScreen, RegisterScreen, WebviewScreen } from '@/pages'
+import { RootStackParamList } from '@/types'
 
 function App(): React.JSX.Element {
     const isDarkMode = useColorScheme() === 'dark'

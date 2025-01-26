@@ -1,6 +1,6 @@
 import { loginRequest, loginResponse, registerRequest, registerResponse } from '@fienmee/types'
 
-import { BE_URL } from '../config'
+import { BE_URL } from '@/config'
 
 export async function login(request: loginRequest): Promise<loginResponse> {
     const res = await fetch(`${BE_URL}/v1/users/login`, {

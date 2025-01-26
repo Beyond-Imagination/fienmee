@@ -1,7 +1,7 @@
 import { Image, StyleSheet, TouchableOpacity, Text } from 'react-native'
 import React from 'react'
 import { useNavigation } from '@react-navigation/native'
-import { LoginScreenProps } from '../../types'
+import { LoginScreenProps } from '@/types'
 
 const styles = StyleSheet.create({
     button: {
