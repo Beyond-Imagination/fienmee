@@ -19,7 +19,7 @@ const EventVenueSelector: React.FC<EventVenueSelectorProps> = ({ initialPosition
     }
 
     return (
-        <Map center={position} style={{ width: '100%', height: '300px' }} level={3} onClick={handleMapClick}>
+        <Map center={position} style={{ width: '100%', height: '200px' }} level={3} onClick={handleMapClick}>
             <MapMarker position={position} />
         </Map>
     )
