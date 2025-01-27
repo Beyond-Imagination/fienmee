@@ -12,6 +12,7 @@ reviewers:
     - yuchem2
     - chsjen492
     - HeesooJun
+    - sezeme
 
 # A list of keywords to be skipped the process that add reviewers if pull requests include it
 #skipKeywords:
