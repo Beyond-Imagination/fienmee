@@ -3,9 +3,9 @@ import React from 'react'
 import { useNavigation } from '@react-navigation/native'
 import type { StaticScreenProps } from '@react-navigation/native'
 
-import { register } from '../api'
-import { setToken } from '../stores/token.ts'
-import { LoginScreenProps } from '../types'
+import { register } from '@/api'
+import { setToken } from '@/stores/token'
+import { LoginScreenProps } from '@/types'
 
 type props = StaticScreenProps<{
     accessToken: string
