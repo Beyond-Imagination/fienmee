@@ -1,10 +1,14 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import PhotoUploader from '@/components/events/photoUploader'
 import EventForm from '@/components/events/eventForm'
+import { useSearchParams } from 'next/navigation'
 
 export default function RegisterPage() {
+    const searchParams = useSearchParams()
+    const category = searchParams.get('category')
+    const [selectedCategories, setSelectedCategories] = useState<Set<string>>(new Set())
     const [isAllDay, setIsAllDay] = useState(false)
     const [photos, setPhotos] = useState<string[]>([])
 
@@ -15,6 +19,13 @@ export default function RegisterPage() {
         event.target.value = ''
     }
 
+    useEffect(() => {
+        if (category) {
+            console.log(category)
+            setSelectedCategories(prev => new Set(prev).add(category))
+        }
+    }, [category])
+
     const handleRemovePhoto = (index: number) => {
         setPhotos(prevPhotos => prevPhotos.filter((_, i) => i !== index))
     }
@@ -22,7 +33,7 @@ export default function RegisterPage() {
     return (
         <div className="min-h-screen flex flex-col px-4">
             <PhotoUploader photos={photos} onAddPhoto={handleAddPhoto} onRemovePhoto={handleRemovePhoto} />
-            <EventForm isAllDay={isAllDay} toggleAllDay={() => setIsAllDay(!isAllDay)} />
+            <EventForm isAllDay={isAllDay} toggleAllDay={() => setIsAllDay(!isAllDay)} selectedCategories={selectedCategories} />
         </div>
     )
 }

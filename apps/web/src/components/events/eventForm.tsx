@@ -5,13 +5,22 @@ import SubmitButton from './submitButton'
 import EventVenueSelector from './eventVenueSelector'
 import { registerEvent } from '@/api/event'
 import { IEvent } from '@fienmee/types'
+import { useRouter } from 'next/navigation'
+import { ArrowIcon } from '../icon/icon'
 
 interface EventFormProps {
     isAllDay: boolean
     toggleAllDay: () => void
+    selectedCategories: Set<string>
 }
 
-const EventForm: React.FC<EventFormProps> = ({ isAllDay, toggleAllDay }) => {
+const EventForm: React.FC<EventFormProps> = ({ isAllDay, toggleAllDay, selectedCategories }) => {
+    const router = useRouter()
+
+    const handleCategorySelect = () => {
+        router.push('/events/register/category')
+    }
+
     const [position, setPosition] = useState({ lat: 33.450701, lng: 126.570667 })
     const [formData, setFormData] = useState<IEvent>({
         _id: '',
@@ -28,7 +37,7 @@ const EventForm: React.FC<EventFormProps> = ({ isAllDay, toggleAllDay }) => {
         cost: '',
         likeCount: 0,
         commentCount: 0,
-        category: [],
+        category: Array.from(selectedCategories),
         targetAudience: [],
         createdAt: new Date(),
     })
@@ -52,6 +61,7 @@ const EventForm: React.FC<EventFormProps> = ({ isAllDay, toggleAllDay }) => {
         try {
             await registerEvent({
                 ...formData,
+                category: Array.from(selectedCategories),
                 location: {
                     type: 'Point',
                     coordinates: [position.lng, position.lat],
@@ -67,6 +77,19 @@ const EventForm: React.FC<EventFormProps> = ({ isAllDay, toggleAllDay }) => {
     return (
         <form className="p-6 w-full max-w-lg mx-auto flex flex-col gap-6" onSubmit={handleSubmit}>
             <InputField label="행사 제목" placeholder="행사 제목을 입력해주세요" name="name" onChange={handleChange} />
+            <div className="flex items-center">
+                <label className="mr-2">카테고리</label>
+                <div className="flex flex-wrap gap-2">
+                    {Array.from(selectedCategories).map((category, index) => (
+                        <span key={index} className="bg-white px-2 py-1 rounded border">
+                            {category}
+                        </span>
+                    ))}
+                </div>
+                <button type="button" onClick={handleCategorySelect} className="text-blue-500 ml-auto">
+                    <ArrowIcon width={24} height={24} />
+                </button>
+            </div>
             <EventTimeSelector
                 isAllDay={isAllDay}
                 toggleAllDay={toggleAllDay}
@@ -78,6 +101,7 @@ const EventForm: React.FC<EventFormProps> = ({ isAllDay, toggleAllDay }) => {
                 <EventVenueSelector initialPosition={position} onPositionChange={setPosition} />
             </div>
             <InputField label="이용 요금" placeholder="₩ 이용 요금을 입력해주세요" name="cost" onChange={handleChange} />
+            <InputField label="이용 대상" placeholder="이용 대상을 입력해주세요" name="targetAudience" onChange={handleChange} />
             <InputField
                 label="설명"
                 placeholder="행사에 대한 설명을 작성해주세요"
