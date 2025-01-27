@@ -5,16 +5,18 @@ interface InputFieldProps {
     placeholder: string
     type?: string
     rows?: number
+    name: string
+    onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void
 }
 
-const InputField: React.FC<InputFieldProps> = ({ label, placeholder, type = 'text', rows }) => {
+const InputField: React.FC<InputFieldProps> = ({ label, placeholder, type = 'text', rows, name, onChange }) => {
     return (
         <div>
             <label className="block text-base font-medium mb-2">{label}</label>
             {type === 'textarea' ? (
-                <textarea placeholder={placeholder} className="w-full border rounded-lg px-4 py-2" rows={rows} />
+                <textarea name={name} placeholder={placeholder} className="w-full border rounded-lg px-4 py-2" rows={rows} onChange={onChange} />
             ) : (
-                <input type={type} placeholder={placeholder} className="w-full border rounded-lg px-4 py-2" />
+                <input type={type} name={name} placeholder={placeholder} className="w-full border rounded-lg px-4 py-2" onChange={onChange} />
             )}
         </div>
     )

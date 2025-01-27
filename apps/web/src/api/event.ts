@@ -1,4 +1,4 @@
-import { IGetEventCategoriesResponse, IGetEventsByCategoryResponse } from '@fienmee/types'
+import { IEvent, IGetEventCategoriesResponse, IGetEventsByCategoryResponse } from '@fienmee/types'
 
 import { SERVER_URL } from '@/config'
 
@@ -33,6 +33,22 @@ export async function deleteEventById(id: string): Promise<void> {
     const res = await fetch(`${SERVER_URL}/v1/events/${id}`, {
         method: 'DELETE',
         headers: { Authorization: `Bearer ${token}` },
+    })
+
+    if (!res.ok) {
+        throw new Error(`code: ${res.status}\ndescription: ${res.statusText}`)
+    }
+    return
+}
+
+export async function registerEvent(eventData: IEvent): Promise<void> {
+    const res = await fetch(`${SERVER_URL}/v1/events`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            // TODO: add authorization Header
+        },
+        body: JSON.stringify(eventData),
     })
 
     if (!res.ok) {

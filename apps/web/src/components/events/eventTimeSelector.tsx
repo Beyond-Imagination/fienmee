@@ -4,9 +4,11 @@ import DateTimeInput from './dateTimeInput'
 interface EventTimeSelectorProps {
     isAllDay: boolean
     toggleAllDay: () => void
+    onStartDateChange: (date: string) => void
+    onEndDateChange: (date: string) => void
 }
 
-const EventTimeSelector: React.FC<EventTimeSelectorProps> = ({ isAllDay, toggleAllDay }) => {
+const EventTimeSelector: React.FC<EventTimeSelectorProps> = ({ isAllDay, toggleAllDay, onStartDateChange, onEndDateChange }) => {
     return (
         <div>
             <label className="block text-base font-medium mb-2">행사 시간</label>
@@ -24,8 +26,8 @@ const EventTimeSelector: React.FC<EventTimeSelectorProps> = ({ isAllDay, toggleA
                 {!isAllDay && <hr className="border-gray-300 mb-4" />}
                 {!isAllDay && (
                     <div className="flex flex-col gap-3">
-                        <DateTimeInput label="시작" />
-                        <DateTimeInput label="종료" />
+                        <DateTimeInput label="시작" onChange={onStartDateChange} />
+                        <DateTimeInput label="종료" onChange={onEndDateChange} />
                     </div>
                 )}
             </div>
