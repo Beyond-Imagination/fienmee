@@ -3,9 +3,10 @@ import React, { useState } from 'react'
 interface DateTimeInputProps {
     label: string
     onChange: (dateTime: string) => void
+    hideTime?: boolean
 }
 
-const DateTimeInput: React.FC<DateTimeInputProps> = ({ label, onChange }) => {
+const DateTimeInput: React.FC<DateTimeInputProps> = ({ label, onChange, hideTime }) => {
     const [date, setDate] = useState('')
     const [time, setTime] = useState('')
 
@@ -26,7 +27,7 @@ const DateTimeInput: React.FC<DateTimeInputProps> = ({ label, onChange }) => {
             <label className="text-sm text-gray-700">{label}</label>
             <div className="flex gap-2">
                 <input type="date" className="border rounded px-2 py-1" onChange={handleDateChange} />
-                <input type="time" className="border rounded px-2 py-1" onChange={handleTimeChange} />
+                {!hideTime && <input type="time" className="border rounded px-2 py-1" onChange={handleTimeChange} />}
             </div>
         </div>
     )
