@@ -21,7 +21,6 @@ export default function RegisterPage() {
 
     useEffect(() => {
         if (category) {
-            console.log(category)
             setSelectedCategories(prev => new Set(prev).add(category))
         }
     }, [category])
@@ -33,7 +32,7 @@ export default function RegisterPage() {
     return (
         <div className="min-h-screen flex flex-col px-4">
             <PhotoUploader photos={photos} onAddPhoto={handleAddPhoto} onRemovePhoto={handleRemovePhoto} />
-            <EventForm isAllDay={isAllDay} toggleAllDay={() => setIsAllDay(!isAllDay)} selectedCategories={selectedCategories} />
+            <EventForm isAllDay={isAllDay} toggleAllDay={() => setIsAllDay(!isAllDay)} selectedCategories={selectedCategories} photos={photos} />
         </div>
     )
 }

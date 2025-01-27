@@ -12,11 +12,12 @@ interface EventFormProps {
     isAllDay: boolean
     toggleAllDay: () => void
     selectedCategories: Set<string>
+    photos: string[]
 }
 
-const EventForm: React.FC<EventFormProps> = ({ isAllDay, toggleAllDay, selectedCategories }) => {
+const EventForm: React.FC<EventFormProps> = ({ isAllDay, toggleAllDay, selectedCategories, photos }) => {
     const router = useRouter()
-
+    console.log(photos)
     const handleCategorySelect = () => {
         router.push('/events/register/category')
     }
@@ -37,7 +38,7 @@ const EventForm: React.FC<EventFormProps> = ({ isAllDay, toggleAllDay, selectedC
         cost: '',
         likeCount: 0,
         commentCount: 0,
-        category: Array.from(selectedCategories),
+        category: [],
         targetAudience: [],
         createdAt: new Date(),
     })
@@ -62,6 +63,7 @@ const EventForm: React.FC<EventFormProps> = ({ isAllDay, toggleAllDay, selectedC
             await registerEvent({
                 ...formData,
                 category: Array.from(selectedCategories),
+                photo: photos,
                 location: {
                     type: 'Point',
                     coordinates: [position.lng, position.lat],
