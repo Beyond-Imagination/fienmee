@@ -10,7 +10,7 @@ interface EventFormProps {
 
 const EventForm: React.FC<EventFormProps> = ({ isAllDay, toggleAllDay }) => {
     return (
-        <form className="p-6 w-full max-w-lg mx-auto flex flex-col gap-6">
+        <form className="p-6 w-full max-w-lg mx-auto flex flex-col gap-6 ">
             <InputField label="행사 제목" placeholder="행사 제목을 입력해주세요" />
             <EventTimeSelector isAllDay={isAllDay} toggleAllDay={toggleAllDay} />
             <InputField label="행사 장소" placeholder="위치 추가" />

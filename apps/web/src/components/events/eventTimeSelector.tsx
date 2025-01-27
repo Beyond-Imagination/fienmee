@@ -11,7 +11,7 @@ const EventTimeSelector: React.FC<EventTimeSelectorProps> = ({ isAllDay, toggleA
         <div>
             <label className="block text-base font-medium mb-2">행사 시간</label>
             <div className="border rounded-lg p-4">
-                <div className="flex items-center justify-between mb-4">
+                <div className={`flex items-center justify-between ${isAllDay ? 'mb-0' : 'mb-4'}`}>
                     <span className="text-sm text-gray-700">하루 종일</span>
                     <button
                         type="button"
@@ -21,7 +21,7 @@ const EventTimeSelector: React.FC<EventTimeSelectorProps> = ({ isAllDay, toggleA
                         <div className={`h-4 w-4 rounded-full bg-white transform transition-transform ${isAllDay ? 'translate-x-5' : ''}`} />
                     </button>
                 </div>
-                <hr className="border-gray-300 mb-4" />
+                {!isAllDay && <hr className="border-gray-300 mb-4" />}
                 {!isAllDay && (
                     <div className="flex flex-col gap-3">
                         <DateTimeInput label="시작" />
