@@ -14,3 +14,7 @@ export interface IBackButtonData extends IBridgeData {
 export interface ILogoutData extends IBridgeData {
     type: 'logout'
 }
+
+export function isLogoutData(data: unknown): data is ILogoutData {
+    return typeof data === 'object' && data !== null && 'type' in data && data.type === 'logout'
+}
