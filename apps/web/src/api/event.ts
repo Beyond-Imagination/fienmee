@@ -3,9 +3,10 @@ import { IGetEventCategoriesResponse, IGetEventsByCategoryResponse } from '@fien
 import { SERVER_URL } from '@/config'
 
 export async function getEventsByCategory(category: string, page: number, limit: number): Promise<IGetEventsByCategoryResponse> {
+    const token = sessionStorage.getItem('access_token')
     const res = await fetch(`${SERVER_URL}/v1/events/category/${category}?page=${page}&limit=${limit}`, {
         method: 'GET',
-        // TODO: add authorization Header
+        headers: { Authorization: `Bearer ${token}` },
     })
 
     if (!res.ok) {
@@ -15,9 +16,10 @@ export async function getEventsByCategory(category: string, page: number, limit:
 }
 
 export async function getEventsCategories(): Promise<IGetEventCategoriesResponse> {
+    const token = sessionStorage.getItem('access_token')
     const res = await fetch(`${SERVER_URL}/v1/events/categories`, {
         method: 'GET',
-        // TODO: add authorization Header
+        headers: { Authorization: `Bearer ${token}` },
     })
 
     if (!res.ok) {
@@ -27,9 +29,10 @@ export async function getEventsCategories(): Promise<IGetEventCategoriesResponse
 }
 
 export async function deleteEventById(id: string): Promise<void> {
+    const token = sessionStorage.getItem('access_token')
     const res = await fetch(`${SERVER_URL}/v1/events/${id}`, {
         method: 'DELETE',
-        // TODO: add authorization Header
+        headers: { Authorization: `Bearer ${token}` },
     })
 
     if (!res.ok) {

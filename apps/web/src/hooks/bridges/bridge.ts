@@ -3,8 +3,7 @@ import { useEffect } from 'react'
 const messageHandler = (event: MessageEvent) => {
     const message = JSON.parse(event.data)
     if (message.type === 'jwt') {
-        // TODO: save jwt
-        // alert(message.jwt)
+        sessionStorage.setItem('access_token', message.jwt)
     }
 }
 
