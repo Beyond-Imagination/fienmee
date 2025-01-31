@@ -9,7 +9,7 @@ export default function Setting() {
     // TODO: add onClick action
     const logout = () => {
         sessionStorage.removeItem('access_token')
-        if (window.ReactNativeWebView) {
+        if (typeof window !== undefined) {
             window.ReactNativeWebView.postMessage(JSON.stringify({ type: 'logout' }))
         }
     }
