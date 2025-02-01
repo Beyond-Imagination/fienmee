@@ -17,8 +17,7 @@ export function WebviewScreen() {
     }
 
     const onMessage = async (e: WebViewMessageEvent) => {
-        const data = e.nativeEvent.data
-
+        const data = JSON.parse(e.nativeEvent.data)
         if (isLogoutData(data)) {
             await deleteToken()
             navigation.navigate('Login')

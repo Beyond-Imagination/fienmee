@@ -7,6 +7,12 @@ export default function Setting() {
     const userNickname = 'user1' // TODO: get user info
 
     // TODO: add onClick action
+    const logout = () => {
+        sessionStorage.removeItem('access_token')
+        if (typeof window !== undefined) {
+            window.ReactNativeWebView.postMessage(JSON.stringify({ type: 'logout' }))
+        }
+    }
     return (
         <div className="flex flex-col justify-items-center min-h-[80vh] px-8 mt-6">
             <div className="grid justify-items-center border-b gap-10 w-full py-8 border-gray-300">
@@ -31,7 +37,7 @@ export default function Setting() {
                 </SettingItem>
             </div>
             <div className="grid gap-4 w-full py-8">
-                <SettingItem text="로그아웃">
+                <SettingItem text="로그아웃" onClick={logout}>
                     <LogoutIcon width={32} height={32} />
                 </SettingItem>
             </div>
