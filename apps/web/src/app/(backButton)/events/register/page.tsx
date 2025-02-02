@@ -1,11 +1,20 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { Suspense, useEffect, useState } from 'react'
 import PhotoUploader from '@/components/events/photoUploader'
 import EventForm from '@/components/events/eventForm'
 import { useSearchParams } from 'next/navigation'
 
 export default function RegisterPage() {
+    return (
+        /* TODO: Create a custom loading screen */
+        <Suspense fallback={<div>Loading...</div>}>
+            <RegisterPageContent />
+        </Suspense>
+    )
+}
+
+function RegisterPageContent() {
     const searchParams = useSearchParams()
     const category = searchParams.get('category')
     const [selectedCategories, setSelectedCategories] = useState<Set<string>>(new Set())
