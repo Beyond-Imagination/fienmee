@@ -1,33 +1,37 @@
 'use client'
 
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { useSuspenseQuery } from '@tanstack/react-query'
 
+import { ICategory } from '@fienmee/types'
 import { getEventsCategories } from '@/api/event'
 
 const CategorySelect: React.FC = () => {
+    const [categories, setCategories] = useState<ICategory[]>([])
     const router = useRouter()
-    const { data } = useSuspenseQuery({
-        queryKey: ['categories'],
-        queryFn: () => getEventsCategories(),
-        refetchOnWindowFocus: false,
-    })
 
-    const handleCategoryClick = (categoryName: string) => {
-        router.push(`/events/register?category=${categoryName}`)
+    useEffect(() => {
+        const fetchCategories = async () => {
+            try {
+                const data = await getEventsCategories()
+                setCategories(data.categories)
+            } catch (error) {
+                console.error('Failed to fetch categories:', error)
+            }
+        }
+        fetchCategories()
+    }, [])
+
+    const handleCategoryClick = (category: ICategory) => {
+        router.push(`/events/register?category=${JSON.stringify(category)}`)
     }
 
     return (
         <div className="p-6">
             <h1 className="text-xl font-bold mb-4">카테고리 선택</h1>
             <ul>
-                {data.categories.map(category => (
-                    <li
-                        key={category._id}
-                        className="p-2 border-b cursor-pointer hover:bg-gray-100"
-                        onClick={() => handleCategoryClick(category.title)}
-                    >
+                {categories.map(category => (
+                    <li key={category._id} className="p-2 border-b cursor-pointer hover:bg-gray-100" onClick={() => handleCategoryClick(category)}>
                         {category.title}
                     </li>
                 ))}
