@@ -1,33 +1,18 @@
 'use client'
 
-import React, { useEffect, useState } from 'react'
-import { getEventsCategories } from '../../../../../api/event'
+import React from 'react'
 import { useRouter } from 'next/navigation'
+import { useSuspenseQuery } from '@tanstack/react-query'
 
-interface Category {
-    id: string
-    name: string
-}
+import { getEventsCategories } from '@/api/event'
 
 const CategorySelect: React.FC = () => {
-    const [categories, setCategories] = useState<Category[]>([])
     const router = useRouter()
-
-    useEffect(() => {
-        const fetchCategories = async () => {
-            try {
-                const data = await getEventsCategories()
-                const formattedCategories = data.categories.map((name, index) => ({
-                    id: index.toString(),
-                    name,
-                }))
-                setCategories(formattedCategories)
-            } catch (error) {
-                console.error('Failed to fetch categories:', error)
-            }
-        }
-        fetchCategories()
-    }, [])
+    const { data } = useSuspenseQuery({
+        queryKey: ['categories'],
+        queryFn: () => getEventsCategories(),
+        refetchOnWindowFocus: false,
+    })
 
     const handleCategoryClick = (categoryName: string) => {
         router.push(`/events/register?category=${categoryName}`)
@@ -37,13 +22,13 @@ const CategorySelect: React.FC = () => {
         <div className="p-6">
             <h1 className="text-xl font-bold mb-4">카테고리 선택</h1>
             <ul>
-                {categories.map(category => (
+                {data.categories.map(category => (
                     <li
-                        key={category.id}
+                        key={category._id}
                         className="p-2 border-b cursor-pointer hover:bg-gray-100"
-                        onClick={() => handleCategoryClick(category.name)}
+                        onClick={() => handleCategoryClick(category.title)}
                     >
-                        {category.name}
+                        {category.title}
                     </li>
                 ))}
             </ul>

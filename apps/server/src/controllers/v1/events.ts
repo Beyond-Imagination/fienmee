@@ -2,42 +2,19 @@ import express, { Request, Response, Router } from 'express'
 import asyncify from 'express-asyncify'
 import mongoose from 'mongoose'
 
-import { Events, EventsModel } from '@/models'
+import { CategoryModel, Events, EventsModel } from '@/models'
 import { verifyToken } from '@/middlewares/auth'
 
 const router: Router = asyncify(express.Router())
 
 router.get('/categories', async (req: Request, res: Response) => {
     // TODO: find user favorite categories
-    // TODO: remove hard coding after discussion
-    const categories = [
-        '경관',
-        '교육',
-        '국악',
-        '기타',
-        '독주',
-        '독창회',
-        '무용',
-        '문화',
-        '뮤지컬',
-        '미술',
-        '시민화합',
-        '역사',
-        '연극',
-        '영화',
-        '예술',
-        '오페라',
-        '자연',
-        '전시',
-        '전통',
-        '체험',
-        '축제',
-        '콘서트',
-        '클래식',
-    ]
+    const categories = await CategoryModel.getCategoriesByType('normal')
+    const defaultCategories = await CategoryModel.getCategoriesByType('special')
     res.status(200).json({
         favoriteCategories: [],
         categories: categories,
+        defaultCategories: defaultCategories,
     })
 })
 
@@ -88,14 +65,14 @@ router.get('/:id', async (req: Request, res: Response) => {
 
 router.get('/category/:category', verifyToken, async (req: Request, res: Response) => {
     const options = { sort: { startDate: 1, endDate: 1, createdAt: -1 }, page: Number(req.query.page) || 1, limit: Number(req.query.limit) || 10 }
-    const category = req.params.category
+    const category = await CategoryModel.getCategoryById(req.params.category)
 
     let result: mongoose.PaginateResult<mongoose.PaginateDocument<typeof Events, object, object, mongoose.PaginateOptions>>
-    if (category === '내가 등록한 행사') {
+    if (category.title === '내가 등록한 행사') {
         result = await EventsModel.findByAuthor(req.user._id, options)
     } else {
         // TODO: add get hottest events
-        result = await EventsModel.findByCategory(category, options)
+        result = await EventsModel.findByCategory(category._id, options)
     }
 
     const events = result.docs.map(event => ({ ...event.toJSON() }))

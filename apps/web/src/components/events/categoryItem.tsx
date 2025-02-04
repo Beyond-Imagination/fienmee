@@ -2,11 +2,12 @@
 
 import Link from 'next/link'
 
+import { ICategory } from '@fienmee/types'
 import { BaseCategoryIcon, HottestCategoryIcon, WrittenCategoryIcon } from '@/components/icon'
 import { categoryStore, titleStore } from '@/store'
 
 interface Props {
-    category: string
+    category: ICategory
     isFavorites: boolean
 }
 
@@ -15,17 +16,16 @@ export function CategoryItem({ category, isFavorites }: Props) {
     const { setTitle } = titleStore()
     const onClick = () => {
         setCategory(category)
-        setTitle(category)
+        setTitle(category.title)
     }
-    // TODO: change category names
-    if (category === '내가 등록한 행사') {
+    if (category.title === '내가 등록한 행사') {
         return (
             <Link className="flex flex-row w-full items-center justify-start p-4 gap-4" href={`/events/category`} onClick={onClick}>
                 <WrittenCategoryIcon width={40} height={40} />
                 <div className="text-3xl text-center">내가 등록한 행사</div>
             </Link>
         )
-    } else if (category === '인기 행사') {
+    } else if (category.title === '인기 행사') {
         return (
             <Link className="flex flex-row w-full items-center justify-start p-4 gap-4" href={`/events/category`} onClick={onClick}>
                 <HottestCategoryIcon width={40} height={40} />
@@ -37,7 +37,7 @@ export function CategoryItem({ category, isFavorites }: Props) {
         return (
             <Link className="flex flex-row w-full items-center justify-start p-4 gap-4" href={`/events/category`} onClick={onClick}>
                 <BaseCategoryIcon width={40} height={40} isFavorites={isFavorites} />
-                <div className="text-3xl text-center pt-1">{category}</div>
+                <div className="text-3xl text-center pt-1">{category.title}</div>
             </Link>
         )
     }

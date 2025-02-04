@@ -1,6 +1,7 @@
 import '@/config'
 import Server from '@/server'
 import { logger } from '@/utils/logger'
+import { CategoryModel } from '@/models'
 import * as db from '@/models/connector'
 import Scheduler from '@/scheduler'
 ;(async () => {
@@ -10,6 +11,7 @@ import Scheduler from '@/scheduler'
 
     scheduler.run()
     server.listen()
+    await CategoryModel.initialize()
     async function shutdown() {
         logger.info('gracefully shutdown fienmee')
         await Promise.all([server.close, scheduler.stop])
