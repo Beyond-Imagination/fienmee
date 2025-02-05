@@ -1,18 +1,15 @@
 'use client'
-
 import React, { useState } from 'react'
-import { IMakeNewScheduleRequest } from '@fienmee/types'
+import { redirect } from 'next/navigation'
 
-export default function ScheduleRegister({ title, startDate, endDate, description }: IMakeNewScheduleRequest) {
+export default function ScheduleRegister() {
     const [isAllDay, setIsAllDay] = useState<boolean>(false)
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
         // todo: add logic for validating and organizing request body object
-        const form: HTMLFormElement = e.target as HTMLFormElement
-        const formData = new FormData(form)
-        const formDataJson = Object.fromEntries(formData.entries())
-        console.log(`formDataJson: ${JSON.stringify(formDataJson)}`)
+        alert('todo: submit form data')
+        redirect('/')
         // todo: send request to server
     }
 
@@ -23,7 +20,7 @@ export default function ScheduleRegister({ title, startDate, endDate, descriptio
                     <label className="block text-base font-medium mb-2" htmlFor={'input-title'}>
                         일정 제목
                     </label>
-                    <input className="border rounded-lg" name="title" value={title} type="text" id={'input-title'} />
+                    <input className="border rounded-lg" name="title" type="text" id={'input-title'} />
                 </div>
 
                 <div className="w-full mb-5">
@@ -45,24 +42,14 @@ export default function ScheduleRegister({ title, startDate, endDate, descriptio
                                 <div className="flex flex-col gap-3 items-center">
                                     <div className="flex items-center justify-end gap-2">
                                         <span className="text-sm text-gray-700">시작</span>
-                                        <input
-                                            name="start-date"
-                                            type="date"
-                                            value={startDate?.getDay()}
-                                            className="border rounded-lg px-2 py-1 w-36"
-                                        />
-                                        <input
-                                            name="start-time"
-                                            type="time"
-                                            value={startDate?.getHours()}
-                                            className="border rounded-lg px-2 py-1 w-28"
-                                        />
+                                        <input name="start-date" type="date" className="border rounded-lg px-2 py-1 w-36" />
+                                        <input name="start-time" type="time" className="border rounded-lg px-2 py-1 w-28" />
                                     </div>
 
                                     <div className="flex items-center justify-end gap-2">
                                         <span className="text-sm text-gray-700">종료</span>
-                                        <input name="end-date" type="date" value={endDate?.getDay()} className="border rounded-lg px-2 py-1 w-36" />
-                                        <input name="end-time" type="time" value={endDate?.getHours()} className="border rounded-lg px-2 py-1 w-28" />
+                                        <input name="end-date" type="date" className="border rounded-lg px-2 py-1 w-36" />
+                                        <input name="end-time" type="time" className="border rounded-lg px-2 py-1 w-28" />
                                     </div>
                                 </div>
                             </>
@@ -74,7 +61,7 @@ export default function ScheduleRegister({ title, startDate, endDate, descriptio
                     <label className="block text-base font-medium mb-2" htmlFor={'input-description'}>
                         설명
                     </label>
-                    <textarea value={description} className="border rounded-lg" name="description" id={'input-description'} />
+                    <textarea className="border rounded-lg" name="description" id={'input-description'} />
                 </div>
 
                 <div className="w-full mt-10 flex flex-row justify-between gap-5 flex-center item-center">
