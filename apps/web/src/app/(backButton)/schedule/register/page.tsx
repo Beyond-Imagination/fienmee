@@ -8,7 +8,6 @@ export default function ScheduleRegister() {
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
         // todo: add logic for validating and organizing request body object
-        alert('todo: submit form data')
         redirect('/')
         // todo: send request to server
     }
