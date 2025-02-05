@@ -1,8 +1,9 @@
-import React, { useRef } from 'react'
+import React, { useEffect, useRef } from 'react'
+import { BackHandler } from 'react-native'
 import { WebView, WebViewMessageEvent } from 'react-native-webview'
 import { useNavigation } from '@react-navigation/native'
 
-import { IJWTData, isLogoutData } from '@fienmee/types'
+import { IBackButtonData, IJWTData, isLogoutData } from '@fienmee/types'
 
 import { ENV, FE_URL } from '@/config'
 import { deleteToken, getToken } from '@/stores/token'
@@ -23,6 +24,18 @@ export function WebviewScreen() {
             navigation.navigate('Login')
         }
     }
+
+    useEffect(() => {
+        const onPress = () => {
+            webViewRef.current?.postMessage(JSON.stringify({ type: 'backButton' } as IBackButtonData))
+            return true
+        }
+
+        BackHandler.addEventListener('hardwareBackPress', onPress)
+        return () => {
+            BackHandler.removeEventListener('hardwareBackPress', onPress)
+        }
+    }, [])
 
     return (
         <WebView
