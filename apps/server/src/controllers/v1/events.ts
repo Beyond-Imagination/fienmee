@@ -90,4 +90,9 @@ router.get('/category/:category', verifyToken, async (req: Request, res: Respons
     })
 })
 
+router.post('category/initialize', async (req: Request, res: Response) => {
+    await CategoryModel.initialize()
+    res.sendStatus(200)
+})
+
 export default router
