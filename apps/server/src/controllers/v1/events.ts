@@ -4,6 +4,7 @@ import mongoose from 'mongoose'
 
 import { CategoryModel, Events, EventsModel } from '@/models'
 import { verifyToken } from '@/middlewares/auth'
+import { CategoryCode } from '@fienmee/types'
 
 const router: Router = asyncify(express.Router())
 
@@ -68,7 +69,7 @@ router.get('/category/:category', verifyToken, async (req: Request, res: Respons
     const category = await CategoryModel.getCategoryById(req.params.category)
 
     let result: mongoose.PaginateResult<mongoose.PaginateDocument<typeof Events, object, object, mongoose.PaginateOptions>>
-    if (category.title === '내가 등록한 행사') {
+    if (category.code === CategoryCode.MYEVENT) {
         result = await EventsModel.findByAuthor(req.user._id, options)
     } else {
         // TODO: add get hottest events
@@ -92,7 +93,7 @@ router.get('/category/:category', verifyToken, async (req: Request, res: Respons
 
 router.post('category/initialize', async (req: Request, res: Response) => {
     await CategoryModel.initialize()
-    res.sendStatus(200)
+    res.sendStatus(204)
 })
 
 export default router

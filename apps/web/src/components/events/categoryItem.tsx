@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 
-import { ICategory } from '@fienmee/types'
+import { CategoryCode, ICategory } from '@fienmee/types'
 import { BaseCategoryIcon, HottestCategoryIcon, WrittenCategoryIcon } from '@/components/icon'
 import { categoryStore, titleStore } from '@/store'
 
@@ -18,18 +18,18 @@ export function CategoryItem({ category, isFavorites }: Props) {
         setCategory(category)
         setTitle(category.title)
     }
-    if (category.title === '내가 등록한 행사') {
+    if (category.code === CategoryCode.MYEVENT) {
         return (
             <Link className="flex flex-row w-full items-center justify-start p-4 gap-4" href={`/events/category`} onClick={onClick}>
                 <WrittenCategoryIcon width={40} height={40} />
-                <div className="text-3xl text-center">내가 등록한 행사</div>
+                <div className="text-3xl text-center">{category.title}</div>
             </Link>
         )
-    } else if (category.title === '인기 행사') {
+    } else if (category.code === CategoryCode.HOTEVENT) {
         return (
             <Link className="flex flex-row w-full items-center justify-start p-4 gap-4" href={`/events/category`} onClick={onClick}>
                 <HottestCategoryIcon width={40} height={40} />
-                <div className="text-3xl text-center">인기 행사</div>
+                <div className="text-3xl text-center">{category.title}</div>
             </Link>
         )
     } else {

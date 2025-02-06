@@ -1,4 +1,4 @@
-import { ICategory } from '@fienmee/types'
+import { CategoryCode, ICategory } from '@fienmee/types'
 import { create } from 'zustand'
 
 interface CategoryStore {
@@ -11,11 +11,12 @@ export const categoryStore = create<CategoryStore>(set => ({
     category: {
         _id: '',
         title: '',
+        code: CategoryCode.MYEVENT,
     },
     setCategory: category => {
         set({ category })
     },
     clearCategory: () => {
-        set({ category: { _id: '', title: '' } })
+        set({ category: { _id: '', title: '', code: CategoryCode.MYEVENT } })
     },
 }))
