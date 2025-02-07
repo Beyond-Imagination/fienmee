@@ -2,9 +2,23 @@ import { getSeoulData } from '@/services/seoul/seoul.data'
 import { logger } from '@/utils/logger'
 import { ICulturalEvent } from '@/types/seoul.data'
 import { SeoulDataUpdateError } from '@/types/errors'
-import { EventsModel } from '@/models'
+import { CategoryModel, EventsModel } from '@/models'
 
 const BATCH_SIZE = 1000
+const categoryMap = {
+    영화: '영화, 드라마',
+    연극: '문화예술',
+    '전시/미술': '문화예술',
+    '축제-문화/예술': '문화예술',
+    '교육/체험': '교육',
+    '축제-자연/경관': '자연, 야외활동',
+    국악: '음악',
+    '독주/독창회': '음악',
+    '뮤지컬/오페라': '음악',
+    무용: '음악',
+    콘서트: '음악',
+    클래식: '음악',
+}
 
 async function saveSeoulData(data: Array<ICulturalEvent>, today: string): Promise<boolean> {
     const bulkOps = []
@@ -15,6 +29,7 @@ async function saveSeoulData(data: Array<ICulturalEvent>, today: string): Promis
             check = false
             break
         }
+        const category = await CategoryModel.getCategoryByTitle(categoryMap[event.CODENAME] || '기타')
         bulkOps.push({
             updateOne: {
                 filter: {
@@ -34,7 +49,7 @@ async function saveSeoulData(data: Array<ICulturalEvent>, today: string): Promis
                     description: `프로그램 소개: ${event.PROGRAM}\n${event.ETC_DESC && `기타내용: ${event.ETC_DESC}\n`}${event.PLAYER && `공연자: ${event.PLAYER}\n`}\n상세정보보기: ${event.HMPG_ADDR}\n주최기관: ${event.ORG_NAME}(${event.ORG_LINK})`,
                     photo: [event.MAIN_IMG],
                     cost: event.IS_FREE === '무료' ? '무료' : event.USE_FEE,
-                    category: event.CODENAME.split(/[\s\-/_\\]/),
+                    category: [category._id],
                     targetAudience: [event.USE_TRGT],
                     registeredAt: new Date(event.RGSTDATE),
                 },
