@@ -4,6 +4,7 @@ import { Suspense, useEffect, useState } from 'react'
 import PhotoUploader from '@/components/events/photoUploader'
 import EventForm from '@/components/events/eventForm'
 import { useSearchParams } from 'next/navigation'
+import { ICategory } from '@fienmee/types'
 
 export default function RegisterPage() {
     return (
@@ -17,7 +18,7 @@ export default function RegisterPage() {
 function RegisterPageContent() {
     const searchParams = useSearchParams()
     const category = searchParams.get('category')
-    const [selectedCategories, setSelectedCategories] = useState<Set<string>>(new Set())
+    const [selectedCategories, setSelectedCategories] = useState<Set<ICategory>>(new Set())
     const [isAllDay, setIsAllDay] = useState(false)
     const [photos, setPhotos] = useState<string[]>([])
 
@@ -30,7 +31,7 @@ function RegisterPageContent() {
 
     useEffect(() => {
         if (category) {
-            setSelectedCategories(prev => new Set(prev).add(category))
+            setSelectedCategories(prev => new Set(prev).add(JSON.parse(category)))
         }
     }, [category])
 

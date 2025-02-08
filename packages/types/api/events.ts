@@ -1,3 +1,5 @@
+import { ICategory } from './category'
+
 export interface IEvent {
     _id: string
     name: string
@@ -13,7 +15,7 @@ export interface IEvent {
     cost: string
     likeCount: number
     commentCount: number
-    category: string[]
+    category: ICategory[]
     targetAudience: string[]
     createdAt: Date
 }

@@ -2,7 +2,7 @@ import { getModelForClass, plugin, prop, ReturnModelType, defaultClasses } from 
 import mongoose from 'mongoose'
 import mongoosePaginate from 'mongoose-paginate-v2'
 
-import { User } from '@/models'
+import { Category, User } from '@/models'
 
 @plugin(mongoosePaginate)
 export class Events extends defaultClasses.TimeStamps {
@@ -49,8 +49,8 @@ export class Events extends defaultClasses.TimeStamps {
     @prop()
     public comments: mongoose.Types.ObjectId[]
 
-    @prop()
-    public category: string[]
+    @prop({ ref: Category })
+    public category: mongoose.Types.ObjectId[]
 
     @prop()
     public targetAudience: string[]
@@ -78,10 +78,19 @@ export class Events extends defaultClasses.TimeStamps {
 
     public static async findByCategory(
         this: ReturnModelType<typeof Events>,
-        category: string,
+        category: mongoose.Types.ObjectId,
         options: mongoose.PaginateOptions,
     ): Promise<mongoose.PaginateResult<mongoose.PaginateDocument<typeof Events, object, object, mongoose.PaginateOptions>>> {
-        return await this.paginate({ category: category }, options)
+        return await this.paginate(
+            { category: category },
+            {
+                ...options,
+                populate: {
+                    path: 'category',
+                    select: 'title',
+                },
+            },
+        )
     }
 
     public static async findByAuthor(
@@ -89,7 +98,16 @@ export class Events extends defaultClasses.TimeStamps {
         author: mongoose.Types.ObjectId,
         options: mongoose.PaginateOptions,
     ): Promise<mongoose.PaginateResult<mongoose.PaginateDocument<typeof Events, object, object, mongoose.PaginateOptions>>> {
-        return await this.paginate({ authorId: author }, options)
+        return await this.paginate(
+            { authorId: author },
+            {
+                ...options,
+                populate: {
+                    path: 'category',
+                    select: 'title',
+                },
+            },
+        )
     }
 }
 
