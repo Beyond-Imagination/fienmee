@@ -34,3 +34,28 @@ export interface IGetEventCategoriesResponse {
     categories: string[]
     favoriteCategories: string[]
 }
+
+export interface IPutEventRequest {
+    body: {
+        name: string
+        address: string
+        location: {
+            type: string
+            coordinates: number[]
+        }
+        startDate: Date
+        endDate: Date
+        description: string
+        photo: string[]
+        cost: string
+        likeCount: number
+        commentCount: number
+        category: string[]
+        targetAudience: string[]
+        createdAt: Date
+    }
+    uri: {
+        _id: string
+    }
+    // TODO : add token
+}
