@@ -1,0 +1,32 @@
+FROM node:18-slim AS base
+ENV PNPM_HOME="/pnpm"
+ENV PATH="$PNPM_HOME:$PATH"
+RUN npm install -g corepack@latest
+RUN corepack enable pnpm
+
+WORKDIR /fienmee
+
+COPY pnpm-workspace.yaml /fienmee/pnpm-workspace.yaml
+COPY tsconfig.base.json /fienmee/tsconfig.base.json
+COPY packages /fienmee/packages
+
+COPY package.json /fienmee/package.json
+COPY pnpm-lock.yaml /fienmee/pnpm-lock.yaml
+
+FROM base as build
+
+COPY apps/server /fienmee/apps/server
+
+RUN pnpm install
+RUN pnpm build:server
+
+FROM base AS runner
+
+COPY --from=build /fienmee/apps/server/package.json /fienmee/apps/server/package.json
+COPY --from=build /fienmee/apps/server/dist /fienmee/apps/server/dist
+
+RUN pnpm install --prod --ignore-scripts
+
+EXPOSE 4000
+
+CMD [ "pnpm", "start:server" ]
