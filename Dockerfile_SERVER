@@ -27,6 +27,4 @@ COPY --from=build /fienmee/apps/server/dist /fienmee/apps/server/dist
 
 RUN pnpm install --prod --ignore-scripts
 
-EXPOSE 4000
-
 CMD [ "pnpm", "start:server" ]
