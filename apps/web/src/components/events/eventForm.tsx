@@ -4,14 +4,14 @@ import InputField from '@/components/events/inputField'
 import SubmitButton from './submitButton'
 import EventVenueSelector from './eventVenueSelector'
 import { registerEvent } from '@/api/event'
-import { IEvent } from '@fienmee/types'
+import { ICategory, IEvent } from '@fienmee/types'
 import { useRouter } from 'next/navigation'
 import { ArrowIcon } from '../icon/icon'
 
 interface EventFormProps {
     isAllDay: boolean
     toggleAllDay: () => void
-    selectedCategories: Set<string>
+    selectedCategories: Set<ICategory>
     photos: string[]
 }
 
@@ -84,7 +84,7 @@ const EventForm: React.FC<EventFormProps> = ({ isAllDay, toggleAllDay, selectedC
                 <div className="flex flex-wrap gap-2">
                     {Array.from(selectedCategories).map((category, index) => (
                         <span key={index} className="bg-white px-2 py-1 rounded border">
-                            {category}
+                            {category.title}
                         </span>
                     ))}
                 </div>
