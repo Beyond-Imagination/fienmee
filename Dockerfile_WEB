@@ -1,0 +1,20 @@
+FROM node:18-slim AS build
+ENV PNPM_HOME="/pnpm"
+ENV PATH="$PNPM_HOME:$PATH"
+RUN npm install -g corepack@latest
+RUN corepack enable pnpm
+
+WORKDIR /fienmee
+
+COPY . /fienmee
+
+RUN pnpm install
+RUN pnpm build:web
+
+FROM node:18-slim AS web
+
+COPY --from=build /fienmee/apps/web/.next/standalone /fienmee
+COPY --from=build /fienmee/apps/web/.next/static /fienmee/apps/web/.next/static
+COPY --from=build /fienmee/apps/web/public /fienmee/apps/web/public
+
+CMD [ "node", "/fienmee/apps/web/server.js" ]
