@@ -13,7 +13,7 @@ export class Category extends defaultClasses.TimeStamps {
     public type: string
 
     @prop({ required: true })
-    public code: CategoryCode
+    public code: number | CategoryCode
 
     public toJSON(): object {
         return {
