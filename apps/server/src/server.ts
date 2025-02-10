@@ -45,7 +45,7 @@ export default class Server {
 
     public listen() {
         this.server = this.app.listen(PORT, HOST, () => {
-            logger.info(`🚀 App listening on the port: ${PORT} ENV: ${NODE_ENV}`)
+            logger.info(`🚀 App listening on the host: ${HOST} port: ${PORT} ENV: ${NODE_ENV}`)
         })
     }
 

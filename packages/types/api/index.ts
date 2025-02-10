@@ -1,4 +1,5 @@
 export * from './users'
 export * from './events'
 export * from './errors'
+export * from './schedules'
 export * from './category'
