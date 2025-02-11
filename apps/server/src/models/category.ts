@@ -12,8 +12,8 @@ export class Category extends defaultClasses.TimeStamps {
     @prop({ default: 'normal' })
     public type: string
 
-    @prop({ required: true })
-    public code: number | CategoryCode
+    @prop({ required: true, enum: Object.values(CategoryCode).filter(v => typeof v === 'number') })
+    public code: number
 
     public toJSON(): object {
         return {
@@ -27,7 +27,7 @@ export class Category extends defaultClasses.TimeStamps {
         for (const category of Object.keys(fixedCategory)) {
             const exists = await this.exists(fixedCategory[category])
             if (!exists) {
-                await this.create(category)
+                await this.create(fixedCategory[category])
             }
         }
     }
