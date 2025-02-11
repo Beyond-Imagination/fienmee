@@ -13,8 +13,8 @@ export function WebviewScreen() {
     const navigation = useNavigation<WebviewScreenProps['navigation']>()
     const webViewRef = useRef<WebView>(null)
     const onLoad = async () => {
-        const jwt = await getToken()
-        webViewRef.current?.postMessage(JSON.stringify({ type: 'jwt', jwt: jwt } as IJWTData))
+        const credential = await getToken()
+        webViewRef.current?.postMessage(JSON.stringify({ type: 'jwt', jwt: credential.accessToken } as IJWTData))
     }
 
     const onMessage = async (e: WebViewMessageEvent) => {

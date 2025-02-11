@@ -24,12 +24,12 @@ export function RegisterScreen({ route }: props) {
 
     const onPress = async () => {
         try {
-            const { accessToken } = await register({
+            const credential = await register({
                 accessToken: route.params.accessToken,
                 refreshToken: route.params.refreshToken,
                 provider: route.params.provider,
             })
-            await setToken(accessToken)
+            await setToken(credential)
             navigation.navigate('WebView')
         } catch (error) {
             console.log(error)

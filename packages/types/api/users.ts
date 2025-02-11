@@ -1,12 +1,15 @@
+export interface ICredential {
+    accessToken: string
+    refreshToken: string
+}
+
 export interface loginRequest {
     accessToken: string
     refreshToken: string
     provider: string
 }
 
-export interface loginResponse {
-    accessToken: string
-}
+export type loginResponse = ICredential
 
 export interface registerRequest {
     accessToken: string
@@ -14,6 +17,4 @@ export interface registerRequest {
     provider: string
 }
 
-export interface registerResponse {
-    accessToken: string
-}
+export type registerResponse = ICredential
