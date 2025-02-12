@@ -8,7 +8,7 @@ import { ICategory } from '@fienmee/types'
 
 export default function EventUpdate() {
     const { event, setEvent } = eventStore()
-    const [selectedCategories, setSelectedCategories] = useState<Set<ICategory>>(new Set())
+    const [selectedCategories, setSelectedCategories] = useState<Set<ICategory>>(new Set(event.category))
     const [isAllDay, setIsAllDay] = useState(false)
     const category = event.category
     const handleAddPhoto = (e: React.ChangeEvent<HTMLInputElement>) => {
