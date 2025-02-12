@@ -8,6 +8,11 @@ import { CategoryCode } from '@fienmee/types'
 
 const router: Router = asyncify(express.Router())
 
+router.post('/category/initialize', async (req: Request, res: Response) => {
+    await CategoryModel.initialize()
+    res.sendStatus(204)
+})
+
 router.get('/categories', async (req: Request, res: Response) => {
     // TODO: find user favorite categories
     const categories = await CategoryModel.getCategoriesByType('normal')
@@ -89,11 +94,6 @@ router.get('/category/:category', verifyToken, async (req: Request, res: Respons
             limit: result.limit,
         },
     })
-})
-
-router.post('category/initialize', async (req: Request, res: Response) => {
-    await CategoryModel.initialize()
-    res.sendStatus(204)
 })
 
 export default router
