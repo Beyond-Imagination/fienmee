@@ -1,3 +1,5 @@
+import { FullScreenDialog } from '@/components/modal'
+
 interface Props {
     isOpen: boolean
     onClose: () => void
@@ -5,10 +7,7 @@ interface Props {
 
 export default function DeleteAccountModal({ isOpen, onClose }: Props) {
     return (
-        <div
-            className={`fixed inset-0 bg-white items-center justify-center shadow-[0_-1px_4px_rgba(0,0,0,0.25)] rounded-2xl z-50 
-                        ${isOpen ? 'translate-y-[2rem]' : 'translate-y-full'} transition-transform duration-300 p-6`}
-        >
+        <FullScreenDialog isOpen={isOpen} hasClose={false} onClose={onClose}>
             <div className="flex flex-col w-full">
                 <span className="text-2xl text-center font-semibold w-full">회원 탈퇴 시 주의 사항</span>
                 {/*TODO: add Cautions*/}
@@ -26,6 +25,6 @@ export default function DeleteAccountModal({ isOpen, onClose }: Props) {
                     회원 탈퇴 취소
                 </button>
             </div>
-        </div>
+        </FullScreenDialog>
     )
 }
