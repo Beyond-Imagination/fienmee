@@ -58,10 +58,10 @@ router.delete('/:id', async (req: Request, res: Response) => {
     res.sendStatus(200)
 })
 
-router.get('/:id', async (req: Request, res: Response) => {
+router.get('/:id', verifyToken, async (req: Request, res: Response) => {
     const event = await EventsModel.findById(req.params.id)
 
-    res.status(200).json(event)
+    res.status(200).json({ ...event, isAuthor: event.authorId.equals(req.user._id) })
 })
 
 router.get('/category/:category', verifyToken, async (req: Request, res: Response) => {

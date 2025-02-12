@@ -18,6 +18,7 @@ export interface IEvent {
     category: ICategory[]
     targetAudience: string[]
     createdAt: Date
+    isAuthor: boolean
 }
 
 export interface IGetEventsByCategoryResponse {
@@ -30,11 +31,6 @@ export interface IGetEventsByCategoryResponse {
         limit: number
     }
     events: IEvent[]
-}
-
-export interface IGetEventCategoriesResponse {
-    categories: string[]
-    favoriteCategories: string[]
 }
 
 export interface IPutEventRequest {
@@ -59,5 +55,4 @@ export interface IPutEventRequest {
     uri: {
         _id: string
     }
-    // TODO : add token
 }

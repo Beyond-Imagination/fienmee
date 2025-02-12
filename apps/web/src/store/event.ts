@@ -25,6 +25,7 @@ export const eventStore = create<eventState>(set => ({
         category: [],
         targetAudience: [],
         createdAt: new Date(),
+        isAuthor: false,
     },
     setEvent: event => {
         set({ event })

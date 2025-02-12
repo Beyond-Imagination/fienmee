@@ -58,11 +58,12 @@ export async function registerEvent(eventData: IEvent): Promise<void> {
 }
 
 export async function updateEvent(request: IPutEventRequest): Promise<void> {
+    const token = sessionStorage.getItem('access_token')
     const res = await fetch(`${SERVER_URL}/v1/events/${request.uri._id}`, {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json',
-            // TODO: add authorization Header
+            Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(request.body),
     })

@@ -4,10 +4,11 @@ import PhotoUploader from '@/components/events/photoUploader'
 import EventForm from '@/components/events/eventForm'
 import { useEffect, useState } from 'react'
 import { eventStore } from '@/store'
+import { ICategory } from '@fienmee/types'
 
 export default function EventUpdate() {
     const { event, setEvent } = eventStore()
-    const [selectedCategories, setSelectedCategories] = useState<Set<string>>(new Set())
+    const [selectedCategories, setSelectedCategories] = useState<Set<ICategory>>(new Set())
     const [isAllDay, setIsAllDay] = useState(false)
     const category = event.category
     const handleAddPhoto = (e: React.ChangeEvent<HTMLInputElement>) => {

@@ -8,7 +8,7 @@ import { registerEvent, updateEvent } from '@/api/event'
 import { ICategory, IEvent } from '@fienmee/types'
 import { useRouter } from 'next/navigation'
 import { ArrowIcon } from '../icon/icon'
-import {eventStore} from "@/store";
+import { eventStore } from '@/store'
 
 interface EventFormProps {
     isAllDay: boolean
@@ -48,6 +48,7 @@ const EventForm: React.FC<EventFormProps> = ({ isAllDay, toggleAllDay, selectedC
             category: [],
             targetAudience: [],
             createdAt: new Date(),
+            isAuthor: false,
         },
     )
 
@@ -56,7 +57,7 @@ const EventForm: React.FC<EventFormProps> = ({ isAllDay, toggleAllDay, selectedC
         if (name === 'targetAudience') {
             setFormData(prevState => ({
                 ...prevState,
-                [name]: value ? [value] : []
+                [name]: value ? [value] : [],
             }))
         } else {
             setFormData(prevState => ({ ...prevState, [name]: value }))
