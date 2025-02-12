@@ -29,7 +29,7 @@ export function Navigation() {
                 <NavigationItem uri={'/events/register'} text={'행사 등록'} isClicked={false} onClick={() => setTitle('행사 등록')}>
                     <AddEventButtonIcon width={32} height={32} />
                 </NavigationItem>
-                <NavigationItem uri={'/schedule/register'} text={'일정 등록'} isClicked={false} onClick={() => setTitle('일정 등록')}>
+                <NavigationItem uri={'/schedules/register'} text={'일정 등록'} isClicked={false} onClick={() => setTitle('일정 등록')}>
                     <AddScheduleButtonIcon width={32} height={32} />
                 </NavigationItem>
             </div>
@@ -37,8 +37,8 @@ export function Navigation() {
                 <NavigationItem uri={'/'} text={'홈'} isClicked={pathname === '/'}>
                     <HomeNavigationIcon isClicked={pathname === '/'} width={48} height={48} />
                 </NavigationItem>
-                <NavigationItem uri={'/schedule'} text={'캘린더'} isClicked={pathname === '/schedule'}>
-                    <CalenderNavigationIcon isClicked={pathname === '/schedule'} width={48} height={48} />
+                <NavigationItem uri={'/schedules'} text={'캘린더'} isClicked={pathname === '/schedules'}>
+                    <CalenderNavigationIcon isClicked={pathname === '/schedules'} width={48} height={48} />
                 </NavigationItem>
                 <div className="inline-flex flex-col items-center justify-center p-2">
                     <button
