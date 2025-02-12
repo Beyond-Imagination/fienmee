@@ -65,11 +65,11 @@ const EventForm: React.FC<EventFormProps> = ({ isAllDay, toggleAllDay, selectedC
     }
 
     const onStartDateTimeChange = (dateTime: string) => {
-        setFormData(prevState => ({ ...prevState, startDateTime: dateTime }))
+        setFormData(prevState => ({ ...prevState, startDate: new Date(dateTime) }))
     }
 
     const onEndDateTimeChange = (dateTime: string) => {
-        setFormData(prevState => ({ ...prevState, endDateTime: dateTime }))
+        setFormData(prevState => ({ ...prevState, endDate: new Date(dateTime) }))
     }
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -130,6 +130,8 @@ const EventForm: React.FC<EventFormProps> = ({ isAllDay, toggleAllDay, selectedC
             <EventTimeSelector
                 isAllDay={isAllDay}
                 toggleAllDay={toggleAllDay}
+                initStartDate={formData.startDate}
+                initEndDate={formData.endDate}
                 onStartDateChange={onStartDateTimeChange}
                 onEndDateChange={onEndDateTimeChange}
             />

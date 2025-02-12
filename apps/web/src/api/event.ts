@@ -42,11 +42,12 @@ export async function deleteEventById(id: string): Promise<void> {
 }
 
 export async function registerEvent(eventData: IEvent): Promise<void> {
+    const token = sessionStorage.getItem('access_token')
     const res = await fetch(`${SERVER_URL}/v1/events`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            // TODO: add authorization Header
+            Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(eventData),
     })

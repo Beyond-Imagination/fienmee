@@ -1,5 +1,5 @@
 import { create } from 'zustand'
-import { IEvent } from '@fienmee/types'
+import { ICategory, IEvent } from '@fienmee/types'
 
 interface eventState {
     event: IEvent
@@ -22,7 +22,7 @@ export const eventStore = create<eventState>(set => ({
         cost: '',
         likeCount: 0,
         commentCount: 0,
-        category: [],
+        category: [] as ICategory[],
         targetAudience: [],
         createdAt: new Date(),
         isAuthor: false,

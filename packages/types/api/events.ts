@@ -48,7 +48,7 @@ export interface IPutEventRequest {
         cost: string
         likeCount: number
         commentCount: number
-        category: string[]
+        category: ICategory[]
         targetAudience: string[]
         createdAt: Date
     }

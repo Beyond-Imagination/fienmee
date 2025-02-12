@@ -24,9 +24,10 @@ router.get('/categories', async (req: Request, res: Response) => {
     })
 })
 
-router.post('/', async (req: Request, res: Response) => {
+router.post('/', verifyToken, async (req: Request, res: Response) => {
     await EventsModel.create({
         name: req.body.name,
+        authorId: req.user._id,
         location: req.body.location,
         startDate: req.body.startDate,
         endDate: req.body.endDate,
@@ -80,8 +81,7 @@ router.get('/category/:category', verifyToken, async (req: Request, res: Respons
         // TODO: add get hottest events
         result = await EventsModel.findByCategory(category._id, options)
     }
-
-    const events = result.docs.map(event => ({ ...event.toJSON() }))
+    const events = result.docs.map(event => ({ ...event.toJSON(), isAuthor: event.get('authorId')?.equals(req.user._id) }))
 
     res.status(200).json({
         events: events,
