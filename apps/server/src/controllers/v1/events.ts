@@ -24,9 +24,10 @@ router.get('/categories', async (req: Request, res: Response) => {
     })
 })
 
-router.post('/', async (req: Request, res: Response) => {
+router.post('/', verifyToken, async (req: Request, res: Response) => {
     await EventsModel.create({
         name: req.body.name,
+        authorId: req.user._id,
         location: req.body.location,
         startDate: req.body.startDate,
         endDate: req.body.endDate,
@@ -63,10 +64,10 @@ router.delete('/:id', async (req: Request, res: Response) => {
     res.sendStatus(200)
 })
 
-router.get('/:id', async (req: Request, res: Response) => {
+router.get('/:id', verifyToken, async (req: Request, res: Response) => {
     const event = await EventsModel.findById(req.params.id)
 
-    res.status(200).json(event)
+    res.status(200).json({ ...event, isAuthor: event.authorId.equals(req.user._id) })
 })
 
 router.get('/category/:category', verifyToken, async (req: Request, res: Response) => {
@@ -80,8 +81,7 @@ router.get('/category/:category', verifyToken, async (req: Request, res: Respons
         // TODO: add get hottest events
         result = await EventsModel.findByCategory(category._id, options)
     }
-
-    const events = result.docs.map(event => ({ ...event.toJSON() }))
+    const events = result.docs.map(event => ({ ...event.toJSON(), isAuthor: event.get('authorId')?.equals(req.user._id) }))
 
     res.status(200).json({
         events: events,

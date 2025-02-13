@@ -18,6 +18,7 @@ export interface IEvent {
     category: ICategory[]
     targetAudience: string[]
     createdAt: Date
+    isAuthor: boolean
 }
 
 export interface IGetEventsByCategoryResponse {
@@ -30,4 +31,28 @@ export interface IGetEventsByCategoryResponse {
         limit: number
     }
     events: IEvent[]
+}
+
+export interface IPutEventRequest {
+    body: {
+        name: string
+        address: string
+        location: {
+            type: string
+            coordinates: number[]
+        }
+        startDate: Date
+        endDate: Date
+        description: string
+        photo: string[]
+        cost: string
+        likeCount: number
+        commentCount: number
+        category: ICategory[]
+        targetAudience: string[]
+        createdAt: Date
+    }
+    uri: {
+        _id: string
+    }
 }

@@ -31,7 +31,14 @@ function RegisterPageContent() {
 
     useEffect(() => {
         if (category) {
-            setSelectedCategories(prev => new Set(prev).add(JSON.parse(category)))
+            const parsedCategory = JSON.parse(category)
+            setSelectedCategories(prev => {
+                const newSet = new Set(prev)
+                if (![...newSet].some(cat => cat._id === parsedCategory._id)) {
+                    newSet.add(parsedCategory)
+                }
+                return newSet
+            })
         }
     }, [category])
 
