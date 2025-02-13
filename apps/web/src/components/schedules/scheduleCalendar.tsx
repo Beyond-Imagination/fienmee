@@ -1,18 +1,12 @@
 import Calendar from 'react-calendar'
 import './calendar.css'
-import { useState } from 'react'
-export default function ScheduleCalendar() {
-    const [date, setDate] = useState<Date>(new Date())
+export default function ScheduleCalendar({ onChange }) {
 
-    const onChange = newDate => {
-        setDate(newDate)
-    }
     return (
         <div>
             <div className="bg-white shadow-lg rounded-lg p-4">
                 <Calendar
                     onChange={onChange}
-                    value={date}
                     calendarType="gregory"
                     formatMonthYear={(locale, date) => {
                         const year = date.getFullYear()
