@@ -4,13 +4,28 @@ import { LRUCache } from 'lru-cache'
 import { User } from '@/models/user'
 import { ACCESS_TOKEN_EXPIRES_IN_MS, JWT_SECRET, REFRESH_TOKEN_EXPIRES_IN_MS } from '@/config'
 import { InvalidRequestTokenError } from '@/types/errors/jwt/auth'
+import { IJwtPayload } from '@/types/oauth'
 
 export function issueAccessToken(user: User): string {
-    return jwt.sign({ userId: user._id, type: 'access_token' }, JWT_SECRET, { expiresIn: ACCESS_TOKEN_EXPIRES_IN_MS / 1000 })
+    const expiresAt = new Date()
+    expiresAt.setMinutes(expiresAt.getMinutes() + ACCESS_TOKEN_EXPIRES_IN_MS / 1000)
+    const payload: IJwtPayload = {
+        userId: user._id.toString(),
+        type: 'access_token',
+        expiresAt: expiresAt,
+    }
+    return jwt.sign(payload, JWT_SECRET, { expiresIn: ACCESS_TOKEN_EXPIRES_IN_MS / 1000 })
 }
 
 export function issueRefreshToken(user: User): string {
-    return jwt.sign({ userId: user._id, type: 'refresh_token' }, JWT_SECRET, { expiresIn: REFRESH_TOKEN_EXPIRES_IN_MS / 1000 })
+    const expiresAt = new Date()
+    expiresAt.setMonth(expiresAt.getMonth() + 2)
+    const payload: IJwtPayload = {
+        userId: user._id.toString(),
+        type: 'refresh_token',
+        expiresAt: expiresAt,
+    }
+    return jwt.sign(payload, JWT_SECRET, { expiresIn: REFRESH_TOKEN_EXPIRES_IN_MS / 1000 })
 }
 
 export function expireJwt(jwt: string) {

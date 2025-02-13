@@ -1,4 +1,5 @@
 import { User } from '@/models'
+import { IJwtPayload } from '@/types/oauth'
 
 declare global {
     namespace Express {
@@ -6,6 +7,7 @@ declare global {
             _routeWhitelists: { body: string[] }
             _routeBlacklists: { body: string[] }
             user: User
+            jwtPayload: IJwtPayload
         }
         interface Response {
             meta: {
