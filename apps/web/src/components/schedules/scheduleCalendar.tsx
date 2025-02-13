@@ -1,7 +1,6 @@
 import Calendar from 'react-calendar'
 import './calendar.css'
 export default function ScheduleCalendar({ onChange }) {
-
     return (
         <div>
             <div className="bg-white shadow-lg rounded-lg p-4">
