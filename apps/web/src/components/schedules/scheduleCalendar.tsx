@@ -2,7 +2,7 @@ import Calendar from 'react-calendar'
 import './calendar.css'
 import { useState } from 'react'
 export default function ScheduleCalendar() {
-    const [date, setDate] = useState(new Date())
+    const [date, setDate] = useState<Date>(new Date())
 
     const onChange = newDate => {
         setDate(newDate)
@@ -13,18 +13,22 @@ export default function ScheduleCalendar() {
                 <Calendar
                     onChange={onChange}
                     value={date}
-                    local="ko-KR"
+                    calendarType="gregory"
                     formatMonthYear={(locale, date) => {
                         const year = date.getFullYear()
-                        const month = date.getMonth()
+                        const month = date.getMonth() + 1
                         return `${year}년 ${month}월`
+                    }}
+                    formatDay={(locale, date) => {
+                        return date.getDate()
                     }}
                     formatShortWeekday={(locale, date) => {
                         const weekdays = ['S', 'M', 'T', 'W', 'T', 'F', 'S']
                         return weekdays[date.getDay()]
                     }}
-                    className="border-none"
-                    maxDate={new Date()}
+                    prev2Label={null}
+                    next2Label={null}
+                    showNeighboringMonth={false}
                 />
             </div>
         </div>
