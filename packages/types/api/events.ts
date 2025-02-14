@@ -33,7 +33,7 @@ export interface IGetEventsByCategoryResponse {
     events: IEvent[]
 }
 
-export interface IPutEventRequest {
+export interface IPostEventRequest {
     body: {
         name: string
         address: string
@@ -48,10 +48,13 @@ export interface IPutEventRequest {
         cost: string
         likeCount: number
         commentCount: number
-        category: ICategory[]
+        category: string[]
         targetAudience: string[]
         createdAt: Date
     }
+}
+
+export interface IPutEventRequest extends IPostEventRequest {
     uri: {
         _id: string
     }

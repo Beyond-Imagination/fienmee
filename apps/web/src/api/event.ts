@@ -1,4 +1,4 @@
-import { IEvent, IGetEventCategoriesResponse, IGetEventsByCategoryResponse, IPutEventRequest } from '@fienmee/types'
+import { IGetEventCategoriesResponse, IGetEventsByCategoryResponse, IPostEventRequest, IPutEventRequest } from '@fienmee/types'
 
 import { SERVER_URL } from '@/config'
 
@@ -41,7 +41,7 @@ export async function deleteEventById(id: string): Promise<void> {
     return
 }
 
-export async function registerEvent(eventData: IEvent): Promise<void> {
+export async function registerEvent(eventData: IPostEventRequest): Promise<void> {
     const token = sessionStorage.getItem('access_token')
     const res = await fetch(`${SERVER_URL}/v1/events`, {
         method: 'POST',
@@ -49,7 +49,7 @@ export async function registerEvent(eventData: IEvent): Promise<void> {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify(eventData),
+        body: JSON.stringify(eventData.body),
     })
 
     if (!res.ok) {

@@ -81,7 +81,7 @@ const EventForm: React.FC<EventFormProps> = ({ isAllDay, toggleAllDay, selectedC
                 await updateEvent({
                     body: {
                         ...formData,
-                        category: Array.from(selectedCategories),
+                        category: Array.from(selectedCategories).map(category => category._id),
                         photo: photos,
                         location: {
                             type: 'Point',
@@ -95,12 +95,14 @@ const EventForm: React.FC<EventFormProps> = ({ isAllDay, toggleAllDay, selectedC
                 router.push('/events/detail')
             } else {
                 await registerEvent({
-                    ...formData,
-                    category: Array.from(selectedCategories),
-                    photo: photos,
-                    location: {
-                        type: 'Point',
-                        coordinates: [position.lng, position.lat],
+                    body: {
+                        ...formData,
+                        category: Array.from(selectedCategories).map(category => category._id),
+                        photo: photos,
+                        location: {
+                            type: 'Point',
+                            coordinates: [position.lng, position.lat],
+                        },
                     },
                 })
                 alert('이벤트가 성공적으로 등록되었습니다.')
