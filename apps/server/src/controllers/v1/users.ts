@@ -6,6 +6,7 @@ import { loginRequest, registerRequest } from '@fienmee/types'
 import { UnknownUserError } from '@/types/errors/oauth'
 import { User, UserModel } from '@/models'
 import { issueJwt, getOAuthUser, expireJwt } from '@/services/oauth'
+import { verifyToken } from '@/middlewares/auth'
 
 const router: Router = asyncify(express.Router())
 
@@ -39,6 +40,18 @@ router.post('/register', async (req: Request, res: Response) => {
     const jwt = issueJwt(user)
     res.status(200).json({
         accessToken: jwt,
+    })
+})
+
+router.get('/', verifyToken, async (req: Request, res: Response) => {
+    const user = await UserModel.findById(req.user._id)
+    if (!user) {
+        res.sendStatus(404)
+    }
+
+    res.status(200).json({
+        id: user.id,
+        nickname: user.nickname,
     })
 })
 
