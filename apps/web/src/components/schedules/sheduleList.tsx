@@ -3,12 +3,19 @@ import { useInfiniteQuery } from '@tanstack/react-query'
 import { getSchedulesByDate } from '@/api/schedules'
 import { useInView } from 'react-intersection-observer'
 import { useEffect } from 'react'
+import { IScheduleDocType } from '@fienmee/types'
 
 interface Prop {
     date: Date
 }
+interface IScheduleSummary {
+    id: string
+    title: string
+    time: string
+}
+
 export default function ScheduleList({ date }: Prop) {
-    const formatDate = date => {
+    const formatDate = (date: Date) => {
         const year = date.getFullYear()
         const month = String(date.getMonth() + 1).padStart(2, '0')
         const day = String(date.getDate()).padStart(2, '0')
@@ -37,7 +44,7 @@ export default function ScheduleList({ date }: Prop) {
 
     let schedules
     if (!isLoading) {
-        schedules = data.pages[0]?.docs.map(doc => {
+        schedules = data?.pages[0]?.docs?.map((doc: IScheduleDocType) => {
             const hours = new Date(doc.startDate).getHours()
             const minutes = new Date(doc.startDate).getMinutes()
             return { id: doc._id, title: doc.name, time: `${hours}:${minutes}` }
@@ -46,7 +53,7 @@ export default function ScheduleList({ date }: Prop) {
     return (
         <div>
             <div className="ml-5 mt-6 mb-3 text-xl font-bold text-left">{formatDate(date)} 일정</div>
-            <div>{schedules && schedules.map(schedule => <ScheduleItem key={schedule.id} {...schedule} />)}</div>
+            <div>{schedules && schedules.map((schedule: IScheduleSummary) => <ScheduleItem key={schedule.id} {...schedule} />)}</div>
             <div ref={ref}></div>
         </div>
     )

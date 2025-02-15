@@ -14,3 +14,13 @@ export interface IMakeNewScheduleRequest {
 export interface IMakeNewScheduleResponse {
     scheduleId: string
 }
+
+type ValuePiece = Date | null
+
+export type Value = ValuePiece | [ValuePiece, ValuePiece]
+
+export interface IScheduleDocType {
+    _id: string
+    name: string
+    startDate: Date
+}

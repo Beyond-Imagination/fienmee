@@ -1,13 +1,13 @@
 import Calendar from 'react-calendar'
 import './calendar.css'
-import { Value } from 'react-calendar/dist/esm/shared/types'
+import { Value } from '@fienmee/types'
 
 interface ScheduleCalendarProps {
-    onChange: (value: Date, event: MouseEvent) => void
+    onChange: (value: Date) => void
 }
 export default function ScheduleCalendar({ onChange }: ScheduleCalendarProps) {
-    const handleChange = (value: Value, event: MouseEvent) => {
-        onChange(value as Date, event)
+    const handleChange = (value: Value) => {
+        onChange(value as Date)
     }
     return (
         <div className="bg-white shadow-lg rounded-lg p-4">
@@ -20,7 +20,7 @@ export default function ScheduleCalendar({ onChange }: ScheduleCalendarProps) {
                     return `${year}년 ${month}월`
                 }}
                 formatDay={(locale, date) => {
-                    return date.getDate()
+                    return date.getDate().toString()
                 }}
                 formatShortWeekday={(locale, date) => {
                     const weekdays = ['S', 'M', 'T', 'W', 'T', 'F', 'S']
