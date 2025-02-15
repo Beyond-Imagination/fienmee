@@ -1,11 +1,19 @@
 import Calendar from 'react-calendar'
 import './calendar.css'
-export default function ScheduleCalendar({ onChange }) {
+import { Value } from 'react-calendar/dist/esm/shared/types'
+
+interface ScheduleCalendarProps {
+    onChange: (value: Date, event: MouseEvent) => void
+}
+export default function ScheduleCalendar({ onChange }: ScheduleCalendarProps) {
+    const handleChange = (value: Value, event: MouseEvent) => {
+        onChange(value as Date, event)
+    }
     return (
         <div>
             <div className="bg-white shadow-lg rounded-lg p-4">
                 <Calendar
-                    onChange={onChange}
+                    onChange={handleChange}
                     calendarType="gregory"
                     formatMonthYear={(locale, date) => {
                         const year = date.getFullYear()
