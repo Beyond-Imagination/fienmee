@@ -8,7 +8,7 @@ export default function Schedules() {
     const [selectedDay, setSelectedDay] = useState<Date>(new Date())
     return (
         <div className="flex flex-col items-center">
-            <ScheduleCalendar onChange={newDate => setSelectedDay(newDate)} />
+            <ScheduleCalendar onChange={(newDate: Date) => setSelectedDay(newDate)} />
             <ScheduleList date={selectedDay} />
         </div>
     )
