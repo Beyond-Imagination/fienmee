@@ -3,7 +3,7 @@ import express, { Request, Response, Router } from 'express'
 
 import { loginRequest, loginResponse, refreshResponse, registerRequest, registerResponse } from '@fienmee/types'
 
-import { UnknownUserError } from '@/types/errors/oauth'
+import { DeletedUserError, UnknownUserError } from '@/types/errors/oauth'
 import { User, UserModel } from '@/models'
 import { InvalidTokenTypeError } from '@/types/errors'
 import { issueAccessToken, getOAuthUser, expireJwt, issueRefreshToken, unlinkUser } from '@/services/oauth'
@@ -16,8 +16,12 @@ router.post('/login', async (req: Request, res: Response) => {
 
     const oauthUser = await getOAuthUser(request)
     const user = await UserModel.findByProviderId(oauthUser.providerId)
-    if (!user || user.isDeleted) {
+    if (!user ) {
         throw new UnknownUserError(new Error(`not found ${oauthUser.providerId}`))
+    }
+
+    if (user.isDeleted) {
+        throw new DeletedUserError(new Error('This user account has been deleted.'));
     }
 
     const accessToken = issueAccessToken(user)
