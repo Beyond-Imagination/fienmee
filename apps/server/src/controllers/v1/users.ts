@@ -5,7 +5,7 @@ import { loginRequest, registerRequest } from '@fienmee/types'
 
 import { UnknownUserError } from '@/types/errors/oauth'
 import { User, UserModel } from '@/models'
-import { issueJwt, getOAuthUser, expireJwt } from '@/services/oauth'
+import { issueAccessToken, getOAuthUser, expireJwt, issueRefreshToken } from '@/services/oauth'
 import { verifyToken } from '@/middlewares/auth'
 
 const router: Router = asyncify(express.Router())
@@ -19,16 +19,19 @@ router.post('/login', async (req: Request, res: Response) => {
         throw new UnknownUserError(new Error(`not found ${oauthUser.providerId}`))
     }
 
-    const jwt = issueJwt(user)
+    const accessToken = issueAccessToken(user)
+    const refreshToken = issueRefreshToken(user)
     await UserModel.updateLogIn(user)
+
     res.status(200).json({
-        accessToken: jwt,
+        accessToken: accessToken,
+        refreshToken: refreshToken,
     })
 })
 
 router.delete('/logout', async (req: Request, res: Response) => {
     const jwt = req.headers['authorization']?.split(' ')?.[1]
-    await expireJwt(jwt)
+    expireJwt(jwt)
     res.sendStatus(204)
 })
 
@@ -37,9 +40,13 @@ router.post('/register', async (req: Request, res: Response) => {
 
     const oauthUser = await getOAuthUser(request)
     const user: User = await UserModel.createUser(oauthUser)
-    const jwt = issueJwt(user)
+
+    const accessToken = issueAccessToken(user)
+    const refreshToken = issueRefreshToken(user)
+
     res.status(200).json({
-        accessToken: jwt,
+        accessToken: accessToken,
+        refreshToken: refreshToken,
     })
 })
 

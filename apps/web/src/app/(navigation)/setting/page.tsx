@@ -1,14 +1,26 @@
 'use client'
 
+import { useMutation } from '@tanstack/react-query'
+
 import SettingItem from '@/components/settings/settingItem'
-import { EnquiryIcon, LogoutIcon, PrivacyPolicyIcon, ServiceTermIcon, SmileIcon } from '@/components/icon'
+import { DeleteAccountIcon, EnquiryIcon, LogoutIcon, PrivacyPolicyIcon, ServiceTermIcon, SmileIcon } from '@/components/icon'
+import { logout } from '@/api/user'
+import DeleteAccountModal from '@/components/settings/deleteAcccountModal'
+import { useState } from 'react'
 
 export default function Setting() {
     const userNickname = 'user1' // TODO: get user info
+    const [isDeleteModal, onDeleteModalClose] = useState<boolean>(false)
 
     // TODO: add onClick action
-    const logout = () => {
+    const logoutQuery = useMutation({
+        mutationFn: () => {
+            return logout()
+        },
+    })
+    const logoutToggle = () => {
         sessionStorage.removeItem('access_token')
+        logoutQuery.mutate()
         if (typeof window !== undefined) {
             window.ReactNativeWebView.postMessage(JSON.stringify({ type: 'logout' }))
         }
@@ -37,10 +49,14 @@ export default function Setting() {
                 </SettingItem>
             </div>
             <div className="grid gap-4 w-full py-8">
-                <SettingItem text="로그아웃" onClick={logout}>
+                <SettingItem text="로그아웃" onClick={logoutToggle}>
                     <LogoutIcon width={32} height={32} />
                 </SettingItem>
+                <SettingItem text="회원 탈퇴" onClick={() => onDeleteModalClose(true)}>
+                    <DeleteAccountIcon width={32} height={32} />
+                </SettingItem>
             </div>
+            <DeleteAccountModal isOpen={isDeleteModal} onClose={() => onDeleteModalClose(false)} />
         </div>
     )
 }

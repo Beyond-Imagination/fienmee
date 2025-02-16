@@ -1,0 +1,18 @@
+services:
+    web:
+        build:
+            context: .
+            dockerfile: ./Dockerfile_WEB
+        ports:
+            - "3000:3000"
+        volumes:
+            - ./apps/web/.env:/fienmee/apps/web/.env
+
+    server:
+        build:
+            context: .
+            dockerfile: ./Dockerfile_SERVER
+        ports:
+            - "5000:5000"
+        volumes:
+            - ./apps/server/.env:/fienmee/apps/server/.env

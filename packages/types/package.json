@@ -6,5 +6,8 @@
     "scripts": {
         "test": "jest --passWithNoTests"
     },
-    "private": true
+    "private": true,
+    "devDependencies": {
+        "@babel/runtime": "^7.25.0"
+    }
 }

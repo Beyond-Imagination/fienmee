@@ -14,11 +14,11 @@ export function KakaoOauthLogin() {
     const onPress = async () => {
         const token = await kakaoLogin()
         try {
-            const { accessToken } = await login({
+            const credential = await login({
                 ...token,
                 provider: 'KAKAO',
             })
-            await setToken(accessToken)
+            await setToken(credential)
             navigation.navigate('WebView')
         } catch (error) {
             if (isErrorResponse(error) && error.code === 4100) {

@@ -1,3 +1,5 @@
+import { ICategory } from './category'
+
 export interface IEvent {
     _id: string
     name: string
@@ -13,9 +15,10 @@ export interface IEvent {
     cost: string
     likeCount: number
     commentCount: number
-    category: string[]
+    category: ICategory[]
     targetAudience: string[]
     createdAt: Date
+    isAuthor: boolean
 }
 
 export interface IGetEventsByCategoryResponse {
@@ -30,7 +33,29 @@ export interface IGetEventsByCategoryResponse {
     events: IEvent[]
 }
 
-export interface IGetEventCategoriesResponse {
-    categories: string[]
-    favoriteCategories: string[]
+export interface IPostEventRequest {
+    body: {
+        name: string
+        address: string
+        location: {
+            type: string
+            coordinates: number[]
+        }
+        startDate: Date
+        endDate: Date
+        description: string
+        photo: string[]
+        cost: string
+        likeCount: number
+        commentCount: number
+        category: string[]
+        targetAudience: string[]
+        createdAt: Date
+    }
+}
+
+export interface IPutEventRequest extends IPostEventRequest {
+    uri: {
+        _id: string
+    }
 }
