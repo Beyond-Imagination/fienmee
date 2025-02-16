@@ -17,7 +17,7 @@ router.post('/login', async (req: Request, res: Response) => {
 
     const oauthUser = await getOAuthUser(request)
     const user = await UserModel.findByProviderId(oauthUser.providerId)
-    if (!user) {
+    if (!user || user.isDeleted) {
         throw new UnknownUserError(new Error(`not found ${oauthUser.providerId}`))
     }
 
