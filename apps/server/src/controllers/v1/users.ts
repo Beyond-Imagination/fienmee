@@ -44,14 +44,9 @@ router.post('/register', async (req: Request, res: Response) => {
 })
 
 router.get('/', verifyToken, async (req: Request, res: Response) => {
-    const user = await UserModel.findById(req.user._id)
-    if (!user) {
-        res.sendStatus(404)
-    }
-
     res.status(200).json({
-        id: user.id,
-        nickname: user.nickname,
+        id: req.user._id,
+        nickname: req.user.nickname,
     })
 })
 
