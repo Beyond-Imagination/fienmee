@@ -5,9 +5,9 @@ import { loginRequest, loginResponse, refreshResponse, registerRequest, register
 
 import { UnknownUserError } from '@/types/errors/oauth'
 import { User, UserModel } from '@/models'
-import { issueAccessToken, getOAuthUser, expireJwt, issueRefreshToken } from '@/services/oauth'
-import { verifyToken } from '@/middlewares/auth'
 import { InvalidTokenTypeError } from '@/types/errors'
+import { issueAccessToken, getOAuthUser, expireJwt, issueRefreshToken, unlinkUser } from '@/services/oauth'
+import { verifyToken } from '@/middlewares/auth'
 
 const router: Router = asyncify(express.Router())
 
@@ -75,6 +75,15 @@ router.post('/refresh', verifyToken, async (req: Request, res: Response) => {
     }
 
     res.status(200).json(response)
+})
+
+router.delete('/', verifyToken, async (req: Request, res: Response) => {
+    const jwt = req.headers['authorization']?.split(' ')?.[1]
+
+    await unlinkUser(req.user)
+    expireJwt(jwt)
+
+    res.sendStatus(200)
 })
 
 export default router
