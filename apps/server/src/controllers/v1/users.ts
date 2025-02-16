@@ -43,7 +43,7 @@ router.delete('/logout', async (req: Request, res: Response) => {
 
 router.post('/register', async (req: Request, res: Response) => {
     const request: registerRequest = req.body
-    console.log(request)
+
     const oauthUser = await getOAuthUser(request)
 
     const user = await registerUser(oauthUser)
