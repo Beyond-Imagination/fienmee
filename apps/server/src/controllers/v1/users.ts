@@ -4,10 +4,11 @@ import express, { Request, Response, Router } from 'express'
 import { loginRequest, loginResponse, refreshResponse, registerRequest, registerResponse } from '@fienmee/types'
 
 import { DeletedUserError, UnknownUserError } from '@/types/errors/oauth'
-import { User, UserModel } from '@/models'
 import { InvalidTokenTypeError } from '@/types/errors'
+import { UserModel } from '@/models'
 import { issueAccessToken, getOAuthUser, expireJwt, issueRefreshToken, unlinkUser } from '@/services/oauth'
 import { verifyToken } from '@/middlewares/auth'
+import { registerUser } from '@/services/user'
 
 const router: Router = asyncify(express.Router())
 
@@ -16,12 +17,12 @@ router.post('/login', async (req: Request, res: Response) => {
 
     const oauthUser = await getOAuthUser(request)
     const user = await UserModel.findByProviderId(oauthUser.providerId)
-    if (!user ) {
+    if (!user) {
         throw new UnknownUserError(new Error(`not found ${oauthUser.providerId}`))
     }
 
     if (user.isDeleted) {
-        throw new DeletedUserError(new Error('This user account has been deleted.'));
+        throw new DeletedUserError(new Error('This user account has been deleted.'))
     }
 
     const accessToken = issueAccessToken(user)
@@ -42,9 +43,10 @@ router.delete('/logout', async (req: Request, res: Response) => {
 
 router.post('/register', async (req: Request, res: Response) => {
     const request: registerRequest = req.body
-
+    console.log(request)
     const oauthUser = await getOAuthUser(request)
-    const user: User = await UserModel.createUser(oauthUser)
+
+    const user = await registerUser(oauthUser)
 
     const accessToken = issueAccessToken(user)
     const refreshToken = issueRefreshToken(user)
