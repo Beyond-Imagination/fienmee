@@ -83,7 +83,7 @@ router.delete('/', verifyToken, async (req: Request, res: Response) => {
     await unlinkUser(req.user)
     expireJwt(jwt)
 
-    res.sendStatus(200)
+    res.sendStatus(204)
 })
 
 export default router
