@@ -6,6 +6,7 @@ import { loginRequest, registerRequest } from '@fienmee/types'
 import { UnknownUserError } from '@/types/errors/oauth'
 import { User, UserModel } from '@/models'
 import { issueAccessToken, getOAuthUser, expireJwt, issueRefreshToken } from '@/services/oauth'
+import { verifyToken } from '@/middlewares/auth'
 
 const router: Router = asyncify(express.Router())
 
@@ -46,6 +47,13 @@ router.post('/register', async (req: Request, res: Response) => {
     res.status(200).json({
         accessToken: accessToken,
         refreshToken: refreshToken,
+    })
+})
+
+router.get('/', verifyToken, async (req: Request, res: Response) => {
+    res.status(200).json({
+        id: req.user._id,
+        nickname: req.user.nickname,
     })
 })
 
