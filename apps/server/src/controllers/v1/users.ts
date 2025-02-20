@@ -1,12 +1,13 @@
 import asyncify from 'express-asyncify'
 import express, { Request, Response, Router } from 'express'
 
-import { loginRequest, registerRequest } from '@fienmee/types'
+import { loginRequest, refreshResponse, registerRequest } from '@fienmee/types'
 
 import { UnknownUserError } from '@/types/errors/oauth'
 import { User, UserModel } from '@/models'
 import { issueAccessToken, getOAuthUser, expireJwt, issueRefreshToken } from '@/services/oauth'
 import { verifyToken } from '@/middlewares/auth'
+import { InvalidTokenTypeError } from '@/types/errors'
 
 const router: Router = asyncify(express.Router())
 
@@ -55,6 +56,23 @@ router.get('/', verifyToken, async (req: Request, res: Response) => {
         id: req.user._id,
         nickname: req.user.nickname,
     })
+})
+
+router.post('/refresh', verifyToken, async (req: Request, res: Response) => {
+    if (req.jwtPayload.type !== 'refresh_token') {
+        throw new InvalidTokenTypeError()
+    }
+
+    const response: refreshResponse = {
+        accessToken: issueAccessToken(req.user),
+    }
+
+    const diff = new Date(req.jwtPayload.expiresAt).getTime() - new Date().getTime()
+    if (diff < 60 * 60 * 24 * 1000) {
+        response.refreshToken = issueRefreshToken(req.user)
+    }
+
+    res.status(200).json(response)
 })
 
 export default router
