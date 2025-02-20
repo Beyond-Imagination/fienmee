@@ -15,9 +15,9 @@ export interface IMakeNewScheduleResponse {
     scheduleId: string
 }
 
-type ValuePiece = Date | null
+type CalendarDate = Date | null
 
-export type Value = ValuePiece | [ValuePiece, ValuePiece]
+export type CalendarDateRange = CalendarDate | [CalendarDate, CalendarDate]
 
 export interface IScheduleDocType {
     _id: string

@@ -1,12 +1,11 @@
 import Calendar from 'react-calendar'
 import './calendar.css'
-import { Value } from '@fienmee/types'
-
+import { CalendarDateRange } from '@fienmee/types'
 interface ScheduleCalendarProps {
     onChange: (value: Date) => void
 }
 export default function ScheduleCalendar({ onChange }: ScheduleCalendarProps) {
-    const handleChange = (value: Value) => {
+    const handleChange = (value: CalendarDateRange) => {
         onChange(value as Date)
     }
     return (
