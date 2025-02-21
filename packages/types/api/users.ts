@@ -18,3 +18,8 @@ export interface registerRequest {
 }
 
 export type registerResponse = ICredential
+
+export interface refreshResponse {
+    accessToken: string
+    refreshToken?: string
+}

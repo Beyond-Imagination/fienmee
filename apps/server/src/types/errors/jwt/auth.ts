@@ -15,3 +15,11 @@ export class InvalidRequestTokenError extends APIError {
         Error.captureStackTrace(this, InvalidRequestTokenError)
     }
 }
+
+export class InvalidTokenTypeError extends APIError {
+    constructor(cause: Error | string = null) {
+        super(400, 4011, 'invalid token type', cause)
+        Object.setPrototypeOf(this, InvalidTokenTypeError.prototype)
+        Error.captureStackTrace(this, InvalidTokenTypeError)
+    }
+}
