@@ -1,6 +1,8 @@
 export interface ICredential {
     accessToken: string
+    accessTokenExpiresAt: Date
     refreshToken: string
+    refreshTokenExpiresAt: Date
 }
 
 export interface loginRequest {
@@ -21,5 +23,7 @@ export type registerResponse = ICredential
 
 export interface refreshResponse {
     accessToken: string
+    accessTokenExpiresAt: Date
     refreshToken?: string
+    refreshTokenExpiresAt?: Date
 }

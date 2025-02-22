@@ -5,6 +5,7 @@ export interface IBridgeData {
 export interface IJWTData extends IBridgeData {
     type: 'jwt'
     jwt: string
+    expiresAt: Date
 }
 
 export interface IBackButtonData extends IBridgeData {
