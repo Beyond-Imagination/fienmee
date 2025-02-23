@@ -5,7 +5,7 @@ import { categoryStore } from '@/store'
 
 export default function Page() {
     const { category } = categoryStore()
-    if (!category) {
+    if (category._id === '') {
         return (
             <div className="h-screen flex items-center justify-center px-4">
                 <div className="text-lg text-center">잘못된 접근입니다.</div>
