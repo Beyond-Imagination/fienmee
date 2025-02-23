@@ -3,11 +3,12 @@ import { BackHandler } from 'react-native'
 import { WebView, WebViewMessageEvent } from 'react-native-webview'
 import { useNavigation } from '@react-navigation/native'
 
-import { IBackButtonData, IJWTData, isLogoutData } from '@fienmee/types'
+import { IBackButtonData, IJWTData, isLogoutData, isRefreshData } from '@fienmee/types'
 
 import { ENV, FE_URL } from '@/config'
-import { deleteToken, getToken } from '@/stores/token'
+import { deleteToken, getToken, setToken } from '@/stores/token'
 import { WebviewScreenProps } from '@/types'
+import { refresh } from '@/api'
 
 export function WebviewScreen() {
     const navigation = useNavigation<WebviewScreenProps['navigation']>()
@@ -24,6 +25,18 @@ export function WebviewScreen() {
         if (isLogoutData(data)) {
             await deleteToken()
             navigation.navigate('Login')
+        } else if (isRefreshData(data)) {
+            const credential = await getToken()
+            const newCredential = await refresh({ refreshToken: credential.refreshToken })
+            await setToken({
+                accessToken: newCredential.accessToken,
+                accessTokenExpiresAt: newCredential.accessTokenExpiresAt,
+                refreshToken: newCredential.refreshToken || credential.refreshToken,
+                refreshTokenExpiresAt: newCredential.refreshTokenExpiresAt || credential.refreshTokenExpiresAt,
+            })
+            webViewRef.current?.postMessage(
+                JSON.stringify({ type: 'jwt', jwt: newCredential.accessToken, expiresAt: newCredential.accessTokenExpiresAt } as IJWTData),
+            )
         }
     }
 
