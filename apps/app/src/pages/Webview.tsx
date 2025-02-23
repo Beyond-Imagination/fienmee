@@ -14,7 +14,9 @@ export function WebviewScreen() {
     const webViewRef = useRef<WebView>(null)
     const onLoad = async () => {
         const credential = await getToken()
-        webViewRef.current?.postMessage(JSON.stringify({ type: 'jwt', jwt: credential.accessToken } as IJWTData))
+        webViewRef.current?.postMessage(
+            JSON.stringify({ type: 'jwt', jwt: credential.accessToken, expiresAt: credential.accessTokenExpiresAt } as IJWTData),
+        )
     }
 
     const onMessage = async (e: WebViewMessageEvent) => {

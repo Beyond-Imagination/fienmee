@@ -1,7 +1,7 @@
 import asyncify from 'express-asyncify'
 import express, { Request, Response, Router } from 'express'
 
-import { loginRequest, refreshResponse, registerRequest } from '@fienmee/types'
+import { loginRequest, loginResponse, refreshResponse, registerRequest, registerResponse } from '@fienmee/types'
 
 import { UnknownUserError } from '@/types/errors/oauth'
 import { User, UserModel } from '@/models'
@@ -25,9 +25,9 @@ router.post('/login', async (req: Request, res: Response) => {
     await UserModel.updateLogIn(user)
 
     res.status(200).json({
-        accessToken: accessToken,
-        refreshToken: refreshToken,
-    })
+        ...accessToken,
+        ...refreshToken,
+    } as loginResponse)
 })
 
 router.delete('/logout', async (req: Request, res: Response) => {
@@ -46,9 +46,9 @@ router.post('/register', async (req: Request, res: Response) => {
     const refreshToken = issueRefreshToken(user)
 
     res.status(200).json({
-        accessToken: accessToken,
-        refreshToken: refreshToken,
-    })
+        ...accessToken,
+        ...refreshToken,
+    } as registerResponse)
 })
 
 router.get('/', verifyToken, async (req: Request, res: Response) => {
@@ -64,12 +64,14 @@ router.post('/refresh', verifyToken, async (req: Request, res: Response) => {
     }
 
     const response: refreshResponse = {
-        accessToken: issueAccessToken(req.user),
+        ...issueAccessToken(req.user),
     }
 
     const diff = new Date(req.jwtPayload.expiresAt).getTime() - new Date().getTime()
     if (diff < 60 * 60 * 24 * 1000) {
-        response.refreshToken = issueRefreshToken(req.user)
+        const refreshToken = issueRefreshToken(req.user)
+        response.refreshToken = refreshToken.refreshToken
+        response.refreshTokenExpiresAt = refreshToken.refreshTokenExpiresAt
     }
 
     res.status(200).json(response)
