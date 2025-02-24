@@ -21,6 +21,10 @@ export interface registerRequest {
 
 export type registerResponse = ICredential
 
+export interface refreshRequest {
+    refreshToken: string
+}
+
 export interface refreshResponse {
     accessToken: string
     accessTokenExpiresAt: Date
