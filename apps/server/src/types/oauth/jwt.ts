@@ -3,3 +3,13 @@ export interface IJwtPayload {
     type: string
     expiresAt: Date
 }
+
+export interface IAccessTokenResult {
+    accessToken: string
+    accessTokenExpiresAt: Date
+}
+
+export interface IRefreshTokenResult {
+    refreshToken: string
+    refreshTokenExpiresAt: Date
+}
