@@ -3,7 +3,7 @@ import { useInfiniteQuery } from '@tanstack/react-query'
 import { getSchedulesByDate } from '@/api/schedules'
 import { useInView } from 'react-intersection-observer'
 import { useEffect } from 'react'
-import { IScheduleDocType } from '@fienmee/types'
+import { IScheduleItem } from '@fienmee/types'
 
 interface Prop {
     date: Date
@@ -45,7 +45,7 @@ export default function ScheduleList({ date }: Prop) {
 
     let schedules
     if (!isLoading) {
-        schedules = data?.pages[0]?.docs?.map((doc: IScheduleDocType) => {
+        schedules = data?.pages[0]?.docs?.map((doc: IScheduleItem) => {
             const hours = new Date(doc.startDate).getHours()
             const minutes = new Date(doc.startDate).getMinutes()
             return { id: doc._id, title: doc.name, time: `${hours}:${minutes}` }
