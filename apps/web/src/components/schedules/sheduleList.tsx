@@ -8,6 +8,7 @@ import { IScheduleDocType } from '@fienmee/types'
 interface Prop {
     date: Date
 }
+
 interface IScheduleSummary {
     id: string
     title: string

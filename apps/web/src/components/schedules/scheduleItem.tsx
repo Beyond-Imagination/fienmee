@@ -2,6 +2,7 @@ interface ScheduleProp {
     time: string
     title: string
 }
+
 export default function ScheduleItem({ time, title }: ScheduleProp) {
     return (
         // todo: 클릭 시 일정 조회 상세 페이지로 이동
