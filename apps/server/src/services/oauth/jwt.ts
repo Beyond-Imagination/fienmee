@@ -43,7 +43,10 @@ export function expireJwt(jwt: string) {
     tokenBlackList.set(`ACCESS_${jwt}`, new Date()) // 로그아웃 시점을 기록
 }
 
-const tokenBlackList = new LRUCache({ ttl: REFRESH_TOKEN_EXPIRES_IN * 1000 })
+const tokenBlackList = new LRUCache({
+    maxSize: 1000,
+    ttl: REFRESH_TOKEN_EXPIRES_IN * 1000,
+})
 
 export function isTokenInBlackList(jwt: string): boolean {
     if (!jwt) {
