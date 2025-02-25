@@ -2,12 +2,13 @@
 
 import './globals.css'
 import localFont from 'next/font/local'
-import { useState } from 'react'
+import React, { useState } from 'react'
 import { QueryClientProvider, QueryClient } from '@tanstack/react-query'
 import { KAKAO_API_KEY } from '@/config'
 import Script from 'next/script'
 
 import { useBridge } from '@/hooks/bridges'
+import '@/libs/fetchIntercept'
 
 const geistSans = localFont({
     src: './fonts/GeistVF.woff',

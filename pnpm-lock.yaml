@@ -260,6 +260,9 @@ importers:
       dayjs:
         specifier: ^1.11.13
         version: 1.11.13
+      fetch-intercept:
+        specifier: ^2.4.0
+        version: 2.4.0
       next:
         specifier: 15.1.6
         version: 15.1.6(@babel/core@7.26.0)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
@@ -3630,6 +3633,9 @@ packages:
 
   fecha@4.2.3:
     resolution: {integrity: sha512-OP2IUU6HeYKJi3i0z4A19kHMQoLVs4Hc+DPqqxI2h/DPZHTm/vjsfC6P0b4jCMy14XizLBqvndQ+UilD7707Jw==}
+
+  fetch-intercept@2.4.0:
+    resolution: {integrity: sha512-BPZ2LM9Dh1ua2ovQf03N6rhWg1qxdVD5qK/G4llvcemt6M+jjxCuIDxJ+6IiG+uz//3UQmgfKEv0gOGvYIxZ7g==}
 
   file-entry-cache@6.0.1:
     resolution: {integrity: sha512-7Gps/XWymbLk2QLYK4NzpMOrYjMhdIxXuIvy2QBsLE6ljuodKvdkWs/cpyJJ3CVIVpH0Oi1Hvg1ovbMzLdFBBg==}
@@ -11139,6 +11145,8 @@ snapshots:
   fclone@1.0.11: {}
 
   fecha@4.2.3: {}
+
+  fetch-intercept@2.4.0: {}
 
   file-entry-cache@6.0.1:
     dependencies:

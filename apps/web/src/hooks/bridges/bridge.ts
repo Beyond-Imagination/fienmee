@@ -22,3 +22,9 @@ export function useBridge() {
         window.addEventListener('message', messageHandler(router)) // ios
     })
 }
+
+export function requestRefresh() {
+    if (typeof window !== undefined) {
+        window.ReactNativeWebView.postMessage(JSON.stringify({ type: 'refresh' }))
+    }
+}
