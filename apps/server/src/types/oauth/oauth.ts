@@ -1,5 +1,6 @@
 export interface IOAuth {
     getUser(credential: ICredentials): Promise<IUser>
+    unlinkUser(credential: ICredentials): Promise<void>
 }
 
 export interface ICredentials {

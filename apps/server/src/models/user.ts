@@ -23,6 +23,9 @@ export class User extends defaultClasses.TimeStamps implements IUser {
     @prop({ default: Date.now() })
     public lastLoggedInAt: Date
 
+    @prop({ default: false })
+    public isDeleted: boolean
+
     public toJSON() {
         return {
             _id: this._id,
@@ -44,6 +47,10 @@ export class User extends defaultClasses.TimeStamps implements IUser {
             { _id: user._id },
             { accessToken: user.accessToken, refreshToken: user.refreshToken, lastLoggedInAt: Date.now() },
         ).exec()
+    }
+
+    public static async updateUserDeletionStatus(this: ReturnModelType<typeof User>, user: User) {
+        return await this.findOneAndUpdate({ _id: user._id }, { isDeleted: user.isDeleted }).exec()
     }
 }
 

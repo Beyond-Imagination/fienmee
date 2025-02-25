@@ -7,3 +7,11 @@ export class KakaoUserInformationError extends APIError {
         Error.captureStackTrace(this, KakaoUserInformationError)
     }
 }
+
+export class KakaoNetworkError extends APIError {
+    constructor(cause: Error | string = null) {
+        super(500, 6051, 'Network error while accessing Kakao API', cause)
+        Object.setPrototypeOf(this, KakaoNetworkError.prototype)
+        Error.captureStackTrace(this, KakaoNetworkError)
+    }
+}

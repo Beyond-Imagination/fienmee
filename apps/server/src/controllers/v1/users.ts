@@ -3,11 +3,12 @@ import express, { Request, Response, Router } from 'express'
 
 import { loginRequest, loginResponse, refreshResponse, registerRequest, registerResponse } from '@fienmee/types'
 
-import { UnknownUserError } from '@/types/errors/oauth'
-import { User, UserModel } from '@/models'
-import { issueAccessToken, getOAuthUser, expireJwt, issueRefreshToken } from '@/services/oauth'
-import { verifyToken } from '@/middlewares/auth'
+import { DeletedUserError, UnknownUserError } from '@/types/errors/oauth'
 import { InvalidTokenTypeError } from '@/types/errors'
+import { UserModel } from '@/models'
+import { issueAccessToken, getOAuthUser, expireJwt, issueRefreshToken, unlinkUser } from '@/services/oauth'
+import { verifyToken } from '@/middlewares/auth'
+import { registerUser } from '@/services/user'
 
 const router: Router = asyncify(express.Router())
 
@@ -18,6 +19,10 @@ router.post('/login', async (req: Request, res: Response) => {
     const user = await UserModel.findByProviderId(oauthUser.providerId)
     if (!user) {
         throw new UnknownUserError(new Error(`not found ${oauthUser.providerId}`))
+    }
+
+    if (user.isDeleted) {
+        throw new DeletedUserError(new Error('This user account has been deleted.'))
     }
 
     const accessToken = issueAccessToken(user)
@@ -40,7 +45,8 @@ router.post('/register', async (req: Request, res: Response) => {
     const request: registerRequest = req.body
 
     const oauthUser = await getOAuthUser(request)
-    const user: User = await UserModel.createUser(oauthUser)
+
+    const user = await registerUser(oauthUser)
 
     const accessToken = issueAccessToken(user)
     const refreshToken = issueRefreshToken(user)
@@ -75,6 +81,15 @@ router.post('/refresh', verifyToken, async (req: Request, res: Response) => {
     }
 
     res.status(200).json(response)
+})
+
+router.delete('/', verifyToken, async (req: Request, res: Response) => {
+    const jwt = req.headers['authorization']?.split(' ')?.[1]
+
+    await unlinkUser(req.user)
+    expireJwt(jwt)
+
+    res.sendStatus(204)
 })
 
 export default router
