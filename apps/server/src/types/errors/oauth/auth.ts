@@ -10,7 +10,7 @@ export class UnknownUserError extends APIError {
 
 export class DeletedUserError extends APIError {
     constructor(cause: Error | string = null) {
-        super(404, 4100, 'deleted user error', cause)
+        super(404, 4101, 'deleted user error', cause)
         Object.setPrototypeOf(this, DeletedUserError.prototype)
         Error.captureStackTrace(this, DeletedUserError)
     }
