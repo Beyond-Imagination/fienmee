@@ -5,12 +5,14 @@ import EventForm from '@/components/events/eventForm'
 import { useEffect, useState } from 'react'
 import { eventStore } from '@/store'
 import { ICategory } from '@fienmee/types'
+import { useSearchParams } from 'next/navigation'
 
 export default function EventUpdate() {
+    const searchParams = useSearchParams()
+    const category = searchParams.get('category')
     const { event, setEvent } = eventStore()
     const [selectedCategories, setSelectedCategories] = useState<Set<ICategory>>(new Set(event.category))
     const [isAllDay, setIsAllDay] = useState(false)
-    const category = event.category
     const handleAddPhoto = (e: React.ChangeEvent<HTMLInputElement>) => {
         const files = Array.from(e.target.files || [])
         const newPhotos = files.map(file => URL.createObjectURL(file))
@@ -20,7 +22,8 @@ export default function EventUpdate() {
 
     useEffect(() => {
         if (category) {
-            setSelectedCategories(prev => new Set([...prev, ...category]))
+            const parsedCategory = JSON.parse(category)
+            setSelectedCategories(new Set([parsedCategory]))
         }
     }, [category])
 

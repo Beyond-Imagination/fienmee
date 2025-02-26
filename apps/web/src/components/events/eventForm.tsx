@@ -26,6 +26,10 @@ const EventForm: React.FC<EventFormProps> = ({ isAllDay, toggleAllDay, selectedC
         router.push('/events/register/category')
     }
 
+    const handleUpdateCategorySelect = () => {
+        router.push('/events/update/category')
+    }
+
     const [position, setPosition] = useState(
         initEvent ? { lat: initEvent.location.coordinates[1], lng: initEvent.location.coordinates[0] } : { lat: 33.450701, lng: 126.570667 },
     )
@@ -125,7 +129,7 @@ const EventForm: React.FC<EventFormProps> = ({ isAllDay, toggleAllDay, selectedC
                         </span>
                     ))}
                 </div>
-                <button type="button" onClick={handleCategorySelect} className="text-blue-500 ml-auto">
+                <button type="button" onClick={initEvent ? handleUpdateCategorySelect : handleCategorySelect} className="text-blue-500 ml-auto">
                     <ArrowIcon width={24} height={24} />
                 </button>
             </div>
@@ -158,7 +162,7 @@ const EventForm: React.FC<EventFormProps> = ({ isAllDay, toggleAllDay, selectedC
                 name="description"
                 onChange={handleChange}
             />
-            <SubmitButton label="등록하기" />
+            <SubmitButton label={initEvent ? '수정하기' : '등록하기'} />
         </form>
     )
 }
