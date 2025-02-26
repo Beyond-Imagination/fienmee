@@ -2,12 +2,20 @@
 
 import PhotoUploader from '@/components/events/photoUploader'
 import EventForm from '@/components/events/eventForm'
-import { useEffect, useState } from 'react'
+import { Suspense, useEffect, useState } from 'react'
 import { eventStore } from '@/store'
 import { ICategory } from '@fienmee/types'
 import { useSearchParams } from 'next/navigation'
 
 export default function EventUpdate() {
+    return (
+        <Suspense fallback={<div>Loading...</div>}>
+            <UpdatePageContent />
+        </Suspense>
+    )
+}
+
+function UpdatePageContent() {
     const searchParams = useSearchParams()
     const category = searchParams.get('category')
     const { event, setEvent } = eventStore()
