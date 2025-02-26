@@ -1,18 +1,13 @@
 'use client'
 
-import { Suspense, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import PhotoUploader from '@/components/events/photoUploader'
 import EventForm from '@/components/events/eventForm'
 import { useSearchParams } from 'next/navigation'
 import { ICategory } from '@fienmee/types'
 
 export default function RegisterPage() {
-    return (
-        /* TODO: Create a custom loading screen */
-        <Suspense fallback={<div>Loading...</div>}>
-            <RegisterPageContent />
-        </Suspense>
-    )
+    return <RegisterPageContent />
 }
 
 function RegisterPageContent() {
@@ -31,14 +26,18 @@ function RegisterPageContent() {
 
     useEffect(() => {
         if (category) {
-            const parsedCategory = JSON.parse(category)
-            setSelectedCategories(prev => {
-                const newSet = new Set(prev)
-                if (![...newSet].some(cat => cat._id === parsedCategory._id)) {
-                    newSet.add(parsedCategory)
-                }
-                return newSet
-            })
+            try {
+                const parsedCategory = JSON.parse(category)
+                setSelectedCategories(prev => {
+                    const newSet = new Set(prev)
+                    if (![...newSet].some(cat => cat._id === parsedCategory._id)) {
+                        newSet.add(parsedCategory)
+                    }
+                    return newSet
+                })
+            } catch (error) {
+                console.error('Invalid category data:', error)
+            }
         }
     }, [category])
 
