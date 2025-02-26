@@ -31,19 +31,17 @@ export interface IScheduleItem {
 }
 
 export interface IGetScheduleListResponse {
-    pages: {
-        docs: IScheduleItem[]
-        totalDocs: number
-        totalPages: number
-        limit: number
-        pagingCounter: number
-        hasPrevPage: boolean
-        hasNextPage: boolean
-        prevPage: number | null
-        nextPage: number | null
-    }
-    'page-Params': number[]
+    docs: IScheduleItem[]
+    totalDocs: number
+    totalPages: number
+    limit: number
+    pagingCounter: number
+    hasPrevPage: boolean
+    hasNextPage: boolean
+    prevPage: number | null
+    nextPage: number | null
 }
+
 type CalendarDate = Date | null
 
 export type CalendarDateRange = CalendarDate | [CalendarDate, CalendarDate]

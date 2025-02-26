@@ -45,7 +45,7 @@ export default function ScheduleList({ date }: Prop) {
 
     let schedules
     if (!isLoading) {
-        schedules = data?.pages[0]?.docs?.map((doc: IScheduleItem) => {
+        schedules = data?.pages[0].docs?.map((doc: IScheduleItem) => {
             const hours = new Date(doc.startDate).getHours()
             const minutes = new Date(doc.startDate).getMinutes()
             return { id: doc._id, title: doc.name, time: `${hours}:${minutes}` }
@@ -66,13 +66,13 @@ const useSchedulesByDate = ({ date, startPage, limit }: { date: Date; startPage:
         queryFn: ({ pageParam }) => getSchedulesByDate(date, pageParam, limit),
         initialPageParam: startPage,
         getNextPageParam: lastPage => {
-            if (lastPage.page.hasNextPage) {
-                return lastPage.page.page + 1
+            if (lastPage.hasNextPage) {
+                return lastPage.nextPage
             }
         },
         getPreviousPageParam: lastPage => {
-            if (lastPage.page.hasPrevPage) {
-                return lastPage.page.page - 1
+            if (lastPage.hasPrevPage) {
+                return lastPage.nextPage
             }
         },
     })
