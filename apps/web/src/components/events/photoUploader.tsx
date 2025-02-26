@@ -13,7 +13,7 @@ const PhotoUploader: React.FC<PhotoUploaderProps> = ({ photos, onAddPhoto, onRem
                 htmlFor="photo-upload"
                 className="w-16 h-16 border border-gray-400 rounded-lg flex items-center justify-center cursor-pointer bg-white flex-shrink-0"
             >
-                <img src="/Camera.png" alt="카메라 아이콘" className="h-10 w-10 object-contain" />
+                <img src="/Camera.svg" alt="카메라 아이콘" className="h-10 w-10 object-contain" />
             </label>
             <input type="file" id="photo-upload" accept="image/*" className="hidden" multiple onChange={onAddPhoto} />
 
