@@ -28,3 +28,9 @@ export function requestRefresh() {
         window.ReactNativeWebView.postMessage(JSON.stringify({ type: 'refresh' }))
     }
 }
+
+export function requestLogout() {
+    if (typeof window !== undefined) {
+        window.ReactNativeWebView.postMessage(JSON.stringify({ type: 'logout' }))
+    }
+}

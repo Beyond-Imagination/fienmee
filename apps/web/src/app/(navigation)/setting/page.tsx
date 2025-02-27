@@ -1,12 +1,13 @@
 'use client'
 
+import { useState } from 'react'
 import { useMutation } from '@tanstack/react-query'
 
 import SettingItem from '@/components/settings/settingItem'
 import { DeleteAccountIcon, EnquiryIcon, LogoutIcon, PrivacyPolicyIcon, ServiceTermIcon, SmileIcon } from '@/components/icon'
 import { logout } from '@/api/user'
 import DeleteAccountModal from '@/components/settings/deleteAcccountModal'
-import { useState } from 'react'
+import { requestLogout } from '@/hooks/bridges'
 
 export default function Setting() {
     const userNickname = 'user1' // TODO: get user info
@@ -19,9 +20,7 @@ export default function Setting() {
         },
         onSuccess: () => {
             sessionStorage.removeItem('access_token')
-            if (typeof window !== undefined) {
-                window.ReactNativeWebView.postMessage(JSON.stringify({ type: 'logout' }))
-            }
+            requestLogout()
         },
     })
     const logoutToggle = () => {
