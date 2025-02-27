@@ -17,13 +17,15 @@ export default function Setting() {
         mutationFn: () => {
             return logout()
         },
+        onSuccess: () => {
+            sessionStorage.removeItem('access_token')
+            if (typeof window !== undefined) {
+                window.ReactNativeWebView.postMessage(JSON.stringify({ type: 'logout' }))
+            }
+        },
     })
     const logoutToggle = () => {
-        sessionStorage.removeItem('access_token')
         logoutQuery.mutate()
-        if (typeof window !== undefined) {
-            window.ReactNativeWebView.postMessage(JSON.stringify({ type: 'logout' }))
-        }
     }
     return (
         <div className="flex flex-col justify-items-center min-h-[80vh] px-8 mt-6">

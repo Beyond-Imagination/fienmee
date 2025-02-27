@@ -11,3 +11,15 @@ export async function logout(): Promise<void> {
     }
     return
 }
+
+export async function deleteUser(): Promise<void> {
+    const token = sessionStorage.getItem('access_token')
+    const res = await fetch(`${SERVER_URL}/v1/users`, {
+        method: 'DELETE',
+        headers: { Authorization: `Bearer ${token}` },
+    })
+    if (!res.ok) {
+        throw new Error(`code ${res.status}\ndescription: ${res.statusText}`)
+    }
+    return
+}
