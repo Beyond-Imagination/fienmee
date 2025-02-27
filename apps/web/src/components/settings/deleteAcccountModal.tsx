@@ -1,6 +1,8 @@
-import { FullScreenDialog } from '@/components/modal'
 import { useMutation } from '@tanstack/react-query'
+
+import { FullScreenDialog } from '@/components/modal'
 import { deleteUser } from '@/api/user'
+import { requestLogout } from '@/hooks/bridges'
 
 interface Props {
     isOpen: boolean
@@ -14,9 +16,7 @@ export default function DeleteAccountModal({ isOpen, onClose }: Props) {
         },
         onSuccess: () => {
             sessionStorage.removeItem('access_token')
-            if (typeof window !== undefined) {
-                window.ReactNativeWebView.postMessage(JSON.stringify({ type: 'logout' }))
-            }
+            requestLogout()
             onClose()
         },
     })
