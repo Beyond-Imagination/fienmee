@@ -36,9 +36,27 @@ router.get('/', async (req: Request, res: Response) => {
     }
 
     const userId = req.user?._id.toString()
-    const schedules = await ScheduleModel.findByUserId(userId, filterOption, options)
+    const paginatedDocument = await ScheduleModel.findByUserId(userId, filterOption, options)
 
-    res.status(200).json(schedules)
+    const schedules = paginatedDocument.docs.map(doc => {
+        return {
+            _id: doc._id,
+            eventId: doc.eventId,
+            name: doc.name,
+            startDate: doc.startDate,
+            endDate: doc.endDate,
+            images: doc.images,
+        }
+    })
+    res.status(200).json({
+        schedules: schedules,
+        page: {
+            totalDocs: paginatedDocument.totalDocs,
+            totalPages: paginatedDocument.totalPages,
+            hasNextPage: paginatedDocument.hasNextPage,
+            hasPrevPage: paginatedDocument.hasPrevPage,
+        },
+    })
 })
 
 router.delete('/:id', middlewares.schedules.verifyAuthorMiddleware, async (req: Request, res: Response) => {
