@@ -3,12 +3,14 @@ import { useRouter } from 'next/navigation'
 import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime'
 
 import { isBackButtonData, isJWTData } from '@fienmee/types'
+import { credentialStore } from '@/store'
 
-const messageHandler = (router: AppRouterInstance) => (event: MessageEvent) => {
+type setCredentialFunc = (accessToken: string, expiresAt: Date) => void
+
+const messageHandler = (router: AppRouterInstance, setCredential: setCredentialFunc) => (event: MessageEvent) => {
     const message = JSON.parse(event.data)
     if (isJWTData(message)) {
-        sessionStorage.setItem('access_token', message.jwt)
-        sessionStorage.setItem('access_token_expires_at', message.expiresAt.toString())
+        setCredential(message.jwt, message.expiresAt)
     } else if (isBackButtonData(message)) {
         router.back() // TODO: 더 이상 뒤로 갈곳이 없으면 앱 종료
     }
@@ -16,10 +18,11 @@ const messageHandler = (router: AppRouterInstance) => (event: MessageEvent) => {
 
 export function useBridge() {
     const router = useRouter()
+    const { setCredential } = credentialStore()
 
     useEffect(() => {
-        document.addEventListener('message', messageHandler(router) as EventListener) // android
-        window.addEventListener('message', messageHandler(router)) // ios
+        document.addEventListener('message', messageHandler(router, setCredential) as EventListener) // android
+        window.addEventListener('message', messageHandler(router, setCredential)) // ios
     })
 }
 
