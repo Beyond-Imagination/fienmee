@@ -20,7 +20,6 @@ function UpdatePageContent() {
     const category = searchParams.get('category')
     const { event, setEvent } = eventStore()
     const [selectedCategories, setSelectedCategories] = useState<Set<ICategory>>(new Set(event.category))
-    const [isAllDay, setIsAllDay] = useState(false)
     const handleAddPhoto = (e: React.ChangeEvent<HTMLInputElement>) => {
         const files = Array.from(e.target.files || [])
         const newPhotos = files.map(file => URL.createObjectURL(file))
@@ -42,13 +41,7 @@ function UpdatePageContent() {
     return (
         <div className="grid items-center justify-items-center min-h-screen">
             <PhotoUploader photos={event.photo} onAddPhoto={handleAddPhoto} onRemovePhoto={handleRemovePhoto} />
-            <EventForm
-                isAllDay={isAllDay}
-                toggleAllDay={() => setIsAllDay(!isAllDay)}
-                selectedCategories={selectedCategories}
-                photos={event.photo}
-                initEvent={event}
-            />
+            <EventForm selectedCategories={selectedCategories} photos={event.photo} initEvent={event} isRegister={false} />
         </div>
     )
 }

@@ -11,50 +11,29 @@ import { ArrowIcon } from '../icon/icon'
 import { eventStore } from '@/store'
 
 interface EventFormProps {
-    isAllDay: boolean
-    toggleAllDay: () => void
     selectedCategories: Set<ICategory>
     photos: string[]
-    initEvent?: IEvent
+    initEvent: IEvent
+    isRegister: boolean
 }
 
-const EventForm: React.FC<EventFormProps> = ({ isAllDay, toggleAllDay, selectedCategories, photos, initEvent }) => {
+const EventForm: React.FC<EventFormProps> = ({ selectedCategories, photos, initEvent, isRegister }) => {
     const router = useRouter()
     const { setEvent } = eventStore()
-    console.log(photos)
+
     const handleCategorySelect = () => {
+        setEvent(formData)
         router.push('/events/register/category')
     }
 
     const handleUpdateCategorySelect = () => {
-        router.push('/events/update/category')
+        setEvent(formData)
+        router.push(`/events/update/category`)
     }
 
-    const [position, setPosition] = useState(
-        initEvent ? { lat: initEvent.location.coordinates[1], lng: initEvent.location.coordinates[0] } : { lat: 33.450701, lng: 126.570667 },
-    )
-    const [formData, setFormData] = useState<IEvent>(
-        initEvent || {
-            _id: '',
-            name: '',
-            address: '',
-            location: {
-                type: 'Point',
-                coordinates: [126.570667, 33.450701],
-            },
-            startDate: new Date(),
-            endDate: new Date(),
-            description: '',
-            photo: [],
-            cost: '',
-            likeCount: 0,
-            commentCount: 0,
-            category: [],
-            targetAudience: [],
-            createdAt: new Date(),
-            isAuthor: false,
-        },
-    )
+    const [position, setPosition] = useState({ lat: initEvent.location.coordinates[1], lng: initEvent.location.coordinates[0] })
+
+    const [formData, setFormData] = useState<IEvent>(initEvent)
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target
@@ -76,12 +55,16 @@ const EventForm: React.FC<EventFormProps> = ({ isAllDay, toggleAllDay, selectedC
         setFormData(prevState => ({ ...prevState, endDate: new Date(dateTime) }))
     }
 
+    const toggleAllDay = () => {
+        setFormData(prevState => ({ ...prevState, isAllDay: !prevState.isAllDay }))
+    }
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
         console.log(formData)
 
         try {
-            if (initEvent) {
+            if (!isRegister) {
                 await updateEvent({
                     body: {
                         ...formData,
@@ -134,7 +117,7 @@ const EventForm: React.FC<EventFormProps> = ({ isAllDay, toggleAllDay, selectedC
                 </button>
             </div>
             <EventTimeSelector
-                isAllDay={isAllDay}
+                isAllDay={formData.isAllDay}
                 toggleAllDay={toggleAllDay}
                 initStartDate={formData.startDate}
                 initEndDate={formData.endDate}
@@ -162,7 +145,7 @@ const EventForm: React.FC<EventFormProps> = ({ isAllDay, toggleAllDay, selectedC
                 name="description"
                 onChange={handleChange}
             />
-            <SubmitButton label={initEvent ? '수정하기' : '등록하기'} />
+            <SubmitButton label={isRegister ? '등록하기' : '수정하기'} />
         </form>
     )
 }

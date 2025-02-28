@@ -55,6 +55,9 @@ export class Events extends defaultClasses.TimeStamps {
     @prop()
     public targetAudience: string[]
 
+    @prop({ default: false })
+    public isAllDay: boolean
+
     public toJSON(): object {
         // TODO: add isLiked
         return {
@@ -73,6 +76,7 @@ export class Events extends defaultClasses.TimeStamps {
             commentCount: this.comments.length,
             category: this.category,
             targetAudience: this.targetAudience,
+            isAllDay: this.isAllDay,
         }
     }
 

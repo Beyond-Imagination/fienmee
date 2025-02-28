@@ -36,6 +36,7 @@ router.post('/', verifyToken, async (req: Request, res: Response) => {
         description: req.body.description,
         category: req.body.category,
         targetAudience: req.body.targetAudience,
+        isAllDay: req.body.isAllDay,
     })
     res.sendStatus(204)
 })
@@ -53,6 +54,7 @@ router.put('/:id', async (req: Request, res: Response) => {
             description: req.body.description,
             category: req.body.category,
             targetAudience: req.body.targetAudience,
+            isAllDay: req.body.isAllDay,
         },
     )
     res.sendStatus(204)
