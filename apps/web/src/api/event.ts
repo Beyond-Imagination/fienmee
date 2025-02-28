@@ -3,10 +3,8 @@ import { IGetEventCategoriesResponse, IGetEventsByCategoryResponse, IPostEventRe
 import { SERVER_URL } from '@/config'
 
 export async function getEventsByCategory(category: string, page: number, limit: number): Promise<IGetEventsByCategoryResponse> {
-    const token = sessionStorage.getItem('access_token')
     const res = await fetch(`${SERVER_URL}/v1/events/category/${category}?page=${page}&limit=${limit}`, {
         method: 'GET',
-        headers: { Authorization: `Bearer ${token}` },
     })
 
     if (!res.ok) {
@@ -16,10 +14,8 @@ export async function getEventsByCategory(category: string, page: number, limit:
 }
 
 export async function getEventsCategories(): Promise<IGetEventCategoriesResponse> {
-    const token = sessionStorage.getItem('access_token')
     const res = await fetch(`${SERVER_URL}/v1/events/categories`, {
         method: 'GET',
-        headers: { Authorization: `Bearer ${token}` },
     })
 
     if (!res.ok) {
@@ -29,10 +25,8 @@ export async function getEventsCategories(): Promise<IGetEventCategoriesResponse
 }
 
 export async function deleteEventById(id: string): Promise<void> {
-    const token = sessionStorage.getItem('access_token')
     const res = await fetch(`${SERVER_URL}/v1/events/${id}`, {
         method: 'DELETE',
-        headers: { Authorization: `Bearer ${token}` },
     })
 
     if (!res.ok) {
@@ -42,13 +36,8 @@ export async function deleteEventById(id: string): Promise<void> {
 }
 
 export async function registerEvent(eventData: IPostEventRequest): Promise<void> {
-    const token = sessionStorage.getItem('access_token')
     const res = await fetch(`${SERVER_URL}/v1/events`, {
         method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
-        },
         body: JSON.stringify(eventData.body),
     })
 
@@ -59,13 +48,8 @@ export async function registerEvent(eventData: IPostEventRequest): Promise<void>
 }
 
 export async function updateEvent(request: IPutEventRequest): Promise<void> {
-    const token = sessionStorage.getItem('access_token')
     const res = await fetch(`${SERVER_URL}/v1/events/${request.uri._id}`, {
         method: 'PUT',
-        headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
-        },
         body: JSON.stringify(request.body),
     })
     if (!res.ok) {

@@ -5,20 +5,27 @@ import { TOKEN_REFRESH_BUFFER } from '@/config'
 
 fetchIntercept.register({
     request: function (url, config) {
-        // Modify the url or config here
-        const tokenExpiresAtString = sessionStorage.getItem('access_token_expires_at')
-        if (!tokenExpiresAtString) {
+        const credentialString = sessionStorage.getItem('access-token-storage')
+        if (!credentialString) {
             return [url, config]
         }
 
+        const credential = JSON.parse(credentialString)
+
         const now = new Date()
-        const tokenExpiresAt = new Date(tokenExpiresAtString)
+        const tokenExpiresAt = new Date(credential.state.expiresAt)
 
         if (tokenExpiresAt.getTime() - now.getTime() < TOKEN_REFRESH_BUFFER * 1000) {
             requestRefresh()
         }
 
-        return [url, config]
+        const headers = {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${credential.state.accessToken}`,
+            Accept: 'application/json',
+        }
+
+        return [url, { headers, ...config }]
     },
 
     requestError: function (error) {
