@@ -10,6 +10,12 @@ export default function ScheduleCalendar({ onChange }: ScheduleCalendarProps) {
     const handleChange = (value: CalendarDateRange) => {
         onChange(value as Date)
     }
+
+    const hasSchedule = (date: Date) => {
+        // todo: 월별 일정을 가져오는 api 연동
+        return date.getTime() % 100 < 50
+    }
+
     return (
         <div className="bg-white shadow-lg rounded-lg p-4">
             <Calendar
@@ -30,6 +36,11 @@ export default function ScheduleCalendar({ onChange }: ScheduleCalendarProps) {
                 prev2Label={null}
                 next2Label={null}
                 showNeighboringMonth={false}
+                tileClassName={({ date, view }) => {
+                    if (view === 'month' && hasSchedule(date)) {
+                        return 'has-schedules'
+                    }
+                }}
             />
         </div>
     )

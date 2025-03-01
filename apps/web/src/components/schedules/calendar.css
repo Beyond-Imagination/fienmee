@@ -80,3 +80,18 @@
 .react-calendar__tile--active:enabled:focus {
     /*background: #1087ff;*/
 }
+
+.react-calendar__tile.has-schedules {
+    position: relative;
+}
+
+.react-calendar__tile.has-schedules::after {
+    content: '';
+    position: absolute;
+    left: 45%;
+    top: 20%;
+    width: 6px;
+    height: 6px;
+    background-color: #FF9575;
+    border-radius: 50%;
+}
