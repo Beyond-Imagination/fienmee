@@ -6,7 +6,7 @@ import middlewares from '@/middlewares'
 const router: Router = asyncify(express.Router())
 router.use(middlewares.auth.verifyToken)
 
-router.post('/', middlewares.schedules.addScheduleMiddleware, async (req: Request, res: Response) => {
+router.post('/' /*middlewares.schedules.addScheduleMiddleware*/, async (req: Request, res: Response) => {
     const { name, eventId, startDate, endDate, address, location, description, images } = req.body
     const schedule = await ScheduleModel.create({
         name: name,
@@ -46,9 +46,9 @@ router.delete('/:id', middlewares.schedules.verifyAuthorMiddleware, async (req: 
     res.sendStatus(204)
 })
 
-router.put('/:id', middlewares.schedules.verifyAuthorMiddleware, async (req: Request, res: Response) => {
+router.put('/:id' /*, middlewares.schedules.verifyAuthorMiddleware*/, async (req: Request, res: Response) => {
     const { id } = req.params
-    const { name, startDate, endDate, description, images, location, address } = req.body
+    const { name, startDate, endDate, description /*, images, location, address */ } = req.body
     const updated = await ScheduleModel.findOneAndUpdate(
         { _id: id },
         {
@@ -56,9 +56,9 @@ router.put('/:id', middlewares.schedules.verifyAuthorMiddleware, async (req: Req
             startDate: startDate,
             endDate: endDate,
             description: description,
-            address: address,
-            location: location,
-            images: images,
+            // address: address,
+            // location: location,
+            // images: images,
         },
     )
     res.status(200).json(updated)

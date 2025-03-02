@@ -133,14 +133,17 @@ const EventForm: React.FC<EventFormProps> = ({ isAllDay, toggleAllDay, selectedC
                     <ArrowIcon width={24} height={24} />
                 </button>
             </div>
-            <EventTimeSelector
-                isAllDay={isAllDay}
-                toggleAllDay={toggleAllDay}
-                initStartDate={formData.startDate}
-                initEndDate={formData.endDate}
-                onStartDateChange={onStartDateTimeChange}
-                onEndDateChange={onEndDateTimeChange}
-            />
+            <div className="w-full mb-5">
+                <label className="block text-base font-medium mb-2">행사 시간</label>
+                <EventTimeSelector
+                    isAllDay={isAllDay}
+                    toggleAllDay={toggleAllDay}
+                    initStartDate={formData.startDate}
+                    initEndDate={formData.endDate}
+                    onStartDateChange={onStartDateTimeChange}
+                    onEndDateChange={onEndDateTimeChange}
+                />
+            </div>
             <div>
                 <label>행사 장소</label>
                 <EventVenueSelector initialPosition={position} onPositionChange={setPosition} />

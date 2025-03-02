@@ -1,3 +1,6 @@
+import ScheduleForm from '@/components/schedules/scheduleForm'
+
 export default function ScheduleUpdate() {
-    return <div className="grid items-center justify-items-center min-h-screen">schedule update</div>
+    // TODO : add init schedule value
+    return <ScheduleForm />
 }

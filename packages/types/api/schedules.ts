@@ -42,6 +42,10 @@ export interface IGetScheduleListResponse {
     nextPage: number | null
 }
 
+export interface IUpdateScheduleRequest extends IMakeNewScheduleRequest {
+    _id: string
+}
+
 type CalendarDate = Date | null
 
 export type CalendarDateRange = CalendarDate | [CalendarDate, CalendarDate]

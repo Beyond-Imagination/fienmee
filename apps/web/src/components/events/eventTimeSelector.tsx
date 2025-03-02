@@ -20,7 +20,6 @@ const EventTimeSelector: React.FC<EventTimeSelectorProps> = ({
 }) => {
     return (
         <div>
-            <label className="block text-base font-medium mb-2">행사 시간</label>
             <div className="border rounded-lg p-4">
                 <div className="flex items-center justify-between mb-4">
                     <span className="text-sm text-gray-700">하루 종일</span>
