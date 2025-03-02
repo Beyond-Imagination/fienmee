@@ -2,9 +2,9 @@
 
 import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-
 import { ICategory } from '@fienmee/types'
 import { getEventsCategories } from '@/api/event'
+import CategoryError from '@/components/error/CategoryError'
 
 const CategorySelect: React.FC = () => {
     const [categories, setCategories] = useState<ICategory[]>([])
@@ -18,7 +18,7 @@ const CategorySelect: React.FC = () => {
                 setCategories(data.categories)
             } catch (error) {
                 console.error('Failed to fetch categories:', error)
-                setError(true) // 실제 에러 발생 시만 상태 변경
+                setError(true)
             }
         }
         fetchCategories()
@@ -32,9 +32,7 @@ const CategorySelect: React.FC = () => {
         <div className="p-6 flex flex-col items-center">
             <h1 className="text-xl font-bold mb-4">카테고리 선택</h1>
             {error ? (
-                <div className="max-w-xs mx-auto text-center bg-gray-100 p-4 rounded-lg">
-                    <p className="text-gray-700">카테고리를 불러오는 데 실패했습니다. 다시 시도해 주세요.</p>
-                </div>
+                <CategoryError />
             ) : (
                 <ul className="w-full">
                     {categories.map(category => (
