@@ -7,10 +7,6 @@ import { useSearchParams } from 'next/navigation'
 import { ICategory } from '@fienmee/types'
 
 export default function RegisterPage() {
-    return <RegisterPageContent />
-}
-
-function RegisterPageContent() {
     const searchParams = useSearchParams()
     const category = searchParams.get('category')
     const [selectedCategories, setSelectedCategories] = useState<Set<ICategory>>(new Set())
