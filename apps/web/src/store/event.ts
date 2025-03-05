@@ -4,30 +4,37 @@ import { ICategory, IEvent } from '@fienmee/types'
 interface eventState {
     event: IEvent
     setEvent: (event: IEvent) => void
+    resetEvent: () => void
+}
+
+const initEvent: IEvent = {
+    _id: '',
+    name: '',
+    address: '',
+    location: {
+        type: '',
+        coordinates: [126.570667, 33.450701],
+    },
+    startDate: new Date(),
+    endDate: new Date(),
+    description: '',
+    photo: [],
+    cost: '',
+    likeCount: 0,
+    commentCount: 0,
+    category: [] as ICategory[],
+    targetAudience: [],
+    createdAt: new Date(),
+    isAuthor: false,
+    isAllDay: false,
 }
 
 export const eventStore = create<eventState>(set => ({
-    event: {
-        _id: '',
-        name: '',
-        address: '',
-        location: {
-            type: '',
-            coordinates: [],
-        },
-        startDate: new Date(),
-        endDate: new Date(),
-        description: '',
-        photo: [],
-        cost: '',
-        likeCount: 0,
-        commentCount: 0,
-        category: [] as ICategory[],
-        targetAudience: [],
-        createdAt: new Date(),
-        isAuthor: false,
-    },
+    event: initEvent,
     setEvent: event => {
         set({ event })
+    },
+    resetEvent: () => {
+        set({ event: initEvent })
     },
 }))

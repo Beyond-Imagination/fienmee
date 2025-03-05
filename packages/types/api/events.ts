@@ -19,6 +19,7 @@ export interface IEvent {
     targetAudience: string[]
     createdAt: Date
     isAuthor: boolean
+    isAllDay: boolean
 }
 
 export interface IGetEventsByCategoryResponse {
@@ -51,6 +52,7 @@ export interface IPostEventRequest {
         category: string[]
         targetAudience: string[]
         createdAt: Date
+        isAllDay: boolean
     }
 }
 

@@ -5,19 +5,19 @@ import PhotoUploader from '@/components/events/photoUploader'
 import EventForm from '@/components/events/eventForm'
 import { useSearchParams } from 'next/navigation'
 import { ICategory } from '@fienmee/types'
+import { eventStore } from '@/store'
 
 export default function RegisterPage() {
     const searchParams = useSearchParams()
     const category = searchParams.get('category')
     const [selectedCategories, setSelectedCategories] = useState<Set<ICategory>>(new Set())
-    const [isAllDay, setIsAllDay] = useState(false)
-    const [photos, setPhotos] = useState<string[]>([])
+    const { event, setEvent } = eventStore()
 
-    const handleAddPhoto = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const files = Array.from(event.target.files || [])
+    const handleAddPhoto = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const files = Array.from(e.target.files || [])
         const newPhotos = files.map(file => URL.createObjectURL(file))
-        setPhotos(prevPhotos => [...prevPhotos, ...newPhotos])
-        event.target.value = ''
+        setEvent({ ...event, photo: [...event.photo, ...newPhotos] })
+        e.target.value = ''
     }
 
     useEffect(() => {
@@ -38,13 +38,13 @@ export default function RegisterPage() {
     }, [category])
 
     const handleRemovePhoto = (index: number) => {
-        setPhotos(prevPhotos => prevPhotos.filter((_, i) => i !== index))
+        setEvent({ ...event, photo: event.photo.filter((_, i) => i !== index) })
     }
 
     return (
         <div className="min-h-screen flex flex-col px-4">
-            <PhotoUploader photos={photos} onAddPhoto={handleAddPhoto} onRemovePhoto={handleRemovePhoto} />
-            <EventForm isAllDay={isAllDay} toggleAllDay={() => setIsAllDay(!isAllDay)} selectedCategories={selectedCategories} photos={photos} />
+            <PhotoUploader photos={event.photo} onAddPhoto={handleAddPhoto} onRemovePhoto={handleRemovePhoto} />
+            <EventForm selectedCategories={selectedCategories} photos={event.photo} initEvent={event} isRegister={true} />
         </div>
     )
 }
