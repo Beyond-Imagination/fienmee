@@ -21,7 +21,7 @@ export function KakaoOauthLogin() {
             await setToken(credential)
             navigation.navigate('WebView')
         } catch (error) {
-            if (isErrorResponse(error) && error.code === 4100) {
+            if (isErrorResponse(error) && (error.code === 4100 || error.code === 4101)) {
                 navigation.navigate('Register', {
                     accessToken: token.accessToken,
                     refreshToken: token.refreshToken,
