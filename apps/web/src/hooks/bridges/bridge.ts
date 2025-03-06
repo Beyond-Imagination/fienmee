@@ -10,7 +10,7 @@ type setCredentialFunc = (accessToken: string, expiresAt: Date) => void
 const messageHandler = (router: AppRouterInstance, setCredential: setCredentialFunc) => (event: MessageEvent) => {
     const message = JSON.parse(event.data)
     if (isJWTData(message)) {
-        setCredential(message.jwt, message.expiresAt)
+        setCredential(message.jwt, new Date(message.expiresAt))
     } else if (isBackButtonData(message)) {
         router.back() // TODO: 더 이상 뒤로 갈곳이 없으면 앱 종료
     }
