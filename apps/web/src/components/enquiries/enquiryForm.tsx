@@ -22,8 +22,7 @@ export default function EnquiryForm({ onSuccess }: Props) {
         mutationFn: (request: IPostEnquiryRequest) => {
             return postEnquiry(request)
         },
-        onSuccess: async response => {
-            console.log(response.enquiryId)
+        onSuccess: async () => {
             onSuccess()
         },
     })
