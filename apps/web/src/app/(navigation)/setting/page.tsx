@@ -2,16 +2,20 @@
 
 import { useState } from 'react'
 import { useMutation } from '@tanstack/react-query'
+import { useRouter } from 'next/navigation'
 
 import SettingItem from '@/components/settings/settingItem'
 import { DeleteAccountIcon, EnquiryIcon, LogoutIcon, PrivacyPolicyIcon, ServiceTermIcon, SmileIcon } from '@/components/icon'
 import { logout } from '@/api/user'
 import DeleteAccountModal from '@/components/settings/deleteAcccountModal'
 import { requestLogout } from '@/hooks/bridges'
+import { titleStore } from '@/store'
 
 export default function Setting() {
     const userNickname = 'user1' // TODO: get user info
     const [isDeleteModal, onDeleteModalClose] = useState<boolean>(false)
+    const { setTitle } = titleStore()
+    const router = useRouter()
 
     // TODO: add onClick action
     const logoutQuery = useMutation({
@@ -25,6 +29,10 @@ export default function Setting() {
     })
     const logoutToggle = () => {
         logoutQuery.mutate()
+    }
+    const enquiryToggle = () => {
+        setTitle('문의하기')
+        router.push('/enquiries')
     }
     return (
         <div className="flex flex-col justify-items-center min-h-[80vh] px-8 mt-6">
@@ -45,7 +53,7 @@ export default function Setting() {
                 <SettingItem text="개인정보 처리방침">
                     <PrivacyPolicyIcon height={32} width={32} />
                 </SettingItem>
-                <SettingItem text="문의하기">
+                <SettingItem text="문의하기" onClick={enquiryToggle}>
                     <EnquiryIcon height={32} width={32} />
                 </SettingItem>
             </div>
