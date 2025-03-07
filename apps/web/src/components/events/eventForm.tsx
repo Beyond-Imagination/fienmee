@@ -113,7 +113,7 @@ const EventForm: React.FC<EventFormProps> = ({ selectedCategories, photos, initE
                     ))}
                 </div>
                 <button type="button" onClick={initEvent ? handleUpdateCategorySelect : handleCategorySelect} className="text-blue-500 ml-auto">
-                    <ArrowIcon width={24} height={24} />
+                    <ArrowIcon width="1.5rem" height="1.5rem" />
                 </button>
             </div>
             <EventTimeSelector

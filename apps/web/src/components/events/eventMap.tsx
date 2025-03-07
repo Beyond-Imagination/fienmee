@@ -7,7 +7,7 @@ export interface Props {
 
 export function EventMap({ lng, lat }: Props) {
     return (
-        <Map center={{ lat: lat, lng: lng }} style={{ width: '100%', height: '200px' }}>
+        <Map center={{ lat: lat, lng: lng }} style={{ width: '100%', height: '12.5rem' }}>
             <MapMarker position={{ lat: lat, lng: lng }} />
         </Map>
     )

@@ -14,8 +14,18 @@
     }
 }
 
-body {
+html {
     color: var(--foreground);
     background: var(--background);
     font-family: Arial, Helvetica, sans-serif;
+
+    @media (max-width: 981px) {
+        font-size: 95%;
+    }
+    @media (max-width: 640px) {
+        font-size: 90%;
+    }
+    @media (max-width: 375px) {
+        font-size: 80%;
+    }
 }
