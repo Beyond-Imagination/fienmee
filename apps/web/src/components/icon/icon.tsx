@@ -1,6 +1,6 @@
 export interface IconProps {
-    width: number
-    height: number
+    width: string
+    height: string
 }
 
 interface BaseCategoryProps extends IconProps {

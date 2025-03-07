@@ -54,22 +54,22 @@ export default function EventDetail({ event }: Props) {
                 </div>
 
                 <div className="mt-6">
-                    <p className="text-sm text-gray-700 whitespace-pre-wrap">{event.description}</p>
+                    <p className="text-sm text-gray-700 whitespace-pre-wrap break-all">{event.description}</p>
                 </div>
             </div>
             <div className="flex justify-between p-4 mt-4 pt-4 border-t border-gray-200">
                 {/* TODO: add like function */}
                 <button className="flex items-center space-x-3">
-                    <UnlikeIcon width={20} height={20} />
+                    <UnlikeIcon width="1.25rem" height="1.25rem" />
                     <span className="text-sm">{event.likeCount}</span>
                 </button>
                 <div className="flex items-center space-x-3">
-                    <CommentIcon width={20} height={20} />
+                    <CommentIcon width="1.25rem" height="1.25rem" />
                     <div className="text-sm">{event.commentCount}</div>
                 </div>
                 {/* TODO: add share function */}
                 <button className="flex items-center space-x-2">
-                    <ShareIcon width={20} height={20} />
+                    <ShareIcon width="1.25rem" height="1.25rem" />
                     <div className="text-sm">공유하기</div>
                 </button>
             </div>

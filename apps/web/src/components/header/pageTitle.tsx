@@ -21,9 +21,9 @@ export function PageTitleHeader() {
     }
 
     return (
-        <div className="flex flex-row items-center w-full bg-white pt-10 p-2">
+        <div className="flex flex-row items-center w-full h-[6.25rem] bg-white pt-4 p-2">
             <button className="absolute z-1 ps-4" onClick={onClick}>
-                <BackButtonIcon width={30} height={30} />
+                <BackButtonIcon width="1.75rem" height="1.75rem" />
             </button>
             <span className="text-3xl text-center font-semibold w-full">{title}</span>
         </div>

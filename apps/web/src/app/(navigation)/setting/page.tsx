@@ -34,27 +34,27 @@ export default function Setting() {
                         안녕하세요 👋 <br />
                         {userNickname}님
                     </span>
-                    <SmileIcon width={100} height={100} />
+                    <SmileIcon width="6.25rem" height="6.25rem" />
                 </div>
                 <button className="rounded-lg h-12 w-3/4 text-white bg-[#FF9575] py-3">프로필 수정</button>
             </div>
             <div className="grid border-b gap-4 w-full py-8 border-gray-300">
                 <SettingItem text="서비스 이용약관">
-                    <ServiceTermIcon height={32} width={32} />
+                    <ServiceTermIcon height="2rem" width="2rem" />
                 </SettingItem>
                 <SettingItem text="개인정보 처리방침">
-                    <PrivacyPolicyIcon height={32} width={32} />
+                    <PrivacyPolicyIcon height="2rem" width="2rem" />
                 </SettingItem>
                 <SettingItem text="문의하기">
-                    <EnquiryIcon height={32} width={32} />
+                    <EnquiryIcon height="2rem" width="2rem" />
                 </SettingItem>
             </div>
             <div className="grid gap-4 w-full py-8">
                 <SettingItem text="로그아웃" onClick={logoutToggle}>
-                    <LogoutIcon width={32} height={32} />
+                    <LogoutIcon width="2rem" height="2rem" />
                 </SettingItem>
                 <SettingItem text="회원 탈퇴" onClick={() => onDeleteModalClose(true)}>
-                    <DeleteAccountIcon width={32} height={32} />
+                    <DeleteAccountIcon width="2rem" height="2rem" />
                 </SettingItem>
             </div>
             <DeleteAccountModal isOpen={isDeleteModal} onClose={() => onDeleteModalClose(false)} />
