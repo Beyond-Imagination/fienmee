@@ -21,14 +21,14 @@ export function CategoryItem({ category, isFavorites }: Props) {
     if (category.code === CategoryCode.MYEVENT) {
         return (
             <Link className="flex flex-row w-full items-center justify-start p-4 gap-4" href={`/events/category`} onClick={onClick}>
-                <WrittenCategoryIcon width={40} height={40} />
+                <WrittenCategoryIcon width="2.5rem" height="2.5rem" />
                 <div className="text-3xl text-center">{category.title}</div>
             </Link>
         )
     } else if (category.code === CategoryCode.HOTEVENT) {
         return (
             <Link className="flex flex-row w-full items-center justify-start p-4 gap-4" href={`/events/category`} onClick={onClick}>
-                <HottestCategoryIcon width={40} height={40} />
+                <HottestCategoryIcon width="2.5rem" height="2.5rem" />
                 <div className="text-3xl text-center">{category.title}</div>
             </Link>
         )
@@ -36,7 +36,7 @@ export function CategoryItem({ category, isFavorites }: Props) {
         // TODO: add logic making to Favorites
         return (
             <Link className="flex flex-row w-full items-center justify-start p-4 gap-4" href={`/events/category`} onClick={onClick}>
-                <BaseCategoryIcon width={40} height={40} isFavorites={isFavorites} />
+                <BaseCategoryIcon width="2.5rem" height="2.5rem" isFavorites={isFavorites} />
                 <div className="text-3xl text-center pt-1">{category.title}</div>
             </Link>
         )

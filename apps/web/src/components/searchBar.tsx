@@ -30,7 +30,7 @@ export default function SearchBar() {
                 })}
             />
             <button type="submit" disabled={isSubmitting}>
-                <SearchIcon width={32} height={32} />
+                <SearchIcon width="2rem" height="2rem" />
             </button>
         </form>
     )

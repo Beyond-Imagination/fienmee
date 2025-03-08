@@ -5,7 +5,7 @@ export default function BackButtonLayout({ children }: { children: React.ReactNo
     return (
         <div className="flex flex-col w-full h-dvh">
             <PageTitleHeader />
-            <div className="w-full h-full overflow-y-scroll">{children}</div>
+            <div className="w-full overflow-y-scroll">{children}</div>
         </div>
     )
 }

@@ -14,7 +14,7 @@ export default function Page() {
     }
 
     return (
-        <div className="h-min-screen items-center justify-items-center min-h-screen bg-inherit">
+        <div className="items-center justify-items-center bg-inherit">
             <div className="w-full h-full bg-inherit">
                 <EventList category={category._id} />
             </div>

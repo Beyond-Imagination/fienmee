@@ -4,11 +4,13 @@ import './globals.css'
 import localFont from 'next/font/local'
 import React, { useState } from 'react'
 import { QueryClientProvider, QueryClient } from '@tanstack/react-query'
-import { KAKAO_API_KEY } from '@/config'
 import Script from 'next/script'
 
-import { useBridge } from '@/hooks/bridges'
+import { KAKAO_API_KEY } from '@/config'
 import '@/libs/fetchIntercept'
+
+import { useBridge } from '@/hooks/bridges'
+import { Authentication } from '@/components/authentication'
 
 const geistSans = localFont({
     src: './fonts/GeistVF.woff',
@@ -42,7 +44,9 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
     return (
         <html lang="en">
             <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-                <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+                <QueryClientProvider client={queryClient}>
+                    <Authentication>{children}</Authentication>
+                </QueryClientProvider>
                 <Script src={KAKAO_SDK_URL} strategy="beforeInteractive" />
             </body>
         </html>
