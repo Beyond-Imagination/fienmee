@@ -3,8 +3,8 @@ import { CloseIcon } from '@/components/icon'
 
 interface Props {
     isOpen: boolean
-    hasClose: boolean
-    onClose: () => void
+    hasClose?: boolean
+    onClose?: () => void
     children: React.ReactNode
 }
 

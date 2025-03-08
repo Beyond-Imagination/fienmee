@@ -84,7 +84,7 @@ export default function EnquiryForm() {
                     </button>
                 </div>
             </form>
-            <AlterDialog isOpen={showModal} onClose={() => setShowModal(true)} hasClose={false}>
+            <AlterDialog isOpen={showModal}>
                 <div className="flex flex-col justify-center items-center gap-5 py-5">
                     <CheckBoxIcon width="5.625rem" height="5.625rem" />
                     <span className="text-center">
