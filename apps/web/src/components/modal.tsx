@@ -3,8 +3,8 @@ import { CloseIcon } from '@/components/icon'
 
 interface Props {
     isOpen: boolean
-    hasClose: boolean
-    onClose: () => void
+    hasClose?: boolean
+    onClose?: () => void
     children: React.ReactNode
 }
 
@@ -18,6 +18,16 @@ export function FullScreenDialog({ isOpen, onClose, hasClose, children }: Props)
                 <CloseIcon width="1.5rem" height="1.5rem" />
             </button>
             {children}
+        </div>
+    )
+}
+
+export function AlterDialog({ isOpen, children }: Props) {
+    return (
+        <div
+            className={`flex fixed inset-0 bg-[#00000050] items-center justify-center transition-transform duration-300 p-6 ${isOpen ? 'opacity-100 z-50' : 'opacity-0 -z-50'}`}
+        >
+            <div className="bg-white rounded-2xl p-4">{children}</div>
         </div>
     )
 }
