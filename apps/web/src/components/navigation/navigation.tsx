@@ -42,7 +42,7 @@ export function Navigation() {
                 >
                     <AddEventButtonIcon width="2rem" height="2rem" />
                 </NavigationItem>
-                <NavigationItem uri={'/schedule/register'} text={'일정 등록'} isClicked={false} onClick={() => setTitle('일정 등록')}>
+                <NavigationItem uri={'/schedules/register'} text={'일정 등록'} isClicked={false} onClick={() => setTitle('일정 등록')}>
                     <AddScheduleButtonIcon width="2rem" height="2rem" />
                 </NavigationItem>
             </div>
