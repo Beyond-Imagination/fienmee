@@ -2,7 +2,7 @@ import express, { Request, Response, Router } from 'express'
 import asyncify from 'express-asyncify'
 import mongoose from 'mongoose'
 
-import { CategoryModel, Events, EventsModel } from '@/models'
+import { CategoryModel, Events, EventsModel, ReviewsModel } from '@/models'
 import { verifyToken } from '@/middlewares/auth'
 import { CategoryCode } from '@fienmee/types'
 
@@ -81,6 +81,20 @@ router.post('/:id/likes', verifyToken, async (req: Request, res: Response) => {
     await EventsModel.updateOne({ _id: req.params.id }, update)
 
     res.sendStatus(204)
+})
+
+router.post('/:id/reviews', verifyToken, async (req: Request, res: Response) => {
+    const event = await EventsModel.findById(req.params.id)
+    const review = await ReviewsModel.create({
+        eventId: event._id,
+        userId: req.user._id,
+        rating: req.body.rating,
+        photo: req.body.photo,
+        body: req.body.body,
+    })
+    res.status(200).json({
+        reviewId: review._id,
+    })
 })
 
 router.get('/category/:category', verifyToken, async (req: Request, res: Response) => {
