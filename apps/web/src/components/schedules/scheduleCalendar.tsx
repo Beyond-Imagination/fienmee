@@ -1,25 +1,31 @@
 import Calendar from 'react-calendar'
 import './calendar.css'
-import { CalendarDateRange } from '@fienmee/types'
+import { IScheduleItem } from '@fienmee/types'
 
 interface ScheduleCalendarProps {
     onChange: (value: Date) => void
+    handleMonthChanged: (data: { activeStartDate: Date }) => void
+    schedulesOnMonth: IScheduleItem[]
 }
 
-export default function ScheduleCalendar({ onChange }: ScheduleCalendarProps) {
-    const handleChange = (value: CalendarDateRange) => {
-        onChange(value as Date)
-    }
-
+export default function ScheduleCalendar({ onChange, handleMonthChanged, schedulesOnMonth }: ScheduleCalendarProps) {
     const hasSchedule = (date: Date) => {
-        // todo: 월별 일정을 가져오는 api 연동
-        return date.getTime() % 100 < 50
+        const targetSchedules = schedulesOnMonth.filter((schedule: IScheduleItem) => {
+            const startDate = schedule.startDate
+            const endDate = schedule.endDate
+            startDate.setHours(0, 0, 0, 0)
+            endDate.setHours(0, 0, 0, 0)
+            return startDate <= date && date <= endDate
+        })
+        return targetSchedules.length != 0
     }
 
     return (
         <div className="bg-white shadow-lg rounded-lg p-4">
             <Calendar
-                onChange={handleChange}
+                locale="ko"
+                onChange={onChange}
+                onActiveStartDateChange={e => handleMonthChanged(e)}
                 calendarType="gregory"
                 formatMonthYear={(locale, date) => {
                     const year = date.getFullYear()
