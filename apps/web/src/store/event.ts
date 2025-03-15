@@ -27,6 +27,7 @@ const initEvent: IEvent = {
     createdAt: new Date(),
     isAuthor: false,
     isAllDay: false,
+    isLiked: false,
 }
 
 export const eventStore = create<eventState>(set => ({
