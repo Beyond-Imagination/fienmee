@@ -3,9 +3,15 @@ import './calendar.css'
 import { IScheduleItem } from '@fienmee/types'
 
 interface ScheduleCalendarProps {
-    onChange: (value: Date) => void
-    handleMonthChanged: (data: { activeStartDate: Date }) => void
+    onChange: (value: Date | null | [Date | null, Date | null]) => void
+    handleMonthChanged: (data: { activeStartDate: Date | null }) => void
     schedulesOnMonth: IScheduleItem[]
+}
+
+interface ScheduleMonthChangedEvent {
+    activeStartDate: Date | null
+    view: 'century' | 'decade' | 'year' | 'month'
+    action: 'prev' | 'prev2' | 'next' | 'next2' | 'onChange' | 'drillUp' | 'drillDown'
 }
 
 export default function ScheduleCalendar({ onChange, handleMonthChanged, schedulesOnMonth }: ScheduleCalendarProps) {
@@ -20,12 +26,16 @@ export default function ScheduleCalendar({ onChange, handleMonthChanged, schedul
         return targetSchedules.length != 0
     }
 
+    const handleOnActiveStartDateChange = async (e: ScheduleMonthChangedEvent) => {
+        await handleMonthChanged(e)
+    }
+
     return (
         <div className="bg-white shadow-lg rounded-lg p-4">
             <Calendar
                 locale="ko"
                 onChange={onChange}
-                onActiveStartDateChange={e => handleMonthChanged(e)}
+                onActiveStartDateChange={e => handleOnActiveStartDateChange(e)}
                 calendarType="gregory"
                 formatMonthYear={(locale, date) => {
                     const year = date.getFullYear()

@@ -31,6 +31,8 @@ export interface IGetScheduleListResponse {
         totalPages: number
         hasNextPage: boolean
         hasPrevPage: boolean
+        nextPage: number
+        prevPage: number
     }
 }
 

@@ -3,27 +3,19 @@
 import ScheduleList from '@/components/schedules/sheduleList'
 import ScheduleCalendar from '@/components/schedules/scheduleCalendar'
 import { useState } from 'react'
-import { IScheduleItem } from '@fienmee/types'
+import { IScheduleItem, IGetScheduleListResponse } from '@fienmee/types'
+import { getSchedulesInMonth } from '@/api/schedules'
 
 export default function Schedules() {
     const [selectedDay, setSelectedDay] = useState<Date>(new Date())
     const [schedulesOnMonth, setSchedulesOnMonth] = useState<IScheduleItem[]>([])
 
-    const handleMonthChanged = ({ activeStartDate }: { activeStartDate: Date }) => {
+    const handleMonthChanged = async ({ activeStartDate }: { activeStartDate: Date | null }) => {
+        if (!activeStartDate) return // 사용자 시나리오에서는 activeStartDate가 null일 수 없음. 타입 호환성을 위한 null 타이핑
         const month = activeStartDate.getMonth() + 1 // month는 0부터 시작
         const year = activeStartDate.getFullYear()
-        alert(`month: ${month}, year: ${year}`)
-        // todo: fetch month data and initialize testMonthData
-        const data: IScheduleItem[] = [
-            {
-                _id: '65a1b2c3d4e5f6a7b8c9d0e2',
-                eventId: 'event-67890',
-                name: 'Music Festival 2023',
-                startDate: new Date('2025-02-01T12:00:00Z'),
-                images: ['https://example.com/images/music-fest-1.jpg', 'https://example.com/images/music-fest-2.jpg'],
-            },
-        ]
-        setSchedulesOnMonth(data)
+        const response: IGetScheduleListResponse = await getSchedulesInMonth(year, month)
+        setSchedulesOnMonth(response.schedules)
     }
 
     return (

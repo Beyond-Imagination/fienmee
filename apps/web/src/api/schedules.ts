@@ -13,3 +13,17 @@ export async function getSchedulesByDate(date: Date, page: number, limit: number
     }
     return res.json()
 }
+
+export async function getSchedulesInMonth(year: number, month: number): Promise<IGetScheduleListResponse> {
+    const firstDay = 1
+    const lastDay = parseInt(new Date(year, month + 1, 0).toString(), 10)
+    const from = `${year}.${month}.${firstDay}`
+    const to = `${year}.${month}.${lastDay}`
+    const res = await fetch(`${SERVER_URL}/v1/schedules?from=${from}&to=${to}`, {
+        method: 'GET',
+    })
+    if (!res.ok) {
+        throw new Error(`code: ${res.status}\ndescription: ${res.statusText}`)
+    }
+    return res.json()
+}
