@@ -57,3 +57,13 @@ export async function updateEvent(request: IPutEventRequest): Promise<void> {
     }
     return
 }
+
+export async function updateEventLikes(id: string) {
+    const res = await fetch(`${SERVER_URL}/v1/events/${id}/likes`, {
+        method: 'POST',
+    })
+    if (!res.ok) {
+        throw new Error(`code: ${res.status}\ndescription: ${res.statusText}`)
+    }
+    return
+}

@@ -1,10 +1,11 @@
 import { IEvent } from '@fienmee/types'
 import dayjs from 'dayjs'
 import 'dayjs/locale/ko'
-import { CommentIcon, ShareIcon, UnlikeIcon } from '@/components/icon'
+import { CommentIcon, ShareIcon } from '@/components/icon'
 import { EventMap } from '@/components/events/eventMap'
 import EventOption from '@/components/events/eventOption'
 import EventPhoto from '@/components/events/eventPhoto'
+import EventLikes from '@/components/events/eventLikes'
 
 interface Props {
     event: IEvent
@@ -58,11 +59,7 @@ export default function EventDetail({ event }: Props) {
                 </div>
             </div>
             <div className="flex justify-between p-4 mt-4 pt-4 border-t border-gray-200">
-                {/* TODO: add like function */}
-                <button className="flex items-center space-x-3">
-                    <UnlikeIcon width="1.25rem" height="1.25rem" />
-                    <span className="text-sm">{event.likeCount}</span>
-                </button>
+                <EventLikes />
                 <div className="flex items-center space-x-3">
                     <CommentIcon width="1.25rem" height="1.25rem" />
                     <div className="text-sm">{event.commentCount}</div>
