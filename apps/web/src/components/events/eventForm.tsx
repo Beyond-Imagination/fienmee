@@ -104,7 +104,7 @@ const EventForm: React.FC<EventFormProps> = ({ selectedCategories, photos, initE
         <form className="p-6 w-full max-w-lg mx-auto flex flex-col gap-6" onSubmit={handleSubmit}>
             <InputField label="행사 제목" placeholder="행사 제목을 입력해주세요" value={formData.name} name="name" onChange={handleChange} />
             <div className="flex items-center">
-                <label className="mr-2">카테고리</label>
+                <label className="font-medium mr-2">카테고리</label>
                 <div className="flex flex-wrap gap-2">
                     {Array.from(selectedCategories).map((category, index) => (
                         <span key={index} className="bg-white px-2 py-1 rounded border">
@@ -125,7 +125,7 @@ const EventForm: React.FC<EventFormProps> = ({ selectedCategories, photos, initE
                 onEndDateChange={onEndDateTimeChange}
             />
             <div>
-                <label>행사 장소</label>
+                <label className="font-medium">행사 장소</label>
                 <EventVenueSelector initialPosition={position} onPositionChange={setPosition} />
             </div>
             <InputField label="이용 요금" placeholder="₩ 이용 요금을 입력해주세요" value={formData.cost} name="cost" onChange={handleChange} />
