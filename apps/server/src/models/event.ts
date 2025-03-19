@@ -59,7 +59,6 @@ export class Events extends defaultClasses.TimeStamps {
     public isAllDay: boolean
 
     public toJSON(): object {
-        // TODO: add isLiked
         return {
             _id: this._id,
             name: this.name,
