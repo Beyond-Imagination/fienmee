@@ -7,8 +7,5 @@
         "build": "rm -rf dist && swc src -d dist .",
         "test": "jest --passWithNoTests"
     },
-    "private": true,
-    "devDependencies": {
-        "@babel/runtime": "^7.25.0"
-    }
+    "private": true
 }
