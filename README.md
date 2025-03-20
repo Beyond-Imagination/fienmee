@@ -26,3 +26,11 @@ cd apps/app
 pnpm start
 # 이후 ios/android 선택
 ```
+
+## application build
+android build 방법
+```shell
+cd apps/app/android
+./gradlew bundleRelease
+# apps/app/android/app/build/outputs/apk 경로에 .apk 파일 생성됨
+```
