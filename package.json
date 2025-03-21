@@ -19,6 +19,7 @@
     "author": "",
     "license": "ISC",
     "devDependencies": {
+        "@babel/runtime": "^7.26.10",
         "@swc/cli": "^0.5.0",
         "@swc/core": "^1.9.1",
         "@swc/jest": "^0.2.37",
