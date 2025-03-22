@@ -5,6 +5,9 @@ on:
         branches:
             - main
             - develop
+            - test
+        tags:
+            - 'v*'
 
 env:
     BRANCH_NAME: ${{ github.head_ref || github.ref_name }}
@@ -39,7 +42,12 @@ jobs:
               id: meta
               uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
               with:
-                  images: ${{ matrix.image }}-${{ env.BRANCH_NAME }}
+                  images: ${{ matrix.image }}
+                  tags: |
+                      type=ref,event=branch
+                      type=semver,pattern={{version}}
+                      type=semver,pattern={{major}}.{{minor}}
+                      type=sha
 
             - name: Build and push Docker image
               uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
