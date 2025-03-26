@@ -26,7 +26,8 @@ router.post('/', middlewares.schedules.addScheduleMiddleware, async (req: Reques
 
 router.get('/', async (req: Request, res: Response) => {
     const options = {
-        page: Number(req.query.page) || 0,
+        isPaginated: req.query.isPaginated || false,
+        page: Number(req.query.page) || 1,
         limit: Number(req.query.limit) || 100,
     }
 
@@ -36,9 +37,9 @@ router.get('/', async (req: Request, res: Response) => {
     }
 
     const userId = req.user?._id.toString()
-    const paginatedDocument = await ScheduleModel.findByUserId(userId, filterOption, options)
+    const documents = await ScheduleModel.findByUserId(userId, filterOption, options)
 
-    const schedules = paginatedDocument.docs.map(doc => {
+    const schedules = documents.docs.map(doc => {
         return {
             _id: doc._id,
             eventId: doc.eventId,
@@ -51,10 +52,10 @@ router.get('/', async (req: Request, res: Response) => {
     res.status(200).json({
         schedules: schedules,
         page: {
-            totalDocs: paginatedDocument.totalDocs,
-            totalPages: paginatedDocument.totalPages,
-            hasNextPage: paginatedDocument.hasNextPage,
-            hasPrevPage: paginatedDocument.hasPrevPage,
+            totalDocs: documents.totalDocs,
+            totalPages: documents.totalPages,
+            hasNextPage: documents.hasNextPage,
+            hasPrevPage: documents.hasPrevPage,
         },
     })
 })
