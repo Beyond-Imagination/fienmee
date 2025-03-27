@@ -72,7 +72,7 @@ router.get('/:id', verifyToken, async (req: Request, res: Response) => {
     res.status(200).json({ ...event, isAuthor: event.authorId.equals(req.user._id) })
 })
 
-router.post('/:id', verifyToken, async (req: Request, res: Response) => {
+router.post('/:id/comments', verifyToken, async (req: Request, res: Response) => {
     await CommentsModel.create({
         userId: req.user._id,
         nickname: req.user.nickname,
