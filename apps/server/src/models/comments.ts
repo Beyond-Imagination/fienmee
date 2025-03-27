@@ -12,7 +12,7 @@ export class Comments extends defaultClasses.TimeStamps {
     @prop({ ref: User, required: true })
     public userId: mongoose.Types.ObjectId
 
-    @prop({ ref: User, required: true })
+    @prop({ required: true })
     public nickname: string
 
     @prop({ ref: Events, required: true })
