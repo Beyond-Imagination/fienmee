@@ -20,6 +20,7 @@ export interface IEvent {
     createdAt: Date
     isAuthor: boolean
     isAllDay: boolean
+    isLiked: boolean
 }
 
 export interface IGetEventsByCategoryResponse {

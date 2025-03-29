@@ -2,7 +2,7 @@ import express, { Request, Response, Router } from 'express'
 import asyncify from 'express-asyncify'
 import mongoose from 'mongoose'
 
-import { CategoryModel, Events, EventsModel, ReviewsModel } from '@/models'
+import { CategoryModel, Events, EventsModel, ReviewsModel, CommentsModel } from '@/models'
 import { verifyToken } from '@/middlewares/auth'
 import { CategoryCode } from '@fienmee/types'
 
@@ -70,6 +70,17 @@ router.get('/:id', verifyToken, async (req: Request, res: Response) => {
     const event = await EventsModel.findById(req.params.id)
 
     res.status(200).json({ ...event, isAuthor: event.authorId.equals(req.user._id) })
+})
+
+router.post('/:id/comments', verifyToken, async (req: Request, res: Response) => {
+    await CommentsModel.create({
+        userId: req.user._id,
+        nickname: req.user.nickname,
+        eventId: req.params.id,
+        comment: req.body.comment,
+    })
+
+    res.sendStatus(204)
 })
 
 router.post('/:id/likes', verifyToken, async (req: Request, res: Response) => {

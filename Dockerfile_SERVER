@@ -8,23 +8,27 @@ WORKDIR /fienmee
 
 COPY pnpm-workspace.yaml /fienmee/pnpm-workspace.yaml
 COPY tsconfig.base.json /fienmee/tsconfig.base.json
-COPY packages /fienmee/packages
 
 COPY package.json /fienmee/package.json
 COPY pnpm-lock.yaml /fienmee/pnpm-lock.yaml
 
 FROM base as build
 
+COPY packages /fienmee/packages
 COPY apps/server /fienmee/apps/server
 
+RUN pnpm fetch
 RUN pnpm install
+RUN pnpm build:types
 RUN pnpm build:server
 
 FROM base AS runner
 
 COPY --from=build /fienmee/apps/server/package.json /fienmee/apps/server/package.json
 COPY --from=build /fienmee/apps/server/dist /fienmee/apps/server/dist
+COPY --from=build /fienmee/packages/types/package.json /fienmee/packages/types/package.json
+COPY --from=build /fienmee/packages/types/dist /fienmee/packages/types
 
-RUN pnpm install --prod --ignore-scripts
+RUN pnpm install --ignore-scripts
 
 CMD [ "pnpm", "start:server" ]

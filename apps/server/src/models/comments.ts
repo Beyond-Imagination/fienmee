@@ -1,40 +1,43 @@
+import { getModelForClass, plugin, prop, defaultClasses } from '@typegoose/typegoose'
 import mongoose from 'mongoose'
-import { defaultClasses, getModelForClass, plugin, prop } from '@typegoose/typegoose'
 import mongoosePaginate from 'mongoose-paginate-v2'
 import { Events, User } from '@/models'
 
 @plugin(mongoosePaginate)
-export class Reviews extends defaultClasses.TimeStamps {
-    public paginate: mongoose.PaginateModel<typeof Reviews>['paginate']
+export class Comments extends defaultClasses.TimeStamps {
+    static paginate: mongoose.PaginateModel<typeof Comments>['paginate']
 
     public _id: mongoose.Types.ObjectId
 
     @prop({ ref: User, required: true })
     public userId: mongoose.Types.ObjectId
 
+    @prop({ required: true })
+    public nickname: string
+
     @prop({ ref: Events, required: true })
     public eventId: mongoose.Types.ObjectId
 
-    @prop({ required: true, min: 1, max: 5 })
-    public rating: number
+    @prop()
+    public comment: string
 
     @prop()
-    public photo: string[]
+    public createdAt: Date
 
-    @prop({ required: true })
-    public body: string
+    @prop()
+    public updatedAt: Date
 
     public toJSON(): object {
         return {
             _id: this._id,
             userId: this.userId,
+            nickname: this.nickname,
             eventId: this.eventId,
-            rating: this.rating,
-            body: this.body,
-            photo: this.photo,
+            comment: this.comment,
             createdAt: this.createdAt,
+            updatedAt: this.updatedAt,
         }
     }
 }
 
-export const ReviewsModel = getModelForClass(Reviews)
+export const CommentsModel = getModelForClass(Comments)
