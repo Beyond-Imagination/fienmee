@@ -17,13 +17,13 @@ interface ScheduleMonthChangedEvent {
 export default function ScheduleCalendar({ onChange, handleMonthChanged, schedulesOnMonth }: ScheduleCalendarProps) {
     const hasSchedule = (date: Date) => {
         const targetSchedules = schedulesOnMonth.filter((schedule: IScheduleItem) => {
-            const startDate = schedule.startDate
-            const endDate = schedule.endDate
+            const startDate = new Date(schedule.startDate)
+            const endDate = new Date(schedule.endDate)
             startDate.setHours(0, 0, 0, 0)
             endDate.setHours(0, 0, 0, 0)
             return startDate <= date && date <= endDate
         })
-        return targetSchedules.length != 0
+        return targetSchedules.length > 0
     }
 
     const handleOnActiveStartDateChange = async (e: ScheduleMonthChangedEvent) => {

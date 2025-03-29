@@ -12,26 +12,22 @@ export default function Schedules() {
     const [schedulesOnMonth, setSchedulesOnMonth] = useState<IScheduleItem[]>([])
     const [activeStartDate, setActiveStartDate] = useState<Date | null>(null)
 
-    const useGetSchedulesInMonthQuery = ({ year, month }: { year: number | null; month: number | null }) => {
-        const { data } = useQuery<IGetScheduleListResponse>({
+    const useGetSchedulesInMonthQuery = ({ year, month }: { year: number; month: number }) => {
+        const { data, isLoading, isError } = useQuery<IGetScheduleListResponse>({
             queryKey: ['schedules', year, month],
-            queryFn: () => {
-                if (!year && !month) return getSchedulesInMonth(year as number, month as number)
-                return Promise.reject(new Error('Invalid selectedDay'))
-            },
+            queryFn: () => getSchedulesInMonth(year, month),
         })
-        return { fetchedSchedule: data?.schedules }
+        return { data, isLoading, isError }
     }
 
-    const year = activeStartDate ? activeStartDate.getFullYear() : null
-    const month = activeStartDate ? activeStartDate.getMonth() : null
-    const { fetchedSchedule } = useGetSchedulesInMonthQuery({ year, month: month ? month + 1 : null }) // month는 1부터 시작
-
+    const year = activeStartDate ? activeStartDate.getFullYear() : new Date().getFullYear()
+    const month = activeStartDate ? activeStartDate.getMonth() + 1 : new Date().getMonth() + 1
+    const { data, isLoading, isError } = useGetSchedulesInMonthQuery({ year, month })
     useEffect(() => {
-        if (fetchedSchedule) {
-            setSchedulesOnMonth(fetchedSchedule)
+        if (!isLoading && !isError && data) {
+            setSchedulesOnMonth(data.schedules)
         }
-    }, [fetchedSchedule])
+    }, [data])
 
     const handleMonthChanged = async ({ activeStartDate }: { activeStartDate: Date | null }) => {
         if (!activeStartDate) setActiveStartDate(activeStartDate)
@@ -39,15 +35,20 @@ export default function Schedules() {
 
     return (
         <div className="flex flex-col items-center">
-            <ScheduleCalendar
-                onChange={newDate => setSelectedDay(newDate as Date)}
-                handleMonthChanged={handleMonthChanged}
-                schedulesOnMonth={schedulesOnMonth}
-            />
-            <ScheduleList
-                items={schedulesOnMonth.filter(schedule => schedule.startDate <= selectedDay && schedule.endDate >= selectedDay)}
-                selectedDate={selectedDay}
-            />
+            {isLoading && <div>Loading...</div>}
+            {!isLoading && !isError && (
+                <>
+                    <ScheduleCalendar
+                        onChange={newDate => setSelectedDay(newDate as Date)}
+                        handleMonthChanged={handleMonthChanged}
+                        schedulesOnMonth={schedulesOnMonth}
+                    />
+                    <ScheduleList
+                        items={schedulesOnMonth?.filter(schedule => schedule.startDate <= selectedDay && schedule.endDate >= selectedDay)}
+                        selectedDate={selectedDay}
+                    />
+                </>
+            )}
         </div>
     )
 }
