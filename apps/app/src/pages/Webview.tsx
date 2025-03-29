@@ -10,6 +10,8 @@ import { deleteToken, getToken, setToken } from '@/stores/token'
 import { WebviewScreenProps } from '@/types'
 import { refresh } from '@/api'
 
+const INJECTED_JAVASCRIPT = `const meta = document.createElement('meta'); meta.setAttribute('content', 'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0'); meta.setAttribute('name', 'viewport'); document.getElementsByTagName('head')[0].appendChild(meta); `
+
 export function WebviewScreen() {
     const navigation = useNavigation<WebviewScreenProps['navigation']>()
     const webViewRef = useRef<WebView>(null)
@@ -59,6 +61,7 @@ export function WebviewScreen() {
             onLoad={onLoad}
             onMessage={onMessage}
             containerStyle={{ flex: 0, width: '100%', height: '100%' }}
+            injectedJavaScript={INJECTED_JAVASCRIPT}
             webviewDebuggingEnabled={ENV}
             overScrollMode="never"
         />
