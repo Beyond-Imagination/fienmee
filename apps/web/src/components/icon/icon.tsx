@@ -3,6 +3,11 @@ export interface IconProps {
     height: string
 }
 
+export interface CustomIconProps extends IconProps {
+    color: string
+    stroke: string
+}
+
 interface BaseCategoryProps extends IconProps {
     isFavorites: boolean
 }
@@ -57,18 +62,7 @@ export function HottestCategoryIcon({ width, height }: IconProps) {
 }
 
 export function BaseCategoryIcon({ width, height, isFavorites }: BaseCategoryProps) {
-    return (
-        <svg width={width} height={height} viewBox="0 0 30 29" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path
-                d="M15 1.6665L19.12 10.0132L28.3333 11.3598L21.6666 17.8532L23.24 27.0265L15 22.6932L6.75996 27.0265L8.33329 17.8532L1.66663 11.3598L10.88 10.0132L15 1.6665Z"
-                fill={`${isFavorites ? '#FF9575' : '#FFFFFF'}`}
-                stroke="#1B1B1B"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-            />
-        </svg>
-    )
+    return <StarIcon height={height} width={width} stroke="#1B1B1B" color={`${isFavorites ? '#FF9575' : '#FFFFFF'}`} />
 }
 
 export function NotificationIcon({ width, height }: IconProps) {
@@ -179,10 +173,10 @@ export function ArrowIcon({ width, height }: IconProps) {
     )
 }
 
-export function CloseIcon({ width, height }: IconProps) {
+export function CloseIcon({ width, height, color, stroke }: CustomIconProps) {
     return (
         <svg width={width} height={height} viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M1.4 14L0 12.6L5.6 7L0 1.4L1.4 0L7 5.6L12.6 0L14 1.4L8.4 7L14 12.6L12.6 14L7 8.4L1.4 14Z" fill="#1D1B20" />
+            <path d="M1.4 14L0 12.6L5.6 7L0 1.4L1.4 0L7 5.6L12.6 0L14 1.4L8.4 7L14 12.6L12.6 14L7 8.4L1.4 14Z" fill={color} stroke={stroke} />
         </svg>
     )
 }
@@ -193,6 +187,21 @@ export function CheckBoxIcon({ width, height }: IconProps) {
             <path
                 d="M45 0C20.1488 0 0 20.1488 0 45C0 69.8512 20.1488 90 45 90C69.8512 90 90 69.8512 90 45C90 20.1488 69.8512 0 45 0ZM70.1513 36.4012L41.8013 64.7513C41.0963 65.4563 40.1437 65.85 39.15 65.85C38.1562 65.85 37.2 65.4563 36.4987 64.7513L23.55 51.8025C22.0837 50.3362 22.0837 47.9662 23.55 46.5C25.0162 45.0337 27.3863 45.0337 28.8525 46.5L39.15 56.7975L64.8487 31.0988C66.315 29.6325 68.685 29.6325 70.1513 31.0988C71.6175 32.565 71.6175 34.935 70.1513 36.4012Z"
                 fill="#FF9575"
+            />
+        </svg>
+    )
+}
+
+export function StarIcon({ stroke, color, width, height }: CustomIconProps) {
+    return (
+        <svg width={width} height={height} viewBox="0 0 30 29" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path
+                d="M15 1.6665L19.12 10.0132L28.3333 11.3598L21.6666 17.8532L23.24 27.0265L15 22.6932L6.75996 27.0265L8.33329 17.8532L1.66663 11.3598L10.88 10.0132L15 1.6665Z"
+                fill={color}
+                stroke={stroke}
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
             />
         </svg>
     )

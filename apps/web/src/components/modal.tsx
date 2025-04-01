@@ -15,7 +15,7 @@ export function FullScreenDialog({ isOpen, onClose, hasClose, children }: Props)
                         ${isOpen ? 'translate-y-[2rem]' : 'translate-y-full'} transition-transform duration-300 p-6`}
         >
             <button className={`${hasClose ? '' : 'hidden'} flex justify-start w-full mb-4`} onClick={onClose}>
-                <CloseIcon width="1.5rem" height="1.5rem" />
+                <CloseIcon width="1.5rem" height="1.5rem" color="#1B1B1B" stroke="" />
             </button>
             {children}
         </div>
