@@ -80,10 +80,9 @@ export default function EventDetail({ event }: Props) {
                     <CommentIcon width="1.25rem" height="1.25rem" />
                     <div className="text-sm">{event.commentCount}</div>
                 </div>
-                {/* TODO: add share function */}
-                <button className="flex items-center space-x-2">
-                    <ShareIcon width="1.25rem" height="1.25rem" />
-                    <div className="text-sm">공유하기</div>
+                {/* TODO: add schedule function */}
+                <button className="rounded-lg text-white bg-[#FF9575] px-6 py-1.5">
+                    <span>내 일정 추가</span>
                 </button>
             </div>
             {/* TODO: add comment list */}
