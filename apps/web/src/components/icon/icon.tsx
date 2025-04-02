@@ -142,9 +142,9 @@ export function UnlikeIcon({ width, height }: IconProps) {
     )
 }
 
-export function OptionIcon() {
+export function OptionIcon({ width, height }: IconProps) {
     return (
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="size-6">
+        <svg width={width} height={height} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor">
             <path
                 strokeLinecap="round"
                 strokeLinejoin="round"
