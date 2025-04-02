@@ -31,7 +31,7 @@ export default function Dropdown({ children, Icon, xTranslate }: Props) {
                 </div>
                 {open && (
                     <article className={`absolute border rounded-md z-30 translate-y-2 ${xTranslate} shadow-md bg-white dark:bg-[#18191b]`}>
-                        <ul className="text-sm">
+                        <ul className="text-sm text-center">
                             {validChildren.length === 1 ? (
                                 <li className="rounded-md hover:bg-gray-100 dark:hover:bg-[#ffffff26]">{validChildren[0]}</li>
                             ) : (
