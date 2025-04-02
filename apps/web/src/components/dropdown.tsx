@@ -24,9 +24,9 @@ export default function Dropdown({ children, Icon, xTranslate }: Props) {
     }, [])
 
     return (
-        <div ref={dropdownRef}>
-            <div className="inline-block" onClick={() => setOpen(true)}>
-                <div className="text-black items-center w-6 h-6 dark:text-white">
+        <div className="self-center justify-self-center" ref={dropdownRef}>
+            <div className="w-full h-full" onClick={() => setOpen(true)}>
+                <div className="flex text-black items-center w-6 h-6 dark:text-white">
                     <Icon />
                 </div>
                 {open && (

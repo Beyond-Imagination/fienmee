@@ -38,7 +38,13 @@ export default function EventDetail({ event }: Props) {
             <div className="flex flex-col p-4 space-y-4">
                 <div className="flex justify-between items-start">
                     <div className="text-xl font-bold">{event.name}</div>
-                    <div className="relative">{event.isAuthor && <EventOption eventId={event._id} />}</div>
+                    <div className="flex flex-row justify-center items-center gap-2">
+                        {/* TODO: add share function */}
+                        <button className="">
+                            <ShareIcon width="1.5rem" height="1.5rem" />
+                        </button>
+                        {event.isAuthor && <EventOption eventId={event._id} />}
+                    </div>
                 </div>
 
                 <div className="space-y-4">
