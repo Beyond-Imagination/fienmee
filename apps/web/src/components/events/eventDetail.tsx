@@ -8,6 +8,7 @@ import EventPhoto from '@/components/events/eventPhoto'
 import EventLikes from '@/components/events/eventLikes'
 import { useMemo } from 'react'
 import TabBar from '@/components/tabBar'
+import EventCommentInput from '@/components/events/commentInputField'
 
 interface Props {
     event: IEvent
@@ -72,6 +73,11 @@ export default function EventDetail({ event }: Props) {
 
                 <div className="mt-6">
                     <p className="text-sm text-gray-700 whitespace-pre-wrap break-all">{event.description}</p>
+                </div>
+            </div>
+            <div className="flex flex-col p-4 space-y-4">
+                <div className="flex items-center">
+                    <EventCommentInput eventId={event._id} />
                 </div>
             </div>
             <div className="flex justify-between p-4 mt-4 pt-4 border-t border-gray-200">
