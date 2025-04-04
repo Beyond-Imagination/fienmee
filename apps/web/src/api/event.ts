@@ -1,4 +1,10 @@
-import { IGetEventCategoriesResponse, IGetEventsByCategoryResponse, IPostEventRequest, IPutEventRequest } from '@fienmee/types'
+import {
+    IGetEventCategoriesResponse,
+    IGetEventsByCategoryResponse,
+    IPostEventCommentRequest,
+    IPostEventRequest,
+    IPutEventRequest,
+} from '@fienmee/types'
 
 import { SERVER_URL } from '@/config'
 
@@ -61,6 +67,17 @@ export async function updateEvent(request: IPutEventRequest): Promise<void> {
 export async function updateEventLikes(id: string) {
     const res = await fetch(`${SERVER_URL}/v1/events/${id}/likes`, {
         method: 'POST',
+    })
+    if (!res.ok) {
+        throw new Error(`code: ${res.status}\ndescription: ${res.statusText}`)
+    }
+    return
+}
+
+export async function registerEventComments(request: IPostEventCommentRequest) {
+    const res = await fetch(`${SERVER_URL}/v1/events/${request.eventId}/comments`, {
+        method: 'POST',
+        body: JSON.stringify({ comment: request.comment }),
     })
     if (!res.ok) {
         throw new Error(`code: ${res.status}\ndescription: ${res.statusText}`)
