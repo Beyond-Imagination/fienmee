@@ -8,14 +8,13 @@ import { BackButtonIcon } from '@/components/icon'
 export function PageTitleHeader() {
     const router = useRouter()
     const { title, setTitle } = titleStore()
-    const { category, clearCategory } = categoryStore()
+    const { category } = categoryStore()
 
     const onClick = () => {
-        if (!title && category) {
+        if (!title && category._id !== '') {
             setTitle(category.title)
         } else {
             setTitle('')
-            clearCategory()
         }
         router.back()
     }

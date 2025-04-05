@@ -1,6 +1,7 @@
 import Calendar from 'react-calendar'
 import './calendar.css'
 import { IScheduleItem } from '@fienmee/types'
+import { NextLabelIcon, PrevLabelIcon } from '@/components/icon/schedule'
 
 interface ScheduleCalendarProps {
     onChange: (value: Date | null | [Date | null, Date | null]) => void
@@ -31,7 +32,7 @@ export default function ScheduleCalendar({ onChange, handleMonthChanged, schedul
     }
 
     return (
-        <div className="bg-white shadow-lg rounded-lg p-4">
+        <div className="bg-white rounded-lg p-4 border-b border-b-[#E4E4E4]">
             <Calendar
                 locale="ko"
                 onChange={onChange}
@@ -49,7 +50,9 @@ export default function ScheduleCalendar({ onChange, handleMonthChanged, schedul
                     const weekdays = ['S', 'M', 'T', 'W', 'T', 'F', 'S']
                     return weekdays[date.getDay()]
                 }}
+                prevLabel={PrevLabelIcon({ width: '0.5rem', height: '0.75rem' })}
                 prev2Label={null}
+                nextLabel={NextLabelIcon({ width: '0.5rem', height: '0.75rem' })}
                 next2Label={null}
                 showNeighboringMonth={false}
                 tileClassName={({ date, view }) => {

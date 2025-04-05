@@ -62,3 +62,29 @@ export interface IPutEventRequest extends IPostEventRequest {
         _id: string
     }
 }
+
+export interface IReviewFormInputs {
+    rating: boolean[]
+    photo: string[]
+    body: string
+}
+
+export interface IPostReviewRequest {
+    uri: {
+        id: string
+    }
+    body: {
+        rating: number
+        photo: string[]
+        body: string
+    }
+}
+
+export interface IPostReviewResponse {
+    reviewId: string
+}
+
+export interface IPostEventCommentRequest {
+    eventId: string
+    comment: string
+}
