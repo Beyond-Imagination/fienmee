@@ -41,8 +41,8 @@ router.get('/', async (req: Request, res: Response) => {
     res.status(200).json(schedules)
 })
 
-router.get('/:id', async (req: Request, res: Response) => {
-    const schedule = await ScheduleModel.findOne({ _id: req.params.id }).exec()
+router.get('/:id', middlewares.schedules.verifyAuthorMiddleware, async (req: Request, res: Response) => {
+    const schedule = await ScheduleModel.findOne({ _id: req.params.id })
     res.status(200).json(schedule)
 })
 
