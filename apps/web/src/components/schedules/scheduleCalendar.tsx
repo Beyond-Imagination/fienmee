@@ -1,12 +1,12 @@
 import Calendar from 'react-calendar'
 import './calendar.css'
-import { IScheduleItem } from '@fienmee/types'
+import { ISchedules } from '@fienmee/types'
 import { NextLabelIcon, PrevLabelIcon } from '@/components/icon/schedule'
 
 interface ScheduleCalendarProps {
     onChange: (value: Date | null | [Date | null, Date | null]) => void
     handleMonthChanged: (data: { activeStartDate: Date | null }) => void
-    schedulesOnMonth: IScheduleItem[]
+    schedulesOnMonth: ISchedules
 }
 
 interface ScheduleMonthChangedEvent {
@@ -17,14 +17,7 @@ interface ScheduleMonthChangedEvent {
 
 export default function ScheduleCalendar({ onChange, handleMonthChanged, schedulesOnMonth }: ScheduleCalendarProps) {
     const hasSchedule = (date: Date) => {
-        const targetSchedules = schedulesOnMonth.filter((schedule: IScheduleItem) => {
-            const startDate = new Date(schedule.startDate)
-            const endDate = new Date(schedule.endDate)
-            startDate.setHours(0, 0, 0, 0)
-            endDate.setHours(0, 0, 0, 0)
-            return startDate <= date && date <= endDate
-        })
-        return targetSchedules.length > 0
+        return !schedulesOnMonth[`${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`]
     }
 
     const handleOnActiveStartDateChange = async (e: ScheduleMonthChangedEvent) => {

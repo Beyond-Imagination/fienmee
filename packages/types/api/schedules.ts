@@ -24,16 +24,12 @@ export interface IScheduleItem {
     images: string[]
 }
 
+export interface ISchedules {
+    [date: string]: IScheduleItem[]
+}
+
 export interface IGetScheduleListResponse {
-    schedules: IScheduleItem[]
-    page: {
-        totalDocs: number
-        totalPages: number
-        hasNextPage: boolean
-        hasPrevPage: boolean
-        nextPage: number
-        prevPage: number
-    }
+    schedules: ISchedules
 }
 
 type CalendarDate = Date | null

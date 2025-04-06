@@ -50,25 +50,16 @@ export class Schedule extends defaultClasses.TimeStamps {
             from: Date
             to: Date
         },
-        options: {
-            isPaginated: boolean
-            page: number
-            limit: number
-        },
     ) {
-        if (options?.isPaginated)
-            return await this.paginate({ authorId: userId, startDate: { $lte: filterOption.to }, endDate: { $gte: filterOption.from } }, options)
-        else {
-            const schedules: Schedule[] = []
-            const documents = await this.find({
-                authorId: userId,
-                startDate: { $lte: filterOption.to },
-                endDate: { $gte: filterOption.from },
-            }).exec()
+        const schedules: Schedule[] = []
+        const documents = await this.find({
+            authorId: userId,
+            startDate: { $lte: filterOption.to },
+            endDate: { $gte: filterOption.from },
+        }).exec()
 
-            documents.forEach(schedule => schedules.push(schedule))
-            return { docs: schedules }
-        }
+        documents.forEach(schedule => schedules.push(schedule))
+        return { docs: schedules }
     }
 }
 
