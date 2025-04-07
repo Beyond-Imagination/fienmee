@@ -1,9 +1,9 @@
 .idea
+.vscode
 
 node_modules
 dist
 logs
 
 .env
-
-.vscode
+newrelic_agent.log

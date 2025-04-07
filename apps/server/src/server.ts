@@ -4,6 +4,7 @@ import compression from 'compression'
 import hpp from 'hpp'
 import helmet from 'helmet'
 import cors from 'cors'
+import newrelic from 'newrelic'
 
 import { logger, loggerMiddleware } from '@/utils/logger'
 import { NODE_ENV, HOST, PORT } from '@/config'
@@ -16,6 +17,7 @@ export default class Server {
 
     constructor() {
         this.app = express()
+        this.app.locals.newrelic = newrelic
 
         this.setPreMiddleware()
         this.setController()
