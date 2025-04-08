@@ -14,7 +14,7 @@ export async function getEventsByCategory(category: string, page: number, limit:
     })
 
     if (!res.ok) {
-        throw new Error(`code: ${res.status}\ndescription: ${res.statusText}`)
+        throw await res.json()
     }
     return res.json()
 }
@@ -25,7 +25,7 @@ export async function getEventsCategories(): Promise<IGetEventCategoriesResponse
     })
 
     if (!res.ok) {
-        throw new Error(`code: ${res.status}\ndescription: ${res.statusText}`)
+        throw await res.json()
     }
     return res.json()
 }
@@ -36,7 +36,7 @@ export async function deleteEventById(id: string): Promise<void> {
     })
 
     if (!res.ok) {
-        throw new Error(`code: ${res.status}\ndescription: ${res.statusText}`)
+        throw await res.json()
     }
     return
 }
@@ -48,7 +48,7 @@ export async function registerEvent(eventData: IPostEventRequest): Promise<void>
     })
 
     if (!res.ok) {
-        throw new Error(`code: ${res.status}\ndescription: ${res.statusText}`)
+        throw await res.json()
     }
     return
 }
@@ -59,7 +59,7 @@ export async function updateEvent(request: IPutEventRequest): Promise<void> {
         body: JSON.stringify(request.body),
     })
     if (!res.ok) {
-        throw new Error(`code: ${res.status}\ndescription: ${res.statusText}`)
+        throw await res.json()
     }
     return
 }
@@ -69,7 +69,7 @@ export async function updateEventLikes(id: string) {
         method: 'POST',
     })
     if (!res.ok) {
-        throw new Error(`code: ${res.status}\ndescription: ${res.statusText}`)
+        throw await res.json()
     }
     return
 }
@@ -80,7 +80,7 @@ export async function registerEventComments(request: IPostEventCommentRequest) {
         body: JSON.stringify({ comment: request.comment }),
     })
     if (!res.ok) {
-        throw new Error(`code: ${res.status}\ndescription: ${res.statusText}`)
+        throw await res.json()
     }
     return
 }

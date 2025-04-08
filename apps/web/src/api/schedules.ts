@@ -9,7 +9,7 @@ export async function getSchedulesByDate(date: Date, page: number, limit: number
     })
 
     if (!res.ok) {
-        throw new Error(`code: ${res.status}\ndescription: ${res.statusText}`)
+        throw await res.json()
     }
     return res.json()
 }

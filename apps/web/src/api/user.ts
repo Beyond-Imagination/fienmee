@@ -5,7 +5,7 @@ export async function logout(): Promise<void> {
         method: 'DELETE',
     })
     if (!res.ok) {
-        throw new Error(`code: ${res.status}\ndescription: ${res.statusText}`)
+        throw await res.json()
     }
     return
 }
@@ -15,7 +15,7 @@ export async function deleteUser(): Promise<void> {
         method: 'DELETE',
     })
     if (!res.ok) {
-        throw new Error(`code ${res.status}\ndescription: ${res.statusText}`)
+        throw await res.json()
     }
     return
 }
