@@ -7,7 +7,7 @@ export async function postEnquiry(request: IPostEnquiryRequest): Promise<IPostEn
         body: JSON.stringify(request.body),
     })
     if (!res.ok) {
-        throw new Error(`code: ${res.status}\ndescription: ${res.statusText}`)
+        throw await res.json()
     }
     return res.json()
 }

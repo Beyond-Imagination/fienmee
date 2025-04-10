@@ -8,7 +8,7 @@ export async function postReview(request: IPostReviewRequest): Promise<IPostRevi
     })
 
     if (!res.ok) {
-        throw new Error(`code: ${res.status}\ndescription: ${res.statusText}`)
+        throw await res.json()
     }
     return res.json()
 }
