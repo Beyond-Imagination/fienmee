@@ -4,6 +4,8 @@ import {
     IPostEventCommentRequest,
     IPostEventRequest,
     IPutEventRequest,
+    IGetPresignedUrlRequest,
+    IGetPresignedUrlResponse,
 } from '@fienmee/types'
 
 import { SERVER_URL } from '@/config'
@@ -83,4 +85,30 @@ export async function registerEventComments(request: IPostEventCommentRequest) {
         throw await res.json()
     }
     return
+}
+
+export async function getPresignedUrl(request: IGetPresignedUrlRequest): Promise<IGetPresignedUrlResponse> {
+    const res = await fetch(`${SERVER_URL}/v1/events/get-presigned-url`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(request),
+    })
+
+    if (!res.ok) {
+        throw new Error(`code: ${res.status}\ndescription: ${res.statusText}`)
+    }
+
+    return res.json()
+}
+
+export async function uploadToS3(presignedUrl: string, file: File): Promise<void> {
+    const res = await fetch(presignedUrl, {
+        method: 'PUT',
+        body: file,
+        headers: { 'Content-Type': file.type },
+    })
+
+    if (!res.ok) {
+        throw new Error(`code: ${res.status}\ndescription: ${res.statusText}`)
+    }
 }
