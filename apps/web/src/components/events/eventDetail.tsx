@@ -6,6 +6,9 @@ import { EventMap } from '@/components/events/eventMap'
 import EventOption from '@/components/events/eventOption'
 import EventPhoto from '@/components/events/eventPhoto'
 import EventLikes from '@/components/events/eventLikes'
+import { useMemo } from 'react'
+import TabBar from '@/components/tabBar'
+import EventCommentInput from '@/components/events/commentInputField'
 
 interface Props {
     event: IEvent
@@ -17,9 +20,17 @@ const formatDate = (date: Date) => {
 }
 
 export default function EventDetail({ event }: Props) {
+    const [items, links, selected] = useMemo(() => {
+        const items = ['상세정보', '리뷰']
+        const links = ['/events/detail', '/events/review']
+        const selected = '상세정보'
+
+        return [items, links, selected]
+    }, [])
+
     return (
-        // TODO: add menu to move review page
-        <div className="p-4">
+        <div className="flex flex-col gap-6 px-4">
+            <TabBar items={items} links={links} selected={selected} />
             <div className="w-full h-64 overflow-x-auto">
                 <div className="flex">
                     <EventPhoto photo={event.photo} name={event.name} />
@@ -28,7 +39,13 @@ export default function EventDetail({ event }: Props) {
             <div className="flex flex-col p-4 space-y-4">
                 <div className="flex justify-between items-start">
                     <div className="text-xl font-bold">{event.name}</div>
-                    <div className="relative">{event.isAuthor && <EventOption eventId={event._id} />}</div>
+                    <div className="flex flex-row justify-center items-center gap-2">
+                        {/* TODO: add share function */}
+                        <button className="">
+                            <ShareIcon width="1.5rem" height="1.5rem" />
+                        </button>
+                        {event.isAuthor && <EventOption eventId={event._id} />}
+                    </div>
                 </div>
 
                 <div className="space-y-4">
@@ -58,16 +75,20 @@ export default function EventDetail({ event }: Props) {
                     <p className="text-sm text-gray-700 whitespace-pre-wrap break-all">{event.description}</p>
                 </div>
             </div>
+            <div className="flex flex-col p-4 space-y-4">
+                <div className="flex items-center">
+                    <EventCommentInput eventId={event._id} />
+                </div>
+            </div>
             <div className="flex justify-between p-4 mt-4 pt-4 border-t border-gray-200">
                 <EventLikes />
                 <div className="flex items-center space-x-3">
                     <CommentIcon width="1.25rem" height="1.25rem" />
                     <div className="text-sm">{event.commentCount}</div>
                 </div>
-                {/* TODO: add share function */}
-                <button className="flex items-center space-x-2">
-                    <ShareIcon width="1.25rem" height="1.25rem" />
-                    <div className="text-sm">공유하기</div>
+                {/* TODO: add schedule function */}
+                <button className="rounded-lg text-white bg-[#FF9575] px-6 py-1.5">
+                    <span>내 일정 추가</span>
                 </button>
             </div>
             {/* TODO: add comment list */}

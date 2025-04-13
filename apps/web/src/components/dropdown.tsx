@@ -24,14 +24,14 @@ export default function Dropdown({ children, Icon, xTranslate }: Props) {
     }, [])
 
     return (
-        <div ref={dropdownRef}>
-            <div className="inline-block" onClick={() => setOpen(true)}>
-                <div className="text-black items-center w-6 h-6 dark:text-white">
+        <div className="self-center justify-self-center" ref={dropdownRef}>
+            <div className="w-full h-full" onClick={() => setOpen(true)}>
+                <div className="flex text-black items-center w-6 h-6 dark:text-white">
                     <Icon />
                 </div>
                 {open && (
                     <article className={`absolute border rounded-md z-30 translate-y-2 ${xTranslate} shadow-md bg-white dark:bg-[#18191b]`}>
-                        <ul className="text-sm">
+                        <ul className="text-sm text-center">
                             {validChildren.length === 1 ? (
                                 <li className="rounded-md hover:bg-gray-100 dark:hover:bg-[#ffffff26]">{validChildren[0]}</li>
                             ) : (

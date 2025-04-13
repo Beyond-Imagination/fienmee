@@ -23,9 +23,9 @@ export default function EventOption({ eventId }: { eventId: string }) {
     }
 
     return (
-        <Dropdown Icon={OptionIcon} xTranslate={'-translate-x-20'}>
+        <Dropdown Icon={() => OptionIcon({ width: '1.5rem', height: '1.5rem' })} xTranslate={'-translate-x-20'}>
             {/* TODO: add modify function */}
-            <Link className="w-24 p-3 border-b border-gray-200" href={'/events/update'}>
+            <Link className="block w-24 p-3 border-b border-gray-200" href={'/events/update'}>
                 수정하기
             </Link>
             <button className="w-24 p-3" onClick={handleDelete}>

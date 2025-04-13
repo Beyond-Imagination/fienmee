@@ -16,13 +16,6 @@ interface IScheduleSummary {
 }
 
 export default function ScheduleList({ date }: Prop) {
-    const formatDate = (date: Date) => {
-        const year = date.getFullYear()
-        const month = String(date.getMonth() + 1).padStart(2, '0')
-        const day = String(date.getDate()).padStart(2, '0')
-        return `${year}-${month}-${day}`
-    }
-
     const { data, isLoading, isError, fetchNextPage } = useSchedulesByDate({ date: date, startPage: 1, limit: 5 })
     const { ref, inView } = useInView()
 
@@ -34,7 +27,7 @@ export default function ScheduleList({ date }: Prop) {
 
     if (isError) {
         return (
-            <div className="h-screen flex items-center justify-center px-4">
+            <div className="flex w-full items-center justify-center px-4 pt-4 bg-white border-t border-t-[#E4E4E4]">
                 <div className="text-lg text-center">
                     <h1>일정을 불러오는 것을 실패하였습니다.</h1>
                     <p>다시 시도해주세요</p>
@@ -52,8 +45,8 @@ export default function ScheduleList({ date }: Prop) {
         })
     }
     return (
-        <div>
-            <div className="ml-5 mt-6 mb-3 text-xl font-bold text-left">{formatDate(date)} 일정</div>
+        <div className="bg-white w-full border-t border-t-[#E4E4E4]">
+            <div className="ml-5 mt-6 mb-3 text-xl font-bold text-left">{String(date.getDate()).padStart(2, '0')}일 일정</div>
             <div>{schedules && schedules.map((schedule: IScheduleSummary) => <ScheduleItem key={schedule.id} {...schedule} />)}</div>
             <div ref={ref}></div>
         </div>

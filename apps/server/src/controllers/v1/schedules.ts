@@ -41,6 +41,11 @@ router.get('/', async (req: Request, res: Response) => {
     res.status(200).json(schedules)
 })
 
+router.get('/:id', middlewares.schedules.verifyAuthorMiddleware, async (req: Request, res: Response) => {
+    const schedule = await ScheduleModel.findOne({ _id: req.params.id })
+    res.status(200).json(schedule)
+})
+
 router.delete('/:id', middlewares.schedules.verifyAuthorMiddleware, async (req: Request, res: Response) => {
     await ScheduleModel.deleteOne({ _id: req.params.id })
     res.sendStatus(204)
