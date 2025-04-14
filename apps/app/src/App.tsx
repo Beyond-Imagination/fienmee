@@ -10,6 +10,7 @@ import { useColorScheme } from 'react-native'
 import { NavigationContainer } from '@react-navigation/native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { Colors } from 'react-native/Libraries/NewAppScreen'
+import ErrorBoundary from 'react-native-error-boundary'
 
 import { LoginScreen, RegisterScreen, WebviewScreen } from '@/pages'
 import { RootStackParamList } from '@/types'
@@ -23,35 +24,37 @@ function App(): React.JSX.Element {
     const Stack = createNativeStackNavigator<RootStackParamList>()
 
     return (
-        <NavigationContainer>
-            <Stack.Navigator
-                screenOptions={{
-                    contentStyle: backgroundStyle,
-                }}
-            >
-                <Stack.Screen
-                    name="Login"
-                    component={LoginScreen}
-                    options={{
-                        headerShown: false,
+        <ErrorBoundary>
+            <NavigationContainer>
+                <Stack.Navigator
+                    screenOptions={{
+                        contentStyle: backgroundStyle,
                     }}
-                />
-                <Stack.Screen
-                    name="Register"
-                    component={RegisterScreen}
-                    options={{
-                        headerShown: false,
-                    }}
-                />
-                <Stack.Screen
-                    name="WebView"
-                    component={WebviewScreen}
-                    options={{
-                        headerShown: false,
-                    }}
-                />
-            </Stack.Navigator>
-        </NavigationContainer>
+                >
+                    <Stack.Screen
+                        name="Login"
+                        component={LoginScreen}
+                        options={{
+                            headerShown: false,
+                        }}
+                    />
+                    <Stack.Screen
+                        name="Register"
+                        component={RegisterScreen}
+                        options={{
+                            headerShown: false,
+                        }}
+                    />
+                    <Stack.Screen
+                        name="WebView"
+                        component={WebviewScreen}
+                        options={{
+                            headerShown: false,
+                        }}
+                    />
+                </Stack.Navigator>
+            </NavigationContainer>
+        </ErrorBoundary>
     )
 }
 

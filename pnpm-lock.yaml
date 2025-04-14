@@ -90,6 +90,9 @@ importers:
       react-native-encrypted-storage:
         specifier: ^4.0.3
         version: 4.0.3(react-native@0.76.3(@babel/core@7.26.10)(@babel/preset-env@7.26.9(@babel/core@7.26.10))(@react-native-community/cli-server-api@15.1.2)(@types/react@18.3.12)(react@18.3.1))(react@18.3.1)
+      react-native-error-boundary:
+        specifier: ^1.2.9
+        version: 1.2.9(react-native@0.76.3(@babel/core@7.26.10)(@babel/preset-env@7.26.9(@babel/core@7.26.10))(@react-native-community/cli-server-api@15.1.2)(@types/react@18.3.12)(react@18.3.1))(react@18.3.1)
       react-native-safe-area-context:
         specifier: ^4.14.0
         version: 4.14.0(react-native@0.76.3(@babel/core@7.26.10)(@babel/preset-env@7.26.9(@babel/core@7.26.10))(@react-native-community/cli-server-api@15.1.2)(@types/react@18.3.12)(react@18.3.1))(react@18.3.1)
@@ -143,7 +146,7 @@ importers:
         specifier: 0.76.2
         version: 0.76.2
       '@types/react':
-        specifier: ^18.2.6
+        specifier: ^18.3.1
         version: 18.3.12
       '@types/react-test-renderer':
         specifier: ^18.0.0
@@ -6128,6 +6131,16 @@ packages:
     peerDependencies:
       react: '*'
       react-native: '*'
+
+  react-native-error-boundary@1.2.9:
+    resolution: {integrity: sha512-G2C4hUpRjwVgQ1efQ6fVfxDvThG/Qhyr/uXhwvMqvIjqlpndvpuNyJc5wOeYfn/ePtgin30Pk7KhmxuHAkyiSQ==}
+    peerDependencies:
+      '@types/react-native': '>=0.57.7'
+      react: '>=16.6.0'
+      react-native: '>=0.57.7'
+    peerDependenciesMeta:
+      '@types/react-native':
+        optional: true
 
   react-native-safe-area-context@4.14.0:
     resolution: {integrity: sha512-/SyYpCulWQOnnXhRq6wepkhoyQMowHm1ptDyRz20s+YS/R9mbd+mK+jFyFCyXFJn8jp7vFl43VUCgspuOiEbwA==}
@@ -14689,6 +14702,11 @@ snapshots:
   react-native-config@1.5.3: {}
 
   react-native-encrypted-storage@4.0.3(react-native@0.76.3(@babel/core@7.26.10)(@babel/preset-env@7.26.9(@babel/core@7.26.10))(@react-native-community/cli-server-api@15.1.2)(@types/react@18.3.12)(react@18.3.1))(react@18.3.1):
+    dependencies:
+      react: 18.3.1
+      react-native: 0.76.3(@babel/core@7.26.10)(@babel/preset-env@7.26.9(@babel/core@7.26.10))(@react-native-community/cli-server-api@15.1.2)(@types/react@18.3.12)(react@18.3.1)
+
+  react-native-error-boundary@1.2.9(react-native@0.76.3(@babel/core@7.26.10)(@babel/preset-env@7.26.9(@babel/core@7.26.10))(@react-native-community/cli-server-api@15.1.2)(@types/react@18.3.12)(react@18.3.1))(react@18.3.1):
     dependencies:
       react: 18.3.1
       react-native: 0.76.3(@babel/core@7.26.10)(@babel/preset-env@7.26.9(@babel/core@7.26.10))(@react-native-community/cli-server-api@15.1.2)(@types/react@18.3.12)(react@18.3.1)
