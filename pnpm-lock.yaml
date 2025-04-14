@@ -146,7 +146,7 @@ importers:
         specifier: 0.76.2
         version: 0.76.2
       '@types/react':
-        specifier: ^18.3.1
+        specifier: ^18.2.6
         version: 18.3.12
       '@types/react-test-renderer':
         specifier: ^18.0.0
