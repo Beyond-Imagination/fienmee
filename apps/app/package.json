@@ -19,6 +19,7 @@
         "react-native": "0.76.3",
         "react-native-config": "^1.5.3",
         "react-native-encrypted-storage": "^4.0.3",
+        "react-native-error-boundary": "^1.2.9",
         "react-native-safe-area-context": "^4.14.0",
         "react-native-screens": "^4.3.0",
         "react-native-webview": "^13.12.5"
