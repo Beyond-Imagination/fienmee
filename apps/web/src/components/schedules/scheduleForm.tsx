@@ -17,6 +17,7 @@ export default function ScheduleForm() {
         startDate: event.startDate,
         endDate: event.endDate,
         description: '',
+        address: event.address,
         location: event.location,
     })
     const onStartDateTimeChange = (dateTime: string) => {

@@ -20,6 +20,7 @@ export interface IScheduleItem {
     authorId: string
     eventId: string
     name: string
+    address: string
     location: {
         type: string
         coordinates: number[]
@@ -27,6 +28,7 @@ export interface IScheduleItem {
     startDate: Date
     endDate: Date
     description: string
+    isAllDay: boolean
 }
 
 export interface IGetScheduleListResponse {
