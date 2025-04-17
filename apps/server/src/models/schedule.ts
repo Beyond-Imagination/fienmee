@@ -38,10 +38,10 @@ export class Schedule extends defaultClasses.TimeStamps {
     public description: string
 
     @prop()
-    public images: string[]
+    public createdAt: Date
 
     @prop()
-    public createdAt: Date
+    public isAllDay: boolean
 
     public static async findByUserId(
         this: ReturnModelType<typeof Schedule>,
