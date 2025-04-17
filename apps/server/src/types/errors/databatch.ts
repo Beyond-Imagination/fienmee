@@ -1,8 +1,10 @@
 import { APIError } from '@/types/errors/error'
+import { ErrorConfig } from '@/types/errors/ErrorConfig'
 
 export class SeoulDataServerError extends APIError {
     constructor(cause: Error | string = null) {
-        super(500, 5000, 'seoul data server error', cause)
+        const { statusCode, errorCode, message } = ErrorConfig.SEOUL_DATA_SERVER
+        super(statusCode, errorCode, message, cause)
         Object.setPrototypeOf(this, SeoulDataServerError.prototype)
         Error.captureStackTrace(this, SeoulDataServerError)
     }
@@ -10,7 +12,8 @@ export class SeoulDataServerError extends APIError {
 
 export class SeoulDataUpdateError extends APIError {
     constructor(cause: Error | string = null) {
-        super(500, 5001, 'seoul data update error', cause)
+        const { statusCode, errorCode, message } = ErrorConfig.SEOUL_DATA_UPDATE
+        super(statusCode, errorCode, message, cause)
         Object.setPrototypeOf(this, SeoulDataServerError.prototype)
         Error.captureStackTrace(this, SeoulDataServerError)
     }
