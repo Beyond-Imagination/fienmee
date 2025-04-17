@@ -1,6 +1,7 @@
 export interface IMakeNewScheduleRequest {
     name: string
     eventId?: string // 개인 일정 등록 또는 연결 이벤트 지정
+    isAllDay: boolean
     startDate: Date
     endDate: Date
     address?: string
@@ -9,7 +10,6 @@ export interface IMakeNewScheduleRequest {
         coordinates: number[]
     }
     description: string
-    images?: string[]
 }
 export interface IMakeNewScheduleResponse {
     scheduleId: string
@@ -27,7 +27,6 @@ export interface IScheduleItem {
     startDate: Date
     endDate: Date
     description: string
-    images: string[]
 }
 
 export interface IGetScheduleListResponse {

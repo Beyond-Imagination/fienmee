@@ -9,6 +9,7 @@ import EventLikes from '@/components/events/eventLikes'
 import { useMemo } from 'react'
 import TabBar from '@/components/tabBar'
 import EventCommentInput from '@/components/events/commentInputField'
+import Link from 'next/link'
 
 interface Props {
     event: IEvent
@@ -87,9 +88,9 @@ export default function EventDetail({ event }: Props) {
                     <div className="text-sm">{event.commentCount}</div>
                 </div>
                 {/* TODO: add schedule function */}
-                <button className="rounded-lg text-white bg-[#FF9575] px-6 py-1.5">
-                    <span>내 일정 추가</span>
-                </button>
+                <Link href={'/schedules/register'} className="rounded-lg text-white bg-[#FF9575] px-6 py-1.5">
+                    내 일정 추가
+                </Link>
             </div>
             {/* TODO: add comment list */}
         </div>

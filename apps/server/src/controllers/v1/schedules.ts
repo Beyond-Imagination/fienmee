@@ -7,7 +7,7 @@ const router: Router = asyncify(express.Router())
 router.use(middlewares.auth.verifyToken)
 
 router.post('/', middlewares.schedules.addScheduleMiddleware, async (req: Request, res: Response) => {
-    const { name, eventId, startDate, endDate, address, location, description, images } = req.body
+    const { name, eventId, startDate, endDate, address, location, description, isAllDay } = req.body
     const schedule = await ScheduleModel.create({
         name: name,
         eventId: eventId,
@@ -17,7 +17,7 @@ router.post('/', middlewares.schedules.addScheduleMiddleware, async (req: Reques
         address: address,
         location: location,
         description: description,
-        images: images,
+        isAllDay: isAllDay,
     })
     res.status(201).json({
         scheduleId: schedule._id,
