@@ -1,3 +1,5 @@
+'use client'
+
 import { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime'
@@ -23,7 +25,7 @@ export function useBridge() {
     useEffect(() => {
         document.addEventListener('message', messageHandler(router, setCredential) as EventListener) // android
         window.addEventListener('message', messageHandler(router, setCredential)) // ios
-    })
+    }, [])
 }
 
 export function requestRefresh() {
