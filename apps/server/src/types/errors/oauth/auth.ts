@@ -18,7 +18,7 @@ export class DeletedUserError extends APIError {
 
 export class UnknownProviderError extends APIError {
     constructor(cause: Error | string = null) {
-        super(404, 4100, 'unknown oauth provider error', cause)
+        super(404, 4102, 'unknown oauth provider error', cause)
         Object.setPrototypeOf(this, UnknownProviderError.prototype)
         Error.captureStackTrace(this, UnknownProviderError)
     }
