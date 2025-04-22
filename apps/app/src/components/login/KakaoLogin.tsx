@@ -28,7 +28,7 @@ export function KakaoOauthLogin() {
                     provider: 'KAKAO',
                 })
             } else {
-                // TODO: error page 로 이동
+                navigation.navigate('Error')
             }
         }
     }

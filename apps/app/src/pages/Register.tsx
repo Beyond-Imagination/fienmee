@@ -33,7 +33,7 @@ export function RegisterScreen({ route }: props) {
             navigation.navigate('WebView')
         } catch (error) {
             console.log(error)
-            // TODO: error 페이지로 이동
+            navigation.navigate('Error')
         }
     }
 

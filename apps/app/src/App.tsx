@@ -12,7 +12,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { Colors } from 'react-native/Libraries/NewAppScreen'
 import ErrorBoundary from 'react-native-error-boundary'
 
-import { LoginScreen, RegisterScreen, WebviewScreen } from '@/pages'
+import { LoginScreen, RegisterScreen, WebviewScreen, ErrorScreen } from '@/pages'
 import { RootStackParamList } from '@/types'
 
 function App(): React.JSX.Element {
@@ -48,6 +48,13 @@ function App(): React.JSX.Element {
                     <Stack.Screen
                         name="WebView"
                         component={WebviewScreen}
+                        options={{
+                            headerShown: false,
+                        }}
+                    />
+                    <Stack.Screen
+                        name="Error"
+                        component={ErrorScreen}
                         options={{
                             headerShown: false,
                         }}
