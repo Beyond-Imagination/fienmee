@@ -1,4 +1,5 @@
 import {
+    IEvent,
     IGetEventCategoriesResponse,
     IGetEventsByCategoryResponse,
     IPostEventCommentRequest,
@@ -83,4 +84,14 @@ export async function registerEventComments(request: IPostEventCommentRequest) {
         throw await res.json()
     }
     return
+}
+
+export async function getEventDetail(eventId: string): Promise<IEvent> {
+    const res = await fetch(`${SERVER_URL}/v1/events/${eventId}`, {
+        method: 'GET',
+    })
+    if (!res.ok) {
+        throw await res.json()
+    }
+    return res.json()
 }
