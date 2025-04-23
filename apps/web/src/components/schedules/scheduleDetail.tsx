@@ -45,6 +45,7 @@ export default function ScheduleDetailModal({ isOpen, onClose, scheduleId }: Sch
     }
     const timeRange = schedule.isAllDay ? '하루 종일' : `${formatTime(schedule.startDate)} - ${formatTime(schedule.endDate)}`
 
+    // TODO: 좌우 슬라이드를 통한 일정 상세 조회
     return (
         <div className="fixed inset-0 bg-black bg-opacity-40 z-50 flex items-end" onClick={handleBackdropClick}>
             <div className="bg-white w-full h-[70%] rounded-t-2xl shadow-lg overflow-y-auto flex flex-col">
