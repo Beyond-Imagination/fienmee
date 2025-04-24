@@ -1,5 +1,5 @@
 import { SERVER_URL } from '@/config'
-import { IGetScheduleListResponse, IMakeNewScheduleRequest, IMakeNewScheduleResponse } from '@fienmee/types'
+import { IGetScheduleListResponse, IMakeNewScheduleRequest, IMakeNewScheduleResponse, IScheduleItem } from '@fienmee/types'
 
 export async function getSchedulesByDate(date: Date, page: number, limit: number): Promise<IGetScheduleListResponse> {
     const from = `${date.getFullYear()}.${date.getMonth()}.${date.getDate()}`
@@ -18,6 +18,16 @@ export async function registerSchedule(schedule: IMakeNewScheduleRequest): Promi
     const res = await fetch(`${SERVER_URL}/v1/schedules`, {
         method: 'POST',
         body: JSON.stringify(schedule),
+    })
+    if (!res.ok) {
+        throw await res.json()
+    }
+    return res.json()
+}
+
+export async function getScheduleDetail(scheduleId: string): Promise<IScheduleItem> {
+    const res = await fetch(`${SERVER_URL}/v1/schedules/${scheduleId}`, {
+        method: 'GET',
     })
     if (!res.ok) {
         throw await res.json()

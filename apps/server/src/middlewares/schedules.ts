@@ -8,7 +8,8 @@ export const verifyAuthorMiddleware = async (req: Request, res: Response, next: 
     if (!authorId) {
         throw new UnauthorizedSchedule(new Error('not found target schedule'))
     }
-    if (req.user?._id !== authorId) {
+
+    if (!req.user?._id.equals(authorId)) {
         throw new UnauthorizedSchedule()
     }
     next()

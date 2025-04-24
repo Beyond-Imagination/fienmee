@@ -2,8 +2,9 @@ import ScheduleItem from '@/components/schedules/scheduleItem'
 import { useInfiniteQuery } from '@tanstack/react-query'
 import { getSchedulesByDate } from '@/api/schedules'
 import { useInView } from 'react-intersection-observer'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { IScheduleItem } from '@fienmee/types'
+import ScheduleDetailModal from '@/components/schedules/scheduleDetail'
 
 interface Prop {
     date: Date
@@ -18,12 +19,23 @@ interface IScheduleSummary {
 export default function ScheduleList({ date }: Prop) {
     const { data, isLoading, isError, fetchNextPage } = useSchedulesByDate({ date: date, startPage: 1, limit: 5 })
     const { ref, inView } = useInView()
+    const [isModalOpen, setIsModalOpen] = useState(false)
+    const [selectedId, setSelectedId] = useState<string>('')
 
     useEffect(() => {
         if (inView) {
             fetchNextPage()
         }
     }, [inView, fetchNextPage])
+
+    const handleClick = (scheduleId: string) => {
+        setIsModalOpen(true)
+        setSelectedId(scheduleId)
+    }
+
+    const handleClose = () => {
+        setIsModalOpen(false)
+    }
 
     if (isError) {
         return (
@@ -47,8 +59,15 @@ export default function ScheduleList({ date }: Prop) {
     return (
         <div className="bg-white w-full border-t border-t-[#E4E4E4]">
             <div className="ml-5 mt-6 mb-3 text-xl font-bold text-left">{String(date.getDate()).padStart(2, '0')}일 일정</div>
-            <div>{schedules && schedules.map((schedule: IScheduleSummary) => <ScheduleItem key={schedule.id} {...schedule} />)}</div>
+            <div>
+                {schedules &&
+                    schedules.map((schedule: IScheduleSummary) => (
+                        <ScheduleItem key={schedule.id} {...schedule} onClick={() => handleClick(schedule.id)} />
+                    ))}
+            </div>
             <div ref={ref}></div>
+
+            {selectedId && <ScheduleDetailModal isOpen={isModalOpen} onClose={handleClose} scheduleId={selectedId} />}
         </div>
     )
 }
