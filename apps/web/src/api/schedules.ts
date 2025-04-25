@@ -34,3 +34,14 @@ export async function getScheduleDetail(scheduleId: string): Promise<IScheduleIt
     }
     return res.json()
 }
+
+export async function updateSchedule(schedule: IScheduleItem): Promise<IScheduleItem> {
+    const res = await fetch(`${SERVER_URL}/v1/schedules/${schedule._id}`, {
+        method: 'PUT',
+        body: JSON.stringify(schedule),
+    })
+    if (!res.ok) {
+        throw await res.json()
+    }
+    return res.json()
+}
