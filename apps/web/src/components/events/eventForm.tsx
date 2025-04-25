@@ -112,7 +112,7 @@ const EventForm: React.FC<EventFormProps> = ({ selectedCategories, photos, initE
                         </span>
                     ))}
                 </div>
-                <button type="button" onClick={initEvent ? handleUpdateCategorySelect : handleCategorySelect} className="text-blue-500 ml-auto">
+                <button type="button" onClick={isRegister ? handleCategorySelect : handleUpdateCategorySelect} className="text-blue-500 ml-auto">
                     <ArrowIcon width="1.5rem" height="1.5rem" />
                 </button>
             </div>
