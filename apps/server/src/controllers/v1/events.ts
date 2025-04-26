@@ -140,8 +140,8 @@ router.get('/category/:category', verifyToken, async (req: Request, res: Respons
     })
 })
 
-router.post('/get-presigned-url', async (req, res) => {
-    const { fileName, fileType }: { fileName: string; fileType: string } = req.body
+router.get('/presigned-url', async (req, res) => {
+    const { fileName, fileType }: { fileName: string; fileType: string } = req.query
 
     const params = {
         Bucket: AWS_S3_BUCKET!,
