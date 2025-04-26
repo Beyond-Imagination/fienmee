@@ -21,10 +21,9 @@ export const PORT = Number.parseInt(process.env.PORT) || 5000
 export const ACCESS_TOKEN_EXPIRES_IN = Number.parseInt(process.env.ACCESS_TOKEN_EXPIRES_IN) || 60 * 30
 export const REFRESH_TOKEN_EXPIRES_IN = Number.parseInt(process.env.REFRESH_TOKEN_EXPIRES_IN) || 60 * 60 * 24 * 60
 
-export const configureAWS = (): void => {
-    AWS.config.update({
-        accessKeyId: AWS_ACCESS_KEY_ID,
-        secretAccessKey: AWS_SECRET_ACCESS_KEY,
-        region: AWS_REGION,
-    })
-}
+AWS.config.update({
+    accessKeyId: AWS_ACCESS_KEY_ID,
+    secretAccessKey: AWS_SECRET_ACCESS_KEY,
+    region: AWS_REGION,
+})
+
