@@ -95,7 +95,7 @@ export async function getPresignedUrl(request: IGetPresignedUrlRequest): Promise
     })
 
     if (!res.ok) {
-        throw new Error(`code: ${res.status}\ndescription: ${res.statusText}`)
+        throw await res.json()
     }
 
     return res.json()
