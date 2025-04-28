@@ -1,31 +1,19 @@
-import { useEffect, useState } from 'react'
 import { IScheduleItem } from '@fienmee/types'
 import { EventMap } from '@/components/events/eventMap'
 import Link from 'next/link'
 import { eventStore } from '@/store'
 import { getEventDetail } from '@/api/event'
-import { getScheduleDetail } from '@/api/schedules'
+import ScheduleOption from '@/components/schedules/scheduleOption'
 
 interface ScheduleDetailModalProps {
     isOpen: boolean
     onClose: () => void
-    scheduleId: string
+    schedule: IScheduleItem
+    setModalType: (type: string) => void
 }
 
-export default function ScheduleDetailModal({ isOpen, onClose, scheduleId }: ScheduleDetailModalProps) {
-    const [schedule, setSchedule] = useState<IScheduleItem | null>(null)
+export default function ScheduleDetailModal({ isOpen, onClose, schedule, setModalType }: ScheduleDetailModalProps) {
     const { setEvent } = eventStore()
-
-    useEffect(() => {
-        const fetchSchedule = async () => {
-            if (scheduleId && isOpen) {
-                const data = await getScheduleDetail(scheduleId)
-                setSchedule(data)
-            }
-        }
-
-        fetchSchedule()
-    }, [scheduleId, isOpen])
 
     const onClick = async (eventId: string) => {
         const event = await getEventDetail(eventId)
@@ -50,7 +38,10 @@ export default function ScheduleDetailModal({ isOpen, onClose, scheduleId }: Sch
         <div className="fixed inset-0 bg-black bg-opacity-40 z-50 flex items-end" onClick={handleBackdropClick}>
             <div className="bg-white w-full h-[70%] rounded-t-2xl shadow-lg overflow-y-auto flex flex-col">
                 <div className="p-10 flex-1 overflow-auto">
-                    <div className="text-lg font-semibold mb-2">{schedule.name}</div>
+                    <div className="flex items-center justify-between mb-2">
+                        <div className="text-lg font-semibold">{schedule.name}</div>
+                        <ScheduleOption onEdit={() => setModalType('update')} />
+                    </div>
                     <div className="text-sm text-gray-400 mb-4">{timeRange}</div>
                     <hr className="border-t border-gray-300 mb-4" />
 

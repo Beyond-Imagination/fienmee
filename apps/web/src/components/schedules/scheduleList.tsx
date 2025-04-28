@@ -5,6 +5,8 @@ import { useInView } from 'react-intersection-observer'
 import { useEffect, useState } from 'react'
 import { IScheduleItem } from '@fienmee/types'
 import ScheduleDetailModal from '@/components/schedules/scheduleDetail'
+import ScheduleUpdateModal from '@/components/schedules/scheduleUpdate'
+import { scheduleStore } from '@/store/schedule'
 
 interface Prop {
     date: Date
@@ -20,7 +22,8 @@ export default function ScheduleList({ date }: Prop) {
     const { data, isLoading, isError, fetchNextPage } = useSchedulesByDate({ date: date, startPage: 1, limit: 5 })
     const { ref, inView } = useInView()
     const [isModalOpen, setIsModalOpen] = useState(false)
-    const [selectedId, setSelectedId] = useState<string>('')
+    const { schedule, setSchedule } = scheduleStore()
+    const [modalType, setModalType] = useState<string>('none')
 
     useEffect(() => {
         if (inView) {
@@ -29,12 +32,17 @@ export default function ScheduleList({ date }: Prop) {
     }, [inView, fetchNextPage])
 
     const handleClick = (scheduleId: string) => {
-        setIsModalOpen(true)
-        setSelectedId(scheduleId)
+        const selectedSchedule = data?.pages[0].docs?.find((doc: IScheduleItem) => doc._id === scheduleId)
+        if (selectedSchedule) {
+            setSchedule(selectedSchedule)
+            setIsModalOpen(true)
+            setModalType('detail')
+        }
     }
 
     const handleClose = () => {
         setIsModalOpen(false)
+        setModalType('none')
     }
 
     if (isError) {
@@ -48,9 +56,9 @@ export default function ScheduleList({ date }: Prop) {
         )
     }
 
-    let schedules
+    let scheduleSummary
     if (!isLoading) {
-        schedules = data?.pages[0].docs?.map((doc: IScheduleItem) => {
+        scheduleSummary = data?.pages[0].docs?.map((doc: IScheduleItem) => {
             const hours = new Date(doc.startDate).getHours()
             const minutes = new Date(doc.startDate).getMinutes()
             return { id: doc._id, title: doc.name, time: `${hours}:${minutes}` }
@@ -60,14 +68,19 @@ export default function ScheduleList({ date }: Prop) {
         <div className="bg-white w-full border-t border-t-[#E4E4E4]">
             <div className="ml-5 mt-6 mb-3 text-xl font-bold text-left">{String(date.getDate()).padStart(2, '0')}일 일정</div>
             <div>
-                {schedules &&
-                    schedules.map((schedule: IScheduleSummary) => (
+                {scheduleSummary &&
+                    scheduleSummary.map((schedule: IScheduleSummary) => (
                         <ScheduleItem key={schedule.id} {...schedule} onClick={() => handleClick(schedule.id)} />
                     ))}
             </div>
             <div ref={ref}></div>
 
-            {selectedId && <ScheduleDetailModal isOpen={isModalOpen} onClose={handleClose} scheduleId={selectedId} />}
+            {modalType === 'detail' && (
+                <ScheduleDetailModal isOpen={isModalOpen} onClose={handleClose} schedule={schedule} setModalType={setModalType} />
+            )}
+            {modalType === 'update' && (
+                <ScheduleUpdateModal isOpen={isModalOpen} onClose={handleClose} initSchedule={schedule} setModalType={setModalType} />
+            )}
         </div>
     )
 }
