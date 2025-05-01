@@ -6,7 +6,7 @@ import { useNavigation } from '@react-navigation/native'
 import { IBackButtonData, IJWTData, isLogoutData, isRefreshData } from '@fienmee/types'
 
 import { ENV, FE_URL } from '@/config'
-import { deleteToken, getToken, setToken } from '@/stores/token'
+import { deleteToken, getToken, setToken } from '@/stores'
 import { WebviewScreenProps } from '@/types'
 import { refresh } from '@/api'
 

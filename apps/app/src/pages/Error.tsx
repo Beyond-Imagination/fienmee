@@ -3,7 +3,7 @@ import React from 'react'
 import { useNavigation } from '@react-navigation/native'
 
 import { ErrorScreenProps } from '@/types'
-import { getToken } from '@/stores/token.ts'
+import { getToken } from '@/stores'
 
 const styles = StyleSheet.create({
     container: {
