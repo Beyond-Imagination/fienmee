@@ -83,6 +83,15 @@ router.post('/:id/comments', verifyToken, async (req: Request, res: Response) =>
     res.sendStatus(204)
 })
 
+router.get('/:id/comments', verifyToken, async (req: Request, res: Response) => {
+    const options = {
+        page: Number(req.query.page) || 1,
+        limit: Number(req.query.limit) || 10,
+    }
+    const comments = await CommentsModel.findByEventId(req.params.id, options)
+    res.status(200).json(comments)
+})
+
 router.post('/:id/likes', verifyToken, async (req: Request, res: Response) => {
     const event = await EventsModel.findById(req.params.id)
 

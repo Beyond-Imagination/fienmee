@@ -1,4 +1,4 @@
-import { getModelForClass, plugin, prop, defaultClasses } from '@typegoose/typegoose'
+import { getModelForClass, plugin, prop, defaultClasses, ReturnModelType } from '@typegoose/typegoose'
 import mongoose from 'mongoose'
 import mongoosePaginate from 'mongoose-paginate-v2'
 import { Events, User } from '@/models'
@@ -37,6 +37,17 @@ export class Comments extends defaultClasses.TimeStamps {
             createdAt: this.createdAt,
             updatedAt: this.updatedAt,
         }
+    }
+
+    public static async findByEventId(
+        this: ReturnModelType<typeof Comments>,
+        eventId: string,
+        options: {
+            page: number
+            limit: number
+        },
+    ) {
+        return this.paginate({ eventId: eventId }, options)
     }
 }
 
