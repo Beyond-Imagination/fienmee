@@ -26,4 +26,3 @@ AWS.config.update({
     secretAccessKey: AWS_SECRET_ACCESS_KEY,
     region: AWS_REGION,
 })
-

@@ -141,7 +141,8 @@ router.get('/category/:category', verifyToken, async (req: Request, res: Respons
 })
 
 router.get('/presigned-url', async (req, res) => {
-    const { fileName, fileType }: { fileName: string; fileType: string } = req.query
+    const fileName = String(req.query.fileName)
+    const fileType = String(req.query.fileType)
 
     const params = {
         Bucket: AWS_S3_BUCKET!,

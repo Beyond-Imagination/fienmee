@@ -1,11 +1,27 @@
 import React, { useRef, useState } from 'react'
 import CameraIcon from '@/components/icon/Camera'
 import { getPresignedUrl, uploadToS3 } from '@/api/event'
+import { ClipLoader } from 'react-spinners'
+import { toast } from 'react-toastify'
 
 interface PhotoUploaderProps {
     photos: string[]
     onAddPhoto: (photoUrls: string[]) => void
     onRemovePhoto: (index: number) => void
+}
+
+const uploadFile = async (file: File): Promise<string | null> => {
+    try {
+        const { presignedUrl } = await getPresignedUrl({
+            fileName: file.name,
+            fileType: file.type,
+        })
+        await uploadToS3(presignedUrl, file)
+        return presignedUrl.split('?')[0]
+    } catch (error) {
+        console.error(error)
+        return null
+    }
 }
 
 const PhotoUploader: React.FC<PhotoUploaderProps> = ({ photos, onAddPhoto, onRemovePhoto }) => {
@@ -17,31 +33,41 @@ const PhotoUploader: React.FC<PhotoUploaderProps> = ({ photos, onAddPhoto, onRem
         if (!files || files.length === 0) return
 
         setUploading(true)
+
         try {
-            const uploadPromises = Array.from(files).map(async file => {
-                try {
-                    const { presignedUrl } = await getPresignedUrl({
-                        fileName: file.name,
-                        fileType: file.type,
-                    })
+            const results = await Promise.all(Array.from(files).map(uploadFile))
+            const succeeded = results.filter((url): url is string => url !== null)
+            const failed = Array.from(files).filter((_, idx) => results[idx] === null)
 
-                    await uploadToS3(presignedUrl, file)
-                    return presignedUrl.split('?')[0]
-                } catch (error) {
-                    console.error(error)
-                    return null
-                }
-            })
+            if (succeeded.length > 0) {
+                onAddPhoto(succeeded)
+            }
 
-            const photoUrls = (await Promise.all(uploadPromises)).filter(Boolean) as string[]
-            if (photoUrls.length > 0) onAddPhoto(photoUrls)
+            if (failed.length > 0) {
+                showUploadFailToast()
+            }
         } catch (error) {
-            // TODO: error 페이지로 이동
             console.error(error)
+            showUploadFailToast()
         } finally {
             setUploading(false)
-            if (inputRef.current) inputRef.current.value = ''
+            resetInput()
         }
+    }
+
+    const resetInput = () => {
+        if (inputRef.current) {
+            inputRef.current.value = ''
+        }
+    }
+
+    const showUploadFailToast = () => {
+        toast.error(
+            <span>
+                사진 업로드에 실패했습니다.
+                <span style={{ fontSize: 0 }}>{Date.now()}</span>
+            </span>,
+        )
     }
 
     return (
@@ -66,7 +92,7 @@ const PhotoUploader: React.FC<PhotoUploaderProps> = ({ photos, onAddPhoto, onRem
                     </button>
                 </div>
             ))}
-            {uploading && <p>Uploading...</p>}
+            {uploading && <ClipLoader color="#3b82f6" />}
         </div>
     )
 }
