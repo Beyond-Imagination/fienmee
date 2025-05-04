@@ -10,6 +10,21 @@ import { AWS_S3_BUCKET } from '@/config'
 
 const router: Router = asyncify(express.Router())
 
+router.get('/presigned-url', async (req, res) => {
+    const fileName = String(req.query.fileName)
+    const fileType = String(req.query.fileType)
+
+    const params = {
+        Bucket: AWS_S3_BUCKET!,
+        Key: `${Date.now()}-${fileName}`,
+        Expires: 3600,
+        ContentType: fileType,
+    }
+
+    const presignedUrl = await s3.getSignedUrlPromise('putObject', params)
+    res.json({ presignedUrl })
+})
+
 router.post('/category/initialize', async (req: Request, res: Response) => {
     await CategoryModel.initialize()
     res.sendStatus(204)
@@ -147,21 +162,6 @@ router.get('/category/:category', verifyToken, async (req: Request, res: Respons
             limit: result.limit,
         },
     })
-})
-
-router.get('/presigned-url', async (req, res) => {
-    const fileName = String(req.query.fileName)
-    const fileType = String(req.query.fileType)
-
-    const params = {
-        Bucket: AWS_S3_BUCKET!,
-        Key: `${Date.now()}-${fileName}`,
-        Expires: 3600,
-        ContentType: fileType,
-    }
-
-    const presignedUrl = await s3.getSignedUrlPromise('putObject', params)
-    res.json({ presignedUrl })
 })
 
 export default router
