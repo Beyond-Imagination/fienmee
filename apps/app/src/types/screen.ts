@@ -8,8 +8,10 @@ export type RootStackParamList = {
         provider: string
     }
     WebView: undefined
+    Error: undefined
 }
 
 export type LoginScreenProps = NativeStackScreenProps<RootStackParamList, 'Login'>
 export type RegisterScreenProps = NativeStackScreenProps<RootStackParamList, 'Register'>
 export type WebviewScreenProps = NativeStackScreenProps<RootStackParamList, 'WebView'>
+export type ErrorScreenProps = NativeStackScreenProps<RootStackParamList, 'Error'>

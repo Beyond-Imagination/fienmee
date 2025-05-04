@@ -33,7 +33,7 @@ const CategorySelect: React.FC = () => {
                     <li
                         key={category._id}
                         className="p-2 border-b cursor-pointer hover:bg-gray-100"
-                        onClick={() => router.push(`/events/register/category/${category._id}`)}
+                        onClick={() => router.push(`/events/register?category=${JSON.stringify(category)}`)}
                     >
                         {category.title}
                     </li>

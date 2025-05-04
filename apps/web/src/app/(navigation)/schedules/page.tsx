@@ -1,6 +1,6 @@
 'use client'
 
-import ScheduleList from '@/components/schedules/sheduleList'
+import ScheduleList from '@/components/schedules/scheduleList'
 import ScheduleCalendar from '@/components/schedules/scheduleCalendar'
 import { useState } from 'react'
 

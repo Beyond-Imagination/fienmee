@@ -6,7 +6,7 @@ import { login as kakaoLogin } from '@react-native-seoul/kakao-login'
 import { isErrorResponse } from '@fienmee/types'
 
 import { login } from '@/api'
-import { setToken } from '@/stores/token'
+import { setToken } from '@/stores'
 import { LoginScreenProps } from '@/types'
 
 export function KakaoOauthLogin() {
@@ -28,7 +28,7 @@ export function KakaoOauthLogin() {
                     provider: 'KAKAO',
                 })
             } else {
-                // TODO: error page 로 이동
+                navigation.navigate('Error')
             }
         }
     }

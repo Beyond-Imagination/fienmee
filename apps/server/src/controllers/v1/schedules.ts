@@ -11,7 +11,7 @@ router.post('/', middlewares.schedules.addScheduleMiddleware, async (req: Reques
     const schedule = await ScheduleModel.create({
         name: name,
         eventId: eventId,
-        authorId: req.user._id.toString(),
+        authorId: req.user._id,
         startDate: startDate,
         endDate: endDate,
         address: address,
@@ -53,7 +53,7 @@ router.delete('/:id', middlewares.schedules.verifyAuthorMiddleware, async (req: 
 
 router.put('/:id', middlewares.schedules.verifyAuthorMiddleware, async (req: Request, res: Response) => {
     const { id } = req.params
-    const { name, startDate, endDate, description, images, location, address } = req.body
+    const { name, startDate, endDate, description, location, address } = req.body
     const updated = await ScheduleModel.findOneAndUpdate(
         { _id: id },
         {
@@ -63,8 +63,8 @@ router.put('/:id', middlewares.schedules.verifyAuthorMiddleware, async (req: Req
             description: description,
             address: address,
             location: location,
-            images: images,
         },
+        { new: true },
     )
     res.status(200).json(updated)
 })

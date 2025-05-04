@@ -1,4 +1,5 @@
 import {
+    IEvent,
     IGetEventCategoriesResponse,
     IGetEventsByCategoryResponse,
     IPostEventCommentRequest,
@@ -87,6 +88,7 @@ export async function registerEventComments(request: IPostEventCommentRequest) {
     return
 }
 
+
 export async function getPresignedUrl(request: IGetPresignedUrlRequest): Promise<IGetPresignedUrlResponse> {
     const res = await fetch(`${SERVER_URL}/v1/events/presigned-url`, {
         method: 'GET',
@@ -112,3 +114,14 @@ export async function uploadToS3(presignedUrl: string, file: File): Promise<void
         throw await res.json()
     }
 }
+
+export async function getEventDetail(eventId: string): Promise<IEvent> {
+    const res = await fetch(`${SERVER_URL}/v1/events/${eventId}`, {
+        method: 'GET',
+    })
+    if (!res.ok) {
+        throw await res.json()
+    }
+    return res.json()
+}
+
