@@ -109,6 +109,6 @@ export async function uploadToS3(presignedUrl: string, file: File): Promise<void
     })
 
     if (!res.ok) {
-        throw new Error(`code: ${res.status}\ndescription: ${res.statusText}`)
+        throw await res.json()
     }
 }
