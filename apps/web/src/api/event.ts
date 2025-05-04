@@ -89,10 +89,9 @@ export async function registerEventComments(request: IPostEventCommentRequest) {
 }
 
 export async function getPresignedUrl(request: IGetPresignedUrlRequest): Promise<IGetPresignedUrlResponse> {
-    const res = await fetch(`${SERVER_URL}/v1/events/presigned-url`, {
+    const query = new URLSearchParams(request as unknown as Record<string, string>).toString()
+    const res = await fetch(`${SERVER_URL}/v1/events/presigned-url?${query}`, {
         method: 'GET',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(request),
     })
 
     if (!res.ok) {
