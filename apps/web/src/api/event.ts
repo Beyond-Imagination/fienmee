@@ -88,7 +88,6 @@ export async function registerEventComments(request: IPostEventCommentRequest) {
     return
 }
 
-
 export async function getPresignedUrl(request: IGetPresignedUrlRequest): Promise<IGetPresignedUrlResponse> {
     const res = await fetch(`${SERVER_URL}/v1/events/presigned-url`, {
         method: 'GET',
@@ -124,4 +123,3 @@ export async function getEventDetail(eventId: string): Promise<IEvent> {
     }
     return res.json()
 }
-
