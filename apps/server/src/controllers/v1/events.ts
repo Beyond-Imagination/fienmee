@@ -156,7 +156,7 @@ router.get('/presigned-url', async (req, res) => {
     const params = {
         Bucket: AWS_S3_BUCKET!,
         Key: `${Date.now()}-${fileName}`,
-        Expires: 604800,
+        Expires: 3600,
         ContentType: fileType,
     }
 
