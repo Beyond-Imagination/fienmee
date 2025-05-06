@@ -84,8 +84,8 @@
 
 .react-calendar__tile--now {
     border-radius: 50%;
-    border: #FF9575 solid 1px;
-    color: #FF9575;
+    border: #ff9575 solid 1px;
+    color: #ff9575;
 }
 
 .react-calendar__tile--now:enabled:hover,
@@ -104,7 +104,7 @@
 
 .react-calendar__tile--active {
     border-radius: 50%;
-    background: #FF9575;
+    background: #ff9575;
     color: white;
 }
 
@@ -124,6 +124,6 @@
     top: 20%;
     width: 6px;
     height: 6px;
-    background-color: #FF9575;
+    background-color: #ff9575;
     border-radius: 50%;
 }

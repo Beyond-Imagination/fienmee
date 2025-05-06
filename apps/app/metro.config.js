@@ -13,6 +13,7 @@ const config = {
     resolver: {
         unstable_enableSymlinks: true,
         unstable_enablePackageExports: true,
+        sourceExts: ['js', 'json', 'ts', 'tsx', 'jsx'],
     },
 }
 

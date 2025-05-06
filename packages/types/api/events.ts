@@ -88,3 +88,12 @@ export interface IPostEventCommentRequest {
     eventId: string
     comment: string
 }
+
+export interface IGetPresignedUrlRequest {
+    fileName: string
+    fileType: string
+}
+
+export interface IGetPresignedUrlResponse {
+    presignedUrl: string
+}
