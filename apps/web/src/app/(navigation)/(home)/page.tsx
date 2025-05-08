@@ -33,7 +33,7 @@ function PageComponent() {
             <div className="px-8 mb-8">
                 <SearchBar />
             </div>
-            <div className="grid gap-10 w-full px-1 pb-10">
+            <div className="grid gap-10 w-full px-1">
                 {/*TODO: change event category*/}
                 <PreviewEventLst title={`${today.getDate()}일 일정`} category={data.categories[0]._id} />
                 <div className="bg-[#F6F5F5] shadow-inner shadow-[#E4E4E4] w-full h-2" />

@@ -41,7 +41,7 @@ export default function Event({ event }: Props) {
         <Link
             href={`/events/detail`}
             onClick={onClick}
-            className="flex hover:bg-gray-100 transition duration-300 justify-between items-start gap-4 px-4 mb-12"
+            className="flex hover:bg-gray-100 transition duration-300 justify-between items-start gap-4 px-4"
         >
             <div className="flex flex-col w-2/3 ps-2 pt-2 gap-2">
                 <div className="text-xl font-semibold">{event.name}</div>
