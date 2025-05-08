@@ -1,7 +1,9 @@
 import asyncify from 'express-asyncify'
 import express, { Request, Response, Router } from 'express'
+
 import { ScheduleModel } from '@/models'
 import middlewares from '@/middlewares'
+import { getUserDailyScheduleCount } from '@/services/schedule'
 
 const router: Router = asyncify(express.Router())
 router.use(middlewares.auth.verifyToken)
@@ -39,6 +41,14 @@ router.get('/', async (req: Request, res: Response) => {
     const schedules = await ScheduleModel.findByUserId(userId, filterOption, options)
 
     res.status(200).json(schedules)
+})
+
+router.get('/dailyCount', middlewares.schedules.verifyAuthorMiddleware, async (req: Request, res: Response) => {
+    const from = new Date(req.query.from as string) || new Date(0)
+    const to = new Date(req.query.to as string) || new Date()
+
+    const dailyScheduleCount = await getUserDailyScheduleCount(req.user, from, to)
+    res.status(200).json(dailyScheduleCount)
 })
 
 router.get('/:id', middlewares.schedules.verifyAuthorMiddleware, async (req: Request, res: Response) => {
