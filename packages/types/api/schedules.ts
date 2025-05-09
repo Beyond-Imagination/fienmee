@@ -46,3 +46,14 @@ export interface IGetScheduleListResponse {
 type CalendarDate = Date | null
 
 export type CalendarDateRange = CalendarDate | [CalendarDate, CalendarDate]
+
+export interface IDailyScheduleCount {
+    date: string
+    count: number
+}
+
+export interface IDailyCountMap {
+    [date: string]: number // key: 'YYYY-MM-DD', value: count
+}
+
+export type IGetDailyScheduleCountResponse = IDailyCountMap
