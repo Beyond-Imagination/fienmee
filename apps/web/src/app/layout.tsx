@@ -7,6 +7,7 @@ import { KAKAO_API_KEY } from '@/config'
 
 import { BridgeProvider, ReactQueryProvider } from '@/providers'
 import { Authentication } from '@/components/authentication'
+import { ToastContainer } from 'react-toastify'
 
 const geistSans = localFont({
     src: './fonts/GeistVF.woff',
@@ -30,6 +31,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
                     </BridgeProvider>
                 </ReactQueryProvider>
                 <Script src={KAKAO_SDK_URL} strategy="beforeInteractive" />
+                <ToastContainer />
             </body>
         </html>
     )

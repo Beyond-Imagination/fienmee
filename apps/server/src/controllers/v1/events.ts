@@ -5,8 +5,25 @@ import mongoose from 'mongoose'
 import { CategoryModel, Events, EventsModel, ReviewsModel, CommentsModel } from '@/models'
 import { verifyToken } from '@/middlewares/auth'
 import { CategoryCode } from '@fienmee/types'
+import { s3 } from '@/services/aws'
+import { AWS_S3_BUCKET } from '@/config'
 
 const router: Router = asyncify(express.Router())
+
+router.get('/presigned-url', async (req, res) => {
+    const fileName = String(req.query.fileName)
+    const fileType = String(req.query.fileType)
+
+    const params = {
+        Bucket: AWS_S3_BUCKET!,
+        Key: `${Date.now()}-${fileName}`,
+        Expires: 3600,
+        ContentType: fileType,
+    }
+
+    const presignedUrl = await s3.getSignedUrlPromise('putObject', params)
+    res.json({ presignedUrl })
+})
 
 router.post('/category/initialize', async (req: Request, res: Response) => {
     await CategoryModel.initialize()

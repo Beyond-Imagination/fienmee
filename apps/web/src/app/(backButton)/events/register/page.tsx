@@ -13,38 +13,34 @@ export default function RegisterPage() {
     const [selectedCategories, setSelectedCategories] = useState<Set<ICategory>>(new Set())
     const { event, setEvent } = eventStore()
 
-    const handleAddPhoto = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const files = Array.from(e.target.files || [])
-        const newPhotos = files.map(file => URL.createObjectURL(file))
-        setEvent({ ...event, photo: [...event.photo, ...newPhotos] })
-        e.target.value = ''
+    const handleAddPhoto = (photoUrls: string[]) => {
+        setEvent({ ...event, photo: [...event.photo, ...photoUrls] })
     }
-
-    useEffect(() => {
-        if (category) {
-            try {
-                const parsedCategory = JSON.parse(category)
-                setSelectedCategories(prev => {
-                    const newSet = new Set(prev)
-                    if (![...newSet].some(cat => cat._id === parsedCategory._id)) {
-                        newSet.add(parsedCategory)
-                    }
-                    return newSet
-                })
-            } catch (error) {
-                console.error('Invalid category data:', error)
-            }
-        }
-    }, [category])
 
     const handleRemovePhoto = (index: number) => {
         setEvent({ ...event, photo: event.photo.filter((_, i) => i !== index) })
     }
 
+    useEffect(() => {
+        if (!category) return
+        try {
+            const parsedCategory: ICategory = JSON.parse(category)
+            setSelectedCategories(prev => {
+                const updated = new Set(prev)
+                if (![...updated].some(cat => cat._id === parsedCategory._id)) {
+                    updated.add(parsedCategory)
+                }
+                return updated
+            })
+        } catch (error) {
+            console.error('Invalid category data:', error)
+        }
+    }, [category])
+
     return (
         <div className="min-h-screen flex flex-col px-4">
-            <PhotoUploader photos={event.photo} onAddPhoto={handleAddPhoto} onRemovePhoto={handleRemovePhoto} />
-            <EventForm selectedCategories={selectedCategories} photos={event.photo} initEvent={event} isRegister={true} />
+            <PhotoUploader photos={event.photo ?? []} onAddPhoto={handleAddPhoto} onRemovePhoto={handleRemovePhoto} />
+            <EventForm selectedCategories={selectedCategories} photos={event.photo ?? []} initEvent={event} isRegister={true} />
         </div>
     )
 }
