@@ -1,20 +1,40 @@
+import { Dispatch, SetStateAction, useEffect, useState } from 'react'
 import Calendar from 'react-calendar'
 import './calendar.css'
-import { CalendarDateRange } from '@fienmee/types'
+
+import { CalendarDateRange, IGetDailyScheduleCountResponse } from '@fienmee/types'
 import { NextLabelIcon, PrevLabelIcon } from '@/components/icon/schedule'
+import { useQuery } from '@tanstack/react-query'
+import { getDailyScheduleCount } from '@/api/schedules'
+import { format } from 'date-fns'
 
 interface ScheduleCalendarProps {
-    onChange: (value: Date) => void
+    setSelectedDay: Dispatch<SetStateAction<Date>>
 }
 
-export default function ScheduleCalendar({ onChange }: ScheduleCalendarProps) {
+export default function ScheduleCalendar({ setSelectedDay }: ScheduleCalendarProps) {
+    const [currentDay, setCurrentDay] = useState<Date>(new Date())
+
+    useEffect(() => {}, [currentDay])
+
+    const { data } = useQuery<IGetDailyScheduleCountResponse>({
+        queryKey: ['monthlySchedule', currentDay.getFullYear(), currentDay.getMonth()],
+        queryFn: async () => {
+            const from = new Date(currentDay.getFullYear(), currentDay.getMonth(), 1)
+            const to = new Date(currentDay.getFullYear(), currentDay.getMonth() + 1, 1)
+            return await getDailyScheduleCount(from, to)
+        },
+    })
+
     const handleChange = (value: CalendarDateRange) => {
-        onChange(value as Date)
+        const currentDay = value as Date
+        setSelectedDay(currentDay)
+        setCurrentDay(currentDay)
     }
 
-    const hasSchedule = (date: Date) => {
-        // todo: 월별 일정을 가져오는 api 연동
-        return date.getTime() % 100 < 50
+    const hasSchedule = (date: Date): boolean => {
+        const key = format(date, 'yyyy-MM-dd')
+        return (data && data[key] !== 0) || false
     }
 
     return (
