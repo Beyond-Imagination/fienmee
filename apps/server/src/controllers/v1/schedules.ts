@@ -43,7 +43,7 @@ router.get('/', async (req: Request, res: Response) => {
     res.status(200).json(schedules)
 })
 
-router.get('/dailyCount', middlewares.schedules.verifyAuthorMiddleware, async (req: Request, res: Response) => {
+router.get('/dailyCount', async (req: Request, res: Response) => {
     const from = new Date(req.query.from as string) || new Date(0)
     const to = new Date(req.query.to as string) || new Date()
 
