@@ -46,7 +46,6 @@ jobs:
                   tags: |
                       type=ref,event=branch
                       type=semver,pattern={{version}}
-                      type=semver,pattern={{major}}.{{minor}}
                       type=sha,prefix=,suffix=,format=short
 
             - name: Build and push Docker image
