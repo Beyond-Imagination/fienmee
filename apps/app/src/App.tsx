@@ -5,7 +5,7 @@
  * @format
  */
 
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useColorScheme } from 'react-native'
 import { NavigationContainer } from '@react-navigation/native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
@@ -14,6 +14,7 @@ import ErrorBoundary from 'react-native-error-boundary'
 
 import { LoginScreen, RegisterScreen, WebviewScreen, ErrorScreen } from '@/pages'
 import { RootStackParamList } from '@/types'
+import PushNotificationService from '@/services/pushNotificationService.ts'
 
 function App(): React.JSX.Element {
     const isDarkMode = useColorScheme() === 'dark'
@@ -22,6 +23,23 @@ function App(): React.JSX.Element {
         backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
     }
     const Stack = createNativeStackNavigator<RootStackParamList>()
+
+    useEffect(() => {
+        const initPush = async () => {
+            const info = await PushNotificationService.getDeviceInfo()
+            if (info) {
+                console.log('FCM token info:', info)
+                // TODO: 서버에 토큰 전송
+            }
+        }
+        initPush()
+
+        PushNotificationService.setMessageHandler()
+        PushNotificationService.listenRefreshToken(token => {
+            console.log('FCM token refreshed:', token)
+            // TODO: 서버에 갱신된 토큰 전송
+        })
+    }, [])
 
     return (
         <ErrorBoundary>
