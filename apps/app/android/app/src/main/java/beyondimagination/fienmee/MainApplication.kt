@@ -1,4 +1,4 @@
-package com.app
+package beyondimagination.fienmee
 
 import android.app.Application
 import com.facebook.react.PackageList

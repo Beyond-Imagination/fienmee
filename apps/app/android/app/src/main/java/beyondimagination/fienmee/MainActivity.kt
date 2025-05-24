@@ -1,4 +1,4 @@
-package com.app
+package beyondimagination.fienmee
 
 import com.facebook.react.ReactActivity
 import com.facebook.react.ReactActivityDelegate
