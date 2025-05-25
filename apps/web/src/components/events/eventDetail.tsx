@@ -8,8 +8,9 @@ import EventPhoto from '@/components/events/eventPhoto'
 import EventLikes from '@/components/events/eventLikes'
 import { useMemo } from 'react'
 import TabBar from '@/components/tabBar'
-import EventCommentInput from '@/components/events/commentInputField'
+import EventCommentInput from '@/components/comment/commentInputField'
 import Link from 'next/link'
+import { CommentList } from '@/components/comment/commentList'
 
 interface Props {
     event: IEvent
@@ -30,7 +31,7 @@ export default function EventDetail({ event }: Props) {
     }, [])
 
     return (
-        <div className="flex flex-col gap-6 px-4">
+        <div className="flex flex-col gap-6 px-4 pb-12">
             <TabBar items={items} links={links} selected={selected} />
             <div className="w-full h-64 overflow-x-auto">
                 <div className="flex">
@@ -80,19 +81,20 @@ export default function EventDetail({ event }: Props) {
                 <div className="flex items-center">
                     <EventCommentInput eventId={event._id} />
                 </div>
+                <CommentList eventId={event._id} />
             </div>
-            <div className="flex justify-between p-4 mt-4 pt-4 border-t border-gray-200">
-                <EventLikes />
-                <div className="flex items-center space-x-3">
-                    <CommentIcon width="1.25rem" height="1.25rem" />
-                    <div className="text-sm">{event.commentCount}</div>
+            <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 px-4 py-4 pb-safe z-10">
+                <div className="flex justify-between items-center">
+                    <EventLikes />
+                    <div className="flex items-center space-x-3">
+                        <CommentIcon width="1.25rem" height="1.25rem" />
+                        <div className="text-sm">{event.commentCount}</div>
+                    </div>
+                    <Link href={'/schedules/register'} className="rounded-lg text-white bg-[#FF9575] px-6 py-1.5">
+                        내 일정 추가
+                    </Link>
                 </div>
-                {/* TODO: add schedule function */}
-                <Link href={'/schedules/register'} className="rounded-lg text-white bg-[#FF9575] px-6 py-1.5">
-                    내 일정 추가
-                </Link>
             </div>
-            {/* TODO: add comment list */}
         </div>
     )
 }

@@ -89,6 +89,25 @@ export interface IPostEventCommentRequest {
     comment: string
 }
 
+export interface IComment {
+    _id: string
+    eventId: string
+    comment: string
+    nickname: string
+}
+
+export interface IGetEventCommentsResponse {
+    page: {
+        totalDocs: number
+        totalPages: number
+        hasNextPage: boolean
+        hasPrevPage: boolean
+        page: number
+        limit: number
+    }
+    comments: IComment[]
+}
+
 export interface IGetPresignedUrlRequest {
     fileName: string
     fileType: string
