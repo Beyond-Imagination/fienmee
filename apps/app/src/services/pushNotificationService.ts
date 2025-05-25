@@ -1,14 +1,18 @@
 import { AuthorizationStatus, deleteToken, getMessaging, getToken, onTokenRefresh, requestPermission } from '@react-native-firebase/messaging'
 import { getUniqueId } from 'react-native-device-info'
 import { Platform, Alert } from 'react-native'
-import { NotificationToken, PlatformType } from '@fienmee/types/api/notification.ts'
+import { NotificationToken, PlatformType } from '@fienmee/types/api/notification'
 
 class PushNotificationService {
     private messaging = getMessaging()
 
     async requestPermission(): Promise<boolean> {
-        const authStatus = await requestPermission(this.messaging)
-        return authStatus === AuthorizationStatus.AUTHORIZED || authStatus === AuthorizationStatus.PROVISIONAL
+        try {
+            const authStatus = await requestPermission(this.messaging)
+            return authStatus === AuthorizationStatus.AUTHORIZED || authStatus === AuthorizationStatus.PROVISIONAL
+        } catch (error) {
+            throw error // TODO: 권한 요청 실패 시 처리 로직 필요
+        }
     }
 
     async getFcmToken(): Promise<string> {

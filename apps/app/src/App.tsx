@@ -26,10 +26,14 @@ function App(): React.JSX.Element {
 
     useEffect(() => {
         const initPush = async () => {
-            const info = await PushNotificationService.getDeviceInfo()
-            if (info) {
-                console.log('FCM token info:', info)
-                // TODO: 서버에 토큰 전송
+            try {
+                const info = await PushNotificationService.getDeviceInfo()
+                if (info) {
+                    console.log('FCM token info:', info)
+                    // TODO: 서버에 토큰 전송
+                }
+            } catch (error) {
+                throw error // TODO: 함수 실패 시 처리 로직 추가
             }
         }
         initPush()
