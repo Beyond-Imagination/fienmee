@@ -14,7 +14,7 @@ import ErrorBoundary from 'react-native-error-boundary'
 
 import { LoginScreen, RegisterScreen, WebviewScreen, ErrorScreen } from '@/pages'
 import { RootStackParamList } from '@/types'
-import PushNotificationService from '@/services/pushNotificationService.ts'
+import PushNotificationService from '@/services/pushNotificationService'
 
 function App(): React.JSX.Element {
     const isDarkMode = useColorScheme() === 'dark'

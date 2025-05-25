@@ -11,24 +11,23 @@ class PushNotificationService {
         return authStatus === AuthorizationStatus.AUTHORIZED || authStatus === AuthorizationStatus.PROVISIONAL
     }
 
-    async getFcmToken(): Promise<string | null> {
+    async getFcmToken(): Promise<string> {
         try {
             return await getToken(this.messaging)
-        } catch (e) {
-            console.log('FCM token error', e)
-            return null
+        } catch (error) {
+            throw error
         }
     }
 
-    async getDeviceInfo(): Promise<NotificationToken | null> {
+    async getDeviceInfo(): Promise<NotificationToken> {
         const hasPermission = await this.requestPermission()
-        if (!hasPermission) return null
-
+        if (!hasPermission) {
+            // TODO: 푸시메시지 권한 없음. 권한 요청 필요
+            throw new Error('Notification permission denied')
+        }
         const token = await this.getFcmToken()
-        if (!token) return null
         const deviceId = await getUniqueId()
         const platform: PlatformType = Platform.OS === 'ios' ? PlatformType.IOS : PlatformType.ANDROID
-
         return {
             token,
             deviceId,
