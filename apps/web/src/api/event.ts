@@ -7,6 +7,7 @@ import {
     IPutEventRequest,
     IGetPresignedUrlRequest,
     IGetPresignedUrlResponse,
+    IGetEventCommentsResponse,
 } from '@fienmee/types'
 
 import { SERVER_URL } from '@/config'
@@ -117,6 +118,17 @@ export async function getEventDetail(eventId: string): Promise<IEvent> {
     const res = await fetch(`${SERVER_URL}/v1/events/${eventId}`, {
         method: 'GET',
     })
+    if (!res.ok) {
+        throw await res.json()
+    }
+    return res.json()
+}
+
+export async function getEventCommentsByEventId(eventId: string, page: number = 1, limit: number = 10): Promise<IGetEventCommentsResponse> {
+    const res = await fetch(`${SERVER_URL}/v1/events/${eventId}/comments?page=${page}&limit=${limit}`, {
+        method: 'GET',
+    })
+
     if (!res.ok) {
         throw await res.json()
     }
