@@ -28,6 +28,7 @@ export class Notification extends defaultClasses.TimeStamps {
     public toJSON() {
         return {
             _id: this._id,
+            userId: this.userId,
             type: this.type,
             title: this.title,
             body: this.body,
