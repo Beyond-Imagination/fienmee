@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "968978426533",
+    "project_id": "fienmee-50cd1",
+    "storage_bucket": "fienmee-50cd1.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:968978426533:android:707d49745118fe779b3b4c",
+        "android_client_info": {
+          "package_name": "beyondimagination.fienmee"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCu6-CX5lxps8l_eAUzrzfdZQOOTzbbJ_E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
