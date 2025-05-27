@@ -42,6 +42,9 @@ export default function ScheduleCalendar({ setSelectedDay }: ScheduleCalendarPro
             <Calendar
                 onChange={handleChange}
                 calendarType="gregory"
+                onActiveStartDateChange={({ activeStartDate }) => {
+                    setCurrentDay(activeStartDate!)
+                }}
                 formatMonthYear={(locale, date) => {
                     const year = date.getFullYear()
                     const month = date.getMonth() + 1
