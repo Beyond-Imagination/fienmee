@@ -16,17 +16,12 @@ class PushNotificationService {
     }
 
     async getFcmToken(): Promise<string> {
-        try {
-            return await getToken(this.messaging)
-        } catch (error) {
-            throw error
-        }
+        return await getToken(this.messaging)
     }
 
     async getDeviceInfo(): Promise<NotificationToken> {
         const hasPermission = await this.requestPermission()
         if (!hasPermission) {
-            // TODO: 푸시메시지 권한 없음. 권한 요청 필요
             throw new Error('Notification permission denied')
         }
         const token = await this.getFcmToken()

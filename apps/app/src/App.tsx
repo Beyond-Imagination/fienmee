@@ -33,7 +33,7 @@ function App(): React.JSX.Element {
                     // TODO: 서버에 토큰 전송
                 }
             } catch (error) {
-                throw error // TODO: 함수 실패 시 처리 로직 추가
+                console.log('Error while initializing push notification:', error) // TODO: 함수 실패 시 처리 로직 추가
             }
         }
         initPush()
