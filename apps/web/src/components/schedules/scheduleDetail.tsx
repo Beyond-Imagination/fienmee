@@ -29,7 +29,8 @@ export default function ScheduleDetailModal({ isOpen, onClose, schedule, setModa
     if (!isOpen || !schedule) return null
 
     const formatTime = (date: Date) => {
-        return `${date.getHours()}:${String(date.getMinutes()).padStart(2, '0')} ${date.getHours() >= 12 ? 'PM' : 'AM'}`
+        const newDate = new Date(date)
+        return `${String(newDate.getMonth() + 1).padStart(2, '0')}.${String(newDate.getDate()).padStart(2, '0')} ${newDate.getHours()}:${String(newDate.getMinutes()).padStart(2, '0')} ${newDate.getHours() >= 12 ? 'PM' : 'AM'}`
     }
     const timeRange = schedule.isAllDay ? '하루 종일' : `${formatTime(schedule.startDate)} - ${formatTime(schedule.endDate)}`
 
