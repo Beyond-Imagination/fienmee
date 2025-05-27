@@ -3,6 +3,12 @@ export enum PlatformType {
     ANDROID,
 }
 
+export enum NotificationType {
+    COMMENT = 0,
+    LIKE,
+    REVIEW,
+}
+
 export interface NotificationToken {
     token: string
     deviceId: string
