@@ -7,29 +7,48 @@ import { UnknownUserError, UnauthorizedTokenError } from '@/types/errors'
 import { IJwtPayload } from '@/types/oauth/jwt'
 import { isTokenInBlackList } from '@/services/oauth'
 
-export const verifyToken = async (req: Request, res: Response, next: NextFunction) => {
-    const token = req.headers['authorization']?.split(' ')?.[1]
-    if (!token) {
-        return next(new UnauthorizedTokenError('fill the "authorization" header field'))
-    }
+export const verifyToken =
+    ({ required = true }: { required?: boolean } = {}) =>
+    async (req: Request, res: Response, next: NextFunction) => {
+        const token = req.headers['authorization']?.split(' ')?.[1]
+        if (!required) {
+            req.user = null
+            req.jwtPayload = null
+        }
 
-    if (isTokenInBlackList(token)) {
-        return next(new UnauthorizedTokenError('Token of logged out user'))
-    }
+        if (!token) {
+            if (required) {
+                return next(new UnauthorizedTokenError('fill the "authorization" header field'))
+            }
+            return next()
+        }
 
-    let jwtPayload: IJwtPayload
-    try {
-        jwtPayload = jwt.verify(token, JWT_SECRET) as IJwtPayload
-    } catch (e) {
-        return next(new UnauthorizedTokenError(e))
-    }
+        if (isTokenInBlackList(token)) {
+            if (required) {
+                return next(new UnauthorizedTokenError('Token of logged out user'))
+            }
+            return next()
+        }
 
-    const user = await UserModel.findOne({ _id: jwtPayload.userId }).exec()
-    if (!user) {
-        return next(new UnknownUserError())
-    }
+        let jwtPayload: IJwtPayload
+        try {
+            jwtPayload = jwt.verify(token, JWT_SECRET) as IJwtPayload
+        } catch (e) {
+            if (required) {
+                return next(new UnauthorizedTokenError(e))
+            }
+            return next()
+        }
 
-    req.user = user
-    req.jwtPayload = jwtPayload
-    next()
-}
+        const user = await UserModel.findOne({ _id: jwtPayload.userId }).exec()
+        if (!user) {
+            if (required) {
+                return next(new UnknownUserError())
+            }
+            return next()
+        }
+
+        req.user = user
+        req.jwtPayload = jwtPayload
+        next()
+    }

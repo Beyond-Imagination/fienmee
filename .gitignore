@@ -7,3 +7,4 @@ logs
 
 .env
 newrelic_agent.log
+firebase-dev-adminsdk.json

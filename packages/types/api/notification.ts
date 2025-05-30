@@ -9,7 +9,7 @@ export enum NotificationType {
     REVIEW,
 }
 
-export interface NotificationToken {
+export interface INotificationToken {
     token: string
     deviceId: string
     platform: PlatformType
