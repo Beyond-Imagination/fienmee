@@ -1,5 +1,4 @@
 import { config } from 'dotenv'
-import * as path from 'path'
 import AWS from 'aws-sdk'
 import firebase from 'firebase-admin'
 
@@ -30,7 +29,7 @@ AWS.config.update({
     region: AWS_REGION,
 })
 
-const firebaseServiceAccount = path.resolve(__dirname, '../../firebase-dev-adminsdk.json')
+const firebaseServiceAccount = JSON.parse(process.env.FIREBASE_CREDENTIALS)
 
 firebase.initializeApp({
     credential: firebase.credential.cert(firebaseServiceAccount),

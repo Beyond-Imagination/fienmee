@@ -3,11 +3,13 @@ import { Image, StyleSheet, Text, TouchableOpacity } from 'react-native'
 import React from 'react'
 import { login as kakaoLogin } from '@react-native-seoul/kakao-login'
 
-import { isErrorResponse } from '@fienmee/types'
+import { INotificationToken, isErrorResponse } from '@fienmee/types'
 
 import { login } from '@/api'
 import { setToken } from '@/stores'
 import { LoginScreenProps } from '@/types'
+import { refreshFCMToken } from '@/api/notification.ts'
+import PushNotificationService from '@/services/pushNotificationService'
 
 export function KakaoOauthLogin() {
     const navigation = useNavigation<LoginScreenProps['navigation']>()
@@ -19,6 +21,12 @@ export function KakaoOauthLogin() {
                 provider: 'KAKAO',
             })
             await setToken(credential)
+            const fcmRequest: INotificationToken = {
+                token: PushNotificationService.token,
+                deviceId: PushNotificationService.deviceId,
+                platform: PushNotificationService.platform,
+            }
+            await refreshFCMToken(fcmRequest)
             navigation.navigate('WebView')
         } catch (error) {
             if (isErrorResponse(error) && (error.code === 4100 || error.code === 4101)) {
