@@ -29,7 +29,7 @@ AWS.config.update({
     region: AWS_REGION,
 })
 
-const firebaseServiceAccount = JSON.parse(process.env.FIREBASE_CREDENTIALS)
+const firebaseServiceAccount = JSON.parse(process.env.FIREBASE_CREDENTIALS as string)
 
 firebase.initializeApp({
     credential: firebase.credential.cert(firebaseServiceAccount),
