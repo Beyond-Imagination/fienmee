@@ -1,2 +1,2 @@
 export * from './users'
-export * from './notification.ts'
+export * from './notification'
