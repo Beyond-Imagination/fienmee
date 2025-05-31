@@ -57,14 +57,14 @@ router.post('/register', async (req: Request, res: Response) => {
     } as registerResponse)
 })
 
-router.get('/', verifyToken(), async (req: Request, res: Response) => {
+router.get('/', verifyToken, async (req: Request, res: Response) => {
     res.status(200).json({
         id: req.user._id,
         nickname: req.user.nickname,
     })
 })
 
-router.post('/refresh', verifyToken(), async (req: Request, res: Response) => {
+router.post('/refresh', verifyToken, async (req: Request, res: Response) => {
     if (req.jwtPayload.type !== 'refresh_token') {
         throw new InvalidTokenTypeError()
     }
@@ -83,7 +83,7 @@ router.post('/refresh', verifyToken(), async (req: Request, res: Response) => {
     res.status(200).json(response)
 })
 
-router.delete('/', verifyToken(), async (req: Request, res: Response) => {
+router.delete('/', verifyToken, async (req: Request, res: Response) => {
     const jwt = req.headers['authorization']?.split(' ')?.[1]
 
     await unlinkUser(req.user)

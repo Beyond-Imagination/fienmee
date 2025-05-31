@@ -1,12 +1,11 @@
 import { BE_URL } from '@/config'
-import { INotificationToken } from '@fienmee/types'
-import { getToken } from '@/stores'
+import { IRequestNotificationToken } from '@fienmee/types'
 
-export async function registerFCMToken(request: INotificationToken): Promise<void> {
+export async function registerFCMToken(request: IRequestNotificationToken): Promise<void> {
     const res = await fetch(`${BE_URL}/v1/notification/token`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(request),
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${request.accessToken}` },
+        body: JSON.stringify(request.body),
     })
 
     if (!res.ok) {
@@ -16,19 +15,11 @@ export async function registerFCMToken(request: INotificationToken): Promise<voi
     return res.json()
 }
 
-export async function refreshFCMToken(request: INotificationToken): Promise<void> {
-    let accessToken = ''
-    try {
-        const credentials = await getToken()
-        accessToken = credentials.accessToken
-    } catch (e) {
-        console.log(e)
-        accessToken = ''
-    }
+export async function refreshFCMToken(request: IRequestNotificationToken): Promise<void> {
     const res = await fetch(`${BE_URL}/v1/notification/token`, {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${accessToken}` },
-        body: JSON.stringify(request),
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${request.accessToken}` },
+        body: JSON.stringify(request.body),
     })
 
     if (!res.ok) {

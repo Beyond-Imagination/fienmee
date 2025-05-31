@@ -6,7 +6,7 @@ import middlewares from '@/middlewares'
 import { getUserDailyScheduleCount } from '@/services/schedule'
 
 const router: Router = asyncify(express.Router())
-router.use(middlewares.auth.verifyToken())
+router.use(middlewares.auth.verifyToken)
 
 router.post('/', middlewares.schedules.addScheduleMiddleware, async (req: Request, res: Response) => {
     const { name, eventId, startDate, endDate, address, location, description, isAllDay } = req.body

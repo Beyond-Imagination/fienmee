@@ -1,20 +1,14 @@
-import mongoose from 'mongoose'
 import express, { Router } from 'express'
 import asyncify from 'express-asyncify'
+
 import { NotificationTokenModel } from '@/models'
+import { verifyToken } from '@/middlewares/auth'
 import { InternalServerError } from '@/types/errors'
 import { DeviceIdNotRegisteredError, DuplicateNotificationTokenError } from '@/types/errors/notification'
-import { verifyToken } from '@/middlewares/auth'
 
 const router: Router = asyncify(express.Router())
 
-interface Fields {
-    token: string
-    platform: string
-    userId?: mongoose.Types.ObjectId
-}
-
-router.post('/token', async (req, res) => {
+router.post('/token', verifyToken, async (req, res) => {
     try {
         await NotificationTokenModel.create({
             token: req.body.token,
@@ -31,20 +25,19 @@ router.post('/token', async (req, res) => {
     }
 })
 
-router.put('/token', verifyToken({ required: false }), async (req, res) => {
+router.put('/token', verifyToken, async (req, res) => {
     if (!req.body.deviceId) {
         throw new DeviceIdNotRegisteredError()
     }
 
-    const updateFields: Fields = {
-        token: req.body.token,
-        platform: req.body.platform,
-    }
-    if (req.user !== null) {
-        updateFields.userId = req.user._id
-    }
-
-    await NotificationTokenModel.findOneAndUpdate({ deviceId: req.body.deviceId }, updateFields)
+    await NotificationTokenModel.findOneAndUpdate(
+        { deviceId: req.body.deviceId },
+        {
+            token: req.body.token,
+            platform: req.body.platform,
+            userId: req.user._id,
+        },
+    )
     res.sendStatus(204)
 })
 

@@ -14,3 +14,8 @@ export interface INotificationToken {
     deviceId: string
     platform: PlatformType
 }
+
+export interface IRequestNotificationToken {
+    body: INotificationToken
+    accessToken: string
+}

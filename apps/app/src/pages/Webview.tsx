@@ -3,12 +3,13 @@ import { BackHandler } from 'react-native'
 import { WebView, WebViewMessageEvent } from 'react-native-webview'
 import { useNavigation } from '@react-navigation/native'
 
-import { IBackButtonData, IJWTData, isLogoutData, isRefreshData } from '@fienmee/types'
+import { IBackButtonData, IJWTData, IRequestNotificationToken, isErrorResponse, isLogoutData, isRefreshData } from '@fienmee/types'
 
 import { ENV, FE_URL } from '@/config'
 import { deleteToken, getToken, setToken } from '@/stores'
 import { WebviewScreenProps } from '@/types'
-import { refresh } from '@/api'
+import { refresh, refreshFCMToken, registerFCMToken } from '@/api'
+import PushNotificationService from '@/services/pushNotificationService'
 
 const INJECTED_JAVASCRIPT = `const meta = document.createElement('meta'); meta.setAttribute('content', 'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0'); meta.setAttribute('name', 'viewport'); document.getElementsByTagName('head')[0].appendChild(meta); `
 
@@ -53,6 +54,48 @@ export function WebviewScreen() {
             BackHandler.removeEventListener('hardwareBackPress', onPress)
         }
     }, [])
+
+    useEffect(() => {
+        const initPush = async () => {
+            const credential = await getToken()
+            try {
+                const info = await PushNotificationService.getDeviceInfo()
+                const fcmRequest: IRequestNotificationToken = {
+                    body: info,
+                    accessToken: credential.accessToken,
+                }
+                await registerFCMToken(fcmRequest)
+            } catch (error) {
+                if (isErrorResponse(error) && error.code === 8000) {
+                    const fcmRequest: IRequestNotificationToken = {
+                        body: {
+                            token: PushNotificationService.token,
+                            deviceId: PushNotificationService.deviceId,
+                            platform: PushNotificationService.platform,
+                        },
+                        accessToken: credential.accessToken,
+                    }
+                    await refreshFCMToken(fcmRequest)
+                } else {
+                    navigation.navigate('Error')
+                }
+            }
+        }
+        initPush()
+        PushNotificationService.setMessageHandler()
+        PushNotificationService.listenRefreshToken(async token => {
+            const credential = await getToken()
+            const request: IRequestNotificationToken = {
+                body: {
+                    token: token,
+                    deviceId: PushNotificationService.deviceId,
+                    platform: PushNotificationService.platform,
+                },
+                accessToken: credential.accessToken,
+            }
+            await refreshFCMToken(request)
+        })
+    }, [navigation])
 
     return (
         <WebView
