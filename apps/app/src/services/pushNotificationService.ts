@@ -5,9 +5,6 @@ import { INotificationToken, PlatformType } from '@fienmee/types/api/notificatio
 
 class PushNotificationService {
     private messaging = getMessaging()
-    public token = ''
-    public deviceId = ''
-    public platform: PlatformType = PlatformType.IOS
 
     async requestPermission(): Promise<boolean> {
         try {
@@ -27,13 +24,13 @@ class PushNotificationService {
         if (!hasPermission) {
             throw new Error('Notification permission denied')
         }
-        this.token = await this.getFcmToken()
-        this.deviceId = await getUniqueId()
-        this.platform = Platform.OS === 'ios' ? PlatformType.IOS : PlatformType.ANDROID
+        const token = await this.getFcmToken()
+        const deviceId = await getUniqueId()
+        const platform = Platform.OS === 'ios' ? PlatformType.IOS : PlatformType.ANDROID
         return {
-            token: this.token,
-            deviceId: this.deviceId,
-            platform: this.platform,
+            token: token,
+            deviceId: deviceId,
+            platform: platform,
         }
     }
 

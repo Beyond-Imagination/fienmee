@@ -9,7 +9,6 @@ import { isTokenInBlackList } from '@/services/oauth'
 
 export const verifyToken = async (req: Request, res: Response, next: NextFunction) => {
     const token = req.headers['authorization']?.split(' ')?.[1]
-
     if (!token) {
         return next(new UnauthorizedTokenError('fill the "authorization" header field'))
     }

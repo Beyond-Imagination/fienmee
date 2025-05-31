@@ -67,12 +67,9 @@ export function WebviewScreen() {
                 await registerFCMToken(fcmRequest)
             } catch (error) {
                 if (isErrorResponse(error) && error.code === 8000) {
+                    const info = await PushNotificationService.getDeviceInfo()
                     const fcmRequest: IRequestNotificationToken = {
-                        body: {
-                            token: PushNotificationService.token,
-                            deviceId: PushNotificationService.deviceId,
-                            platform: PushNotificationService.platform,
-                        },
+                        body: info,
                         accessToken: credential.accessToken,
                     }
                     await refreshFCMToken(fcmRequest)
@@ -85,14 +82,16 @@ export function WebviewScreen() {
         PushNotificationService.setMessageHandler()
         PushNotificationService.listenRefreshToken(async token => {
             const credential = await getToken()
+            const info = await PushNotificationService.getDeviceInfo()
             const request: IRequestNotificationToken = {
                 body: {
                     token: token,
-                    deviceId: PushNotificationService.deviceId,
-                    platform: PushNotificationService.platform,
+                    deviceId: info.deviceId,
+                    platform: info.platform,
                 },
                 accessToken: credential.accessToken,
             }
+            console.log(request)
             await refreshFCMToken(request)
         })
     }, [navigation])
