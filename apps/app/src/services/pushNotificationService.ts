@@ -28,9 +28,9 @@ class PushNotificationService {
         const deviceId = await getUniqueId()
         const platform = Platform.OS === 'ios' ? PlatformType.IOS : PlatformType.ANDROID
         return {
-            token: token,
-            deviceId: deviceId,
-            platform: platform,
+            token,
+            deviceId,
+            platform,
         }
     }
 
