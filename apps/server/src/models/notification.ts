@@ -1,5 +1,6 @@
 import mongoose from 'mongoose'
 import { defaultClasses, getModelForClass, plugin, prop, ReturnModelType } from '@typegoose/typegoose'
+import mongoosePaginate from 'mongoose-paginate-v2'
 import { messaging } from 'firebase-admin'
 
 import { User } from '@/models/user'
@@ -7,7 +8,6 @@ import { NotificationTokenModel } from '@/models/notificaionToken'
 import { NotificationType } from '@fienmee/types/api/notification'
 import { logger } from '@/utils/logger'
 import { FCMMulticastSendError } from '@/types/errors/notification'
-import mongoosePaginate from 'mongoose-paginate-v2'
 
 @plugin(mongoosePaginate)
 export class Notification extends defaultClasses.TimeStamps {
