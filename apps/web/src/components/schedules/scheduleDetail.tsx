@@ -29,12 +29,11 @@ export default function ScheduleDetailModal({ isOpen, onClose, schedule, setModa
     if (!isOpen || !schedule) return null
 
     const formatTime = (date: Date) => {
-        const temp = new Date(date)
-        return `${temp.getHours()}:${String(temp.getMinutes()).padStart(2, '0')} ${temp.getHours() >= 12 ? 'PM' : 'AM'}`
+        const newDate = new Date(date)
+        return `${String(newDate.getMonth() + 1).padStart(2, '0')}.${String(newDate.getDate()).padStart(2, '0')} ${newDate.getHours()}:${String(newDate.getMinutes()).padStart(2, '0')} ${newDate.getHours() >= 12 ? 'PM' : 'AM'}`
     }
     const timeRange = schedule.isAllDay ? '하루 종일' : `${formatTime(schedule.startDate)} - ${formatTime(schedule.endDate)}`
 
-    // TODO: 좌우 슬라이드를 통한 일정 상세 조회
     return (
         <div className="fixed inset-0 bg-black bg-opacity-40 z-50 flex items-end" onClick={handleBackdropClick}>
             <div className="bg-white w-full h-[70%] rounded-t-2xl shadow-lg overflow-y-auto flex flex-col">
@@ -45,7 +44,6 @@ export default function ScheduleDetailModal({ isOpen, onClose, schedule, setModa
                     </div>
                     <div className="text-sm text-gray-400 mb-4">{timeRange}</div>
                     <hr className="border-t border-gray-300 mb-4" />
-
                     <div className="mb-4 py-2">
                         <div className="flex justify-between items-center mb-1 w-full">
                             <div className="text-m text-left">장소</div>
@@ -56,7 +54,6 @@ export default function ScheduleDetailModal({ isOpen, onClose, schedule, setModa
                             <EventMap lng={schedule.location.coordinates[0]} lat={schedule.location.coordinates[1]} />
                         </div>
                     </div>
-
                     <hr className="border-t border-gray-300 mb-4" />
                     <div className="mb-4">
                         <div className="text-m">메모</div>
@@ -64,7 +61,6 @@ export default function ScheduleDetailModal({ isOpen, onClose, schedule, setModa
                     </div>
                     <hr className="border-t border-gray-300 mb-4" />
                 </div>
-
                 <div className="px-14 py-4">
                     <Link
                         className="block text-center bg-[#FF9575] text-white py-3 rounded-lg w-full font-semibold"

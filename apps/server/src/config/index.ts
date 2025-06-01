@@ -1,5 +1,7 @@
 import { config } from 'dotenv'
+import * as path from 'path'
 import AWS from 'aws-sdk'
+import firebase from 'firebase-admin'
 
 config()
 
@@ -15,6 +17,7 @@ export const {
     AWS_SECRET_ACCESS_KEY,
     AWS_REGION,
     AWS_S3_BUCKET,
+    FIREBASE_PROJECT_ID,
 } = process.env
 
 export const PORT = Number.parseInt(process.env.PORT) || 5000
@@ -25,4 +28,11 @@ AWS.config.update({
     accessKeyId: AWS_ACCESS_KEY_ID,
     secretAccessKey: AWS_SECRET_ACCESS_KEY,
     region: AWS_REGION,
+})
+
+const firebaseServiceAccount = path.resolve(__dirname, '../../firebase-dev-adminsdk.json')
+
+firebase.initializeApp({
+    credential: firebase.credential.cert(firebaseServiceAccount),
+    projectId: FIREBASE_PROJECT_ID,
 })

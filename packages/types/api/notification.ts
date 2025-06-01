@@ -3,8 +3,19 @@ export enum PlatformType {
     ANDROID,
 }
 
-export interface NotificationToken {
+export enum NotificationType {
+    COMMENT = 0,
+    LIKE,
+    REVIEW,
+}
+
+export interface INotificationToken {
     token: string
     deviceId: string
     platform: PlatformType
+}
+
+export interface IRequestNotificationToken {
+    body: INotificationToken
+    accessToken: string
 }

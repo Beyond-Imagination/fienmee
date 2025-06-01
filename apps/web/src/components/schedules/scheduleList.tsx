@@ -60,8 +60,9 @@ export default function ScheduleList({ date }: Prop) {
     let scheduleSummary
     if (!isLoading) {
         scheduleSummary = data?.pages[0].docs?.map((doc: IScheduleItem) => {
-            const hours = new Date(doc.startDate).getHours()
-            const minutes = new Date(doc.startDate).getMinutes()
+            const newDate = new Date(doc.startDate)
+            const hours = String(newDate.getHours()).padStart(2, '0')
+            const minutes = String(newDate.getMinutes()).padStart(2, '0')
             return { id: doc._id, title: doc.name, time: `${hours}:${minutes}` }
         })
     }

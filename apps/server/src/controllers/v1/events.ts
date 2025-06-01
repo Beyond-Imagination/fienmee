@@ -2,9 +2,9 @@ import express, { Request, Response, Router } from 'express'
 import asyncify from 'express-asyncify'
 import mongoose from 'mongoose'
 
-import { CategoryModel, Events, EventsModel, ReviewsModel, CommentsModel } from '@/models'
+import { CategoryModel, Events, EventsModel, ReviewsModel, CommentsModel, NotificationModel } from '@/models'
 import { verifyToken } from '@/middlewares/auth'
-import { CategoryCode } from '@fienmee/types'
+import { CategoryCode, NotificationType } from '@fienmee/types'
 import { s3 } from '@/services/aws'
 import { AWS_S3_BUCKET } from '@/config'
 
@@ -97,7 +97,16 @@ router.post('/:id/comments', verifyToken, async (req: Request, res: Response) =>
         comment: req.body.comment,
     })
 
-    await EventsModel.findByIdAndUpdate(req.params.id, { $push: { comments: comment._id } })
+    const event = await EventsModel.findByIdAndUpdate(req.params.id, { $push: { comments: comment._id } })
+    if (!event.authorId.equals(req.user._id)) {
+        await NotificationModel.createAndSendNotification(
+            NotificationType.COMMENT,
+            event.authorId,
+            '내가 등록한 행사에 새로운 댓글이 작성됐어요!',
+            `${event.name} 행사에 새로운 댓글이 작성됐어요!`,
+            `events:detail:${event._id}`,
+        )
+    }
 
     res.sendStatus(204)
 })
@@ -128,6 +137,15 @@ router.post('/:id/likes', verifyToken, async (req: Request, res: Response) => {
     const update = prevLiked ? { $pull: { likes: req.user._id } } : { $push: { likes: req.user._id } }
 
     await EventsModel.updateOne({ _id: req.params.id }, update)
+    if (!event.authorId.equals(req.user._id) && !prevLiked) {
+        await NotificationModel.createAndSendNotification(
+            NotificationType.LIKE,
+            event.authorId,
+            '누군가가 내가 등록한 행사에 좋아요를 눌렀어요!',
+            `${event.name} 행사에 좋아요가 눌렸어요!`,
+            `events:detail:${event._id}`,
+        )
+    }
 
     res.sendStatus(204)
 })
@@ -141,6 +159,16 @@ router.post('/:id/reviews', verifyToken, async (req: Request, res: Response) => 
         photo: req.body.photo,
         body: req.body.body,
     })
+
+    if (!event.authorId.equals(req.user._id)) {
+        await NotificationModel.createAndSendNotification(
+            NotificationType.REVIEW,
+            event.authorId,
+            '내가 등록한 행사에 새로운 리뷰가 작성됐어요!',
+            `${event.name} 행사에 새로운 리뷰가 작성됐어요!`,
+            `events:review:${event._id}`,
+        )
+    }
     res.status(200).json({
         reviewId: review._id,
     })

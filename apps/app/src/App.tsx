@@ -14,7 +14,10 @@ import ErrorBoundary from 'react-native-error-boundary'
 
 import { LoginScreen, RegisterScreen, WebviewScreen, ErrorScreen } from '@/pages'
 import { RootStackParamList } from '@/types'
-import PushNotificationService from '@/services/pushNotificationService'
+import PushNotificationService from '@/services/pushNotificationService.ts'
+import { getToken } from '@/stores'
+import { IRequestNotificationToken } from '@fienmee/types'
+import { submitFCMToken } from '@/api'
 
 function App(): React.JSX.Element {
     const isDarkMode = useColorScheme() === 'dark'
@@ -25,23 +28,20 @@ function App(): React.JSX.Element {
     const Stack = createNativeStackNavigator<RootStackParamList>()
 
     useEffect(() => {
-        const initPush = async () => {
-            try {
-                const info = await PushNotificationService.getDeviceInfo()
-                if (info) {
-                    console.log('FCM token info:', info)
-                    // TODO: 서버에 토큰 전송
-                }
-            } catch (error) {
-                console.log('Error while initializing push notification:', error) // TODO: 함수 실패 시 처리 로직 추가
-            }
-        }
-        initPush()
-
         PushNotificationService.setMessageHandler()
-        PushNotificationService.listenRefreshToken(token => {
-            console.log('FCM token refreshed:', token)
-            // TODO: 서버에 갱신된 토큰 전송
+        PushNotificationService.listenRefreshToken(async token => {
+            const credential = await getToken()
+            const info = await PushNotificationService.getDeviceInfo()
+            const request: IRequestNotificationToken = {
+                body: {
+                    token: token,
+                    deviceId: info.deviceId,
+                    platform: info.platform,
+                },
+                accessToken: credential.accessToken,
+            }
+            console.log(request)
+            await submitFCMToken(request)
         })
     }, [])
 
