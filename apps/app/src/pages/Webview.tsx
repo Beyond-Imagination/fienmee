@@ -3,12 +3,13 @@ import { BackHandler } from 'react-native'
 import { WebView, WebViewMessageEvent } from 'react-native-webview'
 import { useNavigation } from '@react-navigation/native'
 
-import { IBackButtonData, IJWTData, isLogoutData, isRefreshData } from '@fienmee/types'
+import { IBackButtonData, IJWTData, IRequestNotificationToken, isLogoutData, isRefreshData } from '@fienmee/types'
 
 import { ENV, FE_URL } from '@/config'
 import { deleteToken, getToken, setToken } from '@/stores'
 import { WebviewScreenProps } from '@/types'
-import { refresh } from '@/api'
+import { refresh, submitFCMToken } from '@/api'
+import PushNotificationService from '@/services/pushNotificationService'
 
 const INJECTED_JAVASCRIPT = `const meta = document.createElement('meta'); meta.setAttribute('content', 'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0'); meta.setAttribute('name', 'viewport'); document.getElementsByTagName('head')[0].appendChild(meta); `
 
@@ -52,6 +53,19 @@ export function WebviewScreen() {
         return () => {
             BackHandler.removeEventListener('hardwareBackPress', onPress)
         }
+    }, [])
+
+    useEffect(() => {
+        const saveFCMToken = async () => {
+            const credential = await getToken()
+            const info = await PushNotificationService.getDeviceInfo()
+            const fcmRequest: IRequestNotificationToken = {
+                body: info,
+                accessToken: credential.accessToken,
+            }
+            await submitFCMToken(fcmRequest)
+        }
+        saveFCMToken()
     }, [])
 
     return (

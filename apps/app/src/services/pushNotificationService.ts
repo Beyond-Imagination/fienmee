@@ -1,7 +1,7 @@
 import { AuthorizationStatus, deleteToken, getMessaging, getToken, onTokenRefresh, requestPermission } from '@react-native-firebase/messaging'
 import { getUniqueId } from 'react-native-device-info'
-import { Platform, Alert } from 'react-native'
-import { NotificationToken, PlatformType } from '@fienmee/types/api/notification'
+import { Alert, Platform } from 'react-native'
+import { INotificationToken, PlatformType } from '@fienmee/types/api/notification'
 
 class PushNotificationService {
     private messaging = getMessaging()
@@ -19,14 +19,14 @@ class PushNotificationService {
         return await getToken(this.messaging)
     }
 
-    async getDeviceInfo(): Promise<NotificationToken> {
+    async getDeviceInfo(): Promise<INotificationToken> {
         const hasPermission = await this.requestPermission()
         if (!hasPermission) {
             throw new Error('Notification permission denied')
         }
         const token = await this.getFcmToken()
         const deviceId = await getUniqueId()
-        const platform: PlatformType = Platform.OS === 'ios' ? PlatformType.IOS : PlatformType.ANDROID
+        const platform = Platform.OS === 'ios' ? PlatformType.IOS : PlatformType.ANDROID
         return {
             token,
             deviceId,

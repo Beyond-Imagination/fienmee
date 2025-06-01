@@ -13,7 +13,7 @@ export class NotificationToken extends defaultClasses.TimeStamps {
     @prop({ required: true })
     public token: string
 
-    @prop({ required: true })
+    @prop({ required: true, unique: true })
     public deviceId: string
 
     @prop({ required: true, enum: Object.values(PlatformType).filter(v => typeof v === 'number') })
