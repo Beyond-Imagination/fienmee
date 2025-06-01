@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react'
 import { IScheduleItem } from '@fienmee/types'
 import ScheduleDetailModal from '@/components/schedules/scheduleDetail'
 import ScheduleUpdateModal from '@/components/schedules/scheduleUpdate'
+import ScheduleDeleteModal from '@/components/schedules/scheduleDeleteModal'
 import { scheduleStore } from '@/store/schedule'
 
 interface Prop {
@@ -80,6 +81,9 @@ export default function ScheduleList({ date }: Prop) {
             )}
             {modalType === 'update' && (
                 <ScheduleUpdateModal isOpen={isModalOpen} onClose={handleClose} initSchedule={schedule} setModalType={setModalType} />
+            )}
+            {modalType === 'delete' && (
+                <ScheduleDeleteModal isOpen={isModalOpen} onClose={handleClose} scheduleId={schedule._id} setModalType={setModalType} />
             )}
         </div>
     )

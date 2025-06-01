@@ -29,7 +29,8 @@ export default function ScheduleDetailModal({ isOpen, onClose, schedule, setModa
     if (!isOpen || !schedule) return null
 
     const formatTime = (date: Date) => {
-        return `${date.getHours()}:${String(date.getMinutes()).padStart(2, '0')} ${date.getHours() >= 12 ? 'PM' : 'AM'}`
+        const temp = new Date(date)
+        return `${temp.getHours()}:${String(temp.getMinutes()).padStart(2, '0')} ${temp.getHours() >= 12 ? 'PM' : 'AM'}`
     }
     const timeRange = schedule.isAllDay ? '하루 종일' : `${formatTime(schedule.startDate)} - ${formatTime(schedule.endDate)}`
 
@@ -40,7 +41,7 @@ export default function ScheduleDetailModal({ isOpen, onClose, schedule, setModa
                 <div className="p-10 flex-1 overflow-auto">
                     <div className="flex items-center justify-between mb-2">
                         <div className="text-lg font-semibold">{schedule.name}</div>
-                        <ScheduleOption onEdit={() => setModalType('update')} />
+                        <ScheduleOption onEdit={() => setModalType('update')} onDelete={() => setModalType('delete')} />
                     </div>
                     <div className="text-sm text-gray-400 mb-4">{timeRange}</div>
                     <hr className="border-t border-gray-300 mb-4" />
