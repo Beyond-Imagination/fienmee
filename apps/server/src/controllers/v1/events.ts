@@ -137,7 +137,7 @@ router.post('/:id/likes', verifyToken, async (req: Request, res: Response) => {
     const update = prevLiked ? { $pull: { likes: req.user._id } } : { $push: { likes: req.user._id } }
 
     await EventsModel.updateOne({ _id: req.params.id }, update)
-    if (!event.authorId.equals(req.user._id) && !update) {
+    if (!event.authorId.equals(req.user._id) && !prevLiked) {
         await NotificationModel.createAndSendNotification(
             NotificationType.LIKE,
             event.authorId,
