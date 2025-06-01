@@ -27,3 +27,12 @@ jest.mock('@react-native-firebase/messaging', () => ({
 jest.mock('react-native-device-info', () => ({
     getUniqueId: jest.fn().mockResolvedValue('mock-unique-id'),
 }))
+
+// @notifee/react-native 네이티브 모듈 Mock
+jest.mock('@notifee/react-native', () => ({
+    default: {
+        requestPermissions: jest.fn().mockResolvedValue({}),
+        createChannel: jest.fn().mockResolvedValue(undefined),
+        displayNotification: jest.fn().mockResolvedValue('mock-channel-id'),
+    },
+}))
