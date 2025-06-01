@@ -94,7 +94,7 @@ export class Notification extends defaultClasses.TimeStamps {
         }
     }
 
-    public static async findByUser(
+    public static async findByUserId(
         this: ReturnModelType<typeof Notification>,
         userId: mongoose.Types.ObjectId,
         options: mongoose.PaginateOptions,
