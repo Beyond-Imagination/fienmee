@@ -6,6 +6,8 @@ import { verifyToken } from '@/middlewares/auth'
 
 const router: Router = asyncify(express.Router())
 
+router.get('/', verifyToken, async (req, res) => {})
+
 router.put('/token', verifyToken, async (req, res) => {
     await NotificationTokenModel.findOneAndUpdate(
         { deviceId: req.body.deviceId },
