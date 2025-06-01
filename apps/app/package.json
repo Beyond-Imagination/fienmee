@@ -11,6 +11,7 @@
         "test": "jest"
     },
     "dependencies": {
+        "@notifee/react-native": "^9.1.8",
         "@react-native-firebase/app": "^22.2.0",
         "@react-native-firebase/messaging": "^22.2.0",
         "@react-native-seoul/kakao-login": "^5.4.1",

@@ -1,7 +1,8 @@
 import { AuthorizationStatus, deleteToken, getMessaging, getToken, onTokenRefresh, requestPermission } from '@react-native-firebase/messaging'
 import { getUniqueId } from 'react-native-device-info'
-import { Alert, Platform } from 'react-native'
+import { Platform } from 'react-native'
 import { INotificationToken, PlatformType } from '@fienmee/types/api/notification'
+import notifee from '@notifee/react-native'
 
 class PushNotificationService {
     private messaging = getMessaging()
@@ -47,8 +48,19 @@ class PushNotificationService {
             console.log('Background message received: ', JSON.stringify(remoteMessage))
         })
         this.messaging.onMessage(async remoteMessage => {
-            Alert.alert('Foreground message received:', JSON.stringify(remoteMessage))
-            // TODO: 알림 메시지 띄우기
+            const { title, body } = remoteMessage.notification ?? {}
+            await notifee.displayNotification({
+                title,
+                body,
+                android: {
+                    channelId: 'default',
+                    smallIcon: 'ic_launcher', // TODO: add logo img in android/app/src/main/res/drawable
+                    pressAction: {
+                        id: 'default',
+                        launchActivity: 'default',
+                    },
+                },
+            })
         })
     }
 }

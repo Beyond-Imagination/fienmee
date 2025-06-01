@@ -11,8 +11,9 @@ import { NavigationContainer } from '@react-navigation/native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { Colors } from 'react-native/Libraries/NewAppScreen'
 import ErrorBoundary from 'react-native-error-boundary'
+import notifee, { AndroidImportance } from '@notifee/react-native'
 
-import { LoginScreen, RegisterScreen, WebviewScreen, ErrorScreen } from '@/pages'
+import { ErrorScreen, LoginScreen, RegisterScreen, WebviewScreen } from '@/pages'
 import { RootStackParamList } from '@/types'
 import PushNotificationService from '@/services/pushNotificationService.ts'
 import { getToken } from '@/stores'
@@ -28,6 +29,17 @@ function App(): React.JSX.Element {
     const Stack = createNativeStackNavigator<RootStackParamList>()
 
     useEffect(() => {
+        const createChannel = async () => {
+            const settings = await notifee.requestPermission()
+            if (settings.authorizationStatus >= 1) {
+                await notifee.createChannel({
+                    id: 'default',
+                    name: 'Fienmee',
+                    importance: AndroidImportance.HIGH,
+                })
+            }
+        }
+        createChannel()
         PushNotificationService.setMessageHandler()
         PushNotificationService.listenRefreshToken(async token => {
             const credential = await getToken()
@@ -40,7 +52,6 @@ function App(): React.JSX.Element {
                 },
                 accessToken: credential.accessToken,
             }
-            console.log(request)
             await submitFCMToken(request)
         })
     }, [])
