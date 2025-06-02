@@ -174,6 +174,23 @@ router.post('/:id/reviews', verifyToken, async (req: Request, res: Response) => 
     })
 })
 
+router.get('/category/dates', verifyToken, async (req: Request, res: Response) => {
+    const from = new Date(req.query.from as string)
+    const to = new Date(req.query.to as string)
+    const limit = req.query.limit ? Number(req.query.limit) : 0
+    const page = req.query.page ? Number(req.query.page) : 1
+
+    const result = await EventsModel.findByDates(from, to, limit, page)
+
+    const events = result.docs.map(event => ({
+        ...event.toJSON(),
+        isAuthor: event.get('authorId')?.equals(req.user._id),
+        isLiked: event.get('likes')?.includes(req.user._id),
+    }))
+
+    res.status(200).json({ events: events })
+})
+
 router.get('/category/:category', verifyToken, async (req: Request, res: Response) => {
     const options = { sort: { startDate: 1, endDate: 1, createdAt: -1 }, page: Number(req.query.page) || 1, limit: Number(req.query.limit) || 10 }
     const category = await CategoryModel.getCategoryById(req.params.category)

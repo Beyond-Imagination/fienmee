@@ -112,6 +112,31 @@ export class Events extends defaultClasses.TimeStamps {
             },
         )
     }
+
+    public static async findByDates(
+        this: ReturnModelType<typeof Events>,
+        from: Date,
+        to: Date,
+        limit?: number,
+        page?: number,
+    ): Promise<mongoose.PaginateResult<mongoose.PaginateDocument<typeof Events, object, object, mongoose.PaginateOptions>>> {
+        const query = {
+            $nor: [
+                { endDate: { $lt: from } }, // 종료일이 검색 시작일보다 이전
+                { startDate: { $gt: to } }, // 시작일이 검색 종료일보다 이후
+            ],
+        }
+
+        return await this.paginate(query, {
+            limit: limit,
+            sort: { startDate: 1, endDate: 1, createdAt: -1 },
+            page: page,
+            populate: {
+                path: 'category',
+                select: 'title',
+            },
+        })
+    }
 }
 
 export const EventsModel = getModelForClass(Events)
