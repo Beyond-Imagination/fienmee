@@ -1,5 +1,6 @@
 import mongoose from 'mongoose'
-import { defaultClasses, getModelForClass, prop, ReturnModelType } from '@typegoose/typegoose'
+import { defaultClasses, getModelForClass, plugin, prop, ReturnModelType } from '@typegoose/typegoose'
+import mongoosePaginate from 'mongoose-paginate-v2'
 import { messaging } from 'firebase-admin'
 
 import { User } from '@/models/user'
@@ -8,7 +9,9 @@ import { NotificationType } from '@fienmee/types/api/notification'
 import { logger } from '@/utils/logger'
 import { FCMMulticastSendError } from '@/types/errors/notification'
 
+@plugin(mongoosePaginate)
 export class Notification extends defaultClasses.TimeStamps {
+    static paginate: mongoose.PaginateModel<typeof Notification>['paginate']
     public _id: mongoose.Types.ObjectId
 
     @prop({ required: true, ref: User })
@@ -89,6 +92,14 @@ export class Notification extends defaultClasses.TimeStamps {
         } catch (error) {
             throw new FCMMulticastSendError(error)
         }
+    }
+
+    public static async findByUserId(
+        this: ReturnModelType<typeof Notification>,
+        userId: mongoose.Types.ObjectId,
+        options: mongoose.PaginateOptions,
+    ): Promise<mongoose.PaginateResult<mongoose.PaginateDocument<typeof Notification, object, object, mongoose.PaginateOptions>>> {
+        return await this.paginate({ userId: userId }, { ...options })
     }
 }
 
