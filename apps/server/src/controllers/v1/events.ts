@@ -175,8 +175,9 @@ router.post('/:id/reviews', verifyToken, async (req: Request, res: Response) => 
 })
 
 router.get('/category/dates', verifyToken, async (req: Request, res: Response) => {
-    const from = new Date(req.query.from as string)
-    const to = new Date(req.query.to as string)
+    const today = new Date()
+    const from = req.query.from ? new Date(req.query.from as string) : new Date(today.getFullYear(), today.getMonth(), today.getDate())
+    const to = req.query.to ? new Date(req.query.to as string) : new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1)
     const limit = req.query.limit ? Number(req.query.limit) : 0
     const page = req.query.page ? Number(req.query.page) : 1
 
