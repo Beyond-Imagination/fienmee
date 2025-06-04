@@ -86,7 +86,11 @@ router.delete('/:id', async (req: Request, res: Response) => {
 router.get('/:id', verifyToken, async (req: Request, res: Response) => {
     const event = await EventsModel.findById(req.params.id)
 
-    res.status(200).json({ ...event, isAuthor: event.authorId.equals(req.user._id) })
+    res.status(200).json({
+        ...event.toJSON(),
+        isAuthor: event.get('authorId')?.equals(req.user._id),
+        isLiked: event.get('likes')?.includes(req.user._id),
+    })
 })
 
 router.post('/:id/comments', verifyToken, async (req: Request, res: Response) => {
