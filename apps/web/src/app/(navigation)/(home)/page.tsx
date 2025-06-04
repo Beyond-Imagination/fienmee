@@ -35,7 +35,7 @@ function PageComponent() {
             </div>
             <div className="grid gap-10 w-full px-1">
                 {/*TODO: change event category*/}
-                <PreviewEventLst title={`${today.getDate()}일 일정`} category={data.categories[0]._id} />
+                <PreviewEventLst title={`${today.getDate()}일 일정`} category={'dates'} />
                 <div className="bg-[#F6F5F5] shadow-inner shadow-[#E4E4E4] w-full h-2" />
                 <PreviewEventLst title="관심 카테고리" category={data.categories[0]._id} />
                 <div className="bg-[#F6F5F5] shadow-inner shadow-[#E4E4E4] w-full h-2" />
