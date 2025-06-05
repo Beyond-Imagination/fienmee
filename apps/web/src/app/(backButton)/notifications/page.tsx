@@ -1,8 +1,9 @@
 'use client'
 
+import { useEffect } from 'react'
+
 import { NotificationList } from '@/components/notification/notificationList'
 import { titleStore } from '@/store'
-import { useEffect } from 'react'
 
 export default function Page() {
     const { setTitle } = titleStore()

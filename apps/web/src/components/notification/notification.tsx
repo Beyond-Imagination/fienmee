@@ -1,5 +1,6 @@
 import { useMutation } from '@tanstack/react-query'
 import { useRouter } from 'next/navigation'
+import { format } from 'date-fns'
 
 import { INotification } from '@fienmee/types'
 import NotificationIcon from '@/components/icon/notificationIcon'
@@ -16,7 +17,7 @@ export default function Notification({ notification }: Props) {
     const { setEvent } = eventStore()
     const formattingDate = (date: Date) => {
         const newDate = new Date(date)
-        return `${newDate.getFullYear()}.${String(newDate.getMonth() + 1).padStart(2, '0')}.${String(newDate.getDate()).padStart(2, '0')} ${String(newDate.getHours()).padStart(2, '0')}:${String(newDate.getMinutes()).padStart(2, '0')}`
+        return format(newDate, 'yyyy.MM.dd HH:mm')
     }
     const onNavigate = async () => {
         const parts = notification.navigate.split(':')
