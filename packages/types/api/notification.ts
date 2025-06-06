@@ -19,3 +19,26 @@ export interface IRequestNotificationToken {
     body: INotificationToken
     accessToken: string
 }
+
+export interface INotification {
+    _id: string
+    userId: string
+    type: NotificationType
+    title: string
+    body: string
+    navigate: string
+    isRead: boolean
+    createdAt: Date
+}
+
+export interface IGetNotificationListResponse {
+    notifications: INotification[]
+    page: {
+        totalDocs: number
+        totalPages: number
+        hasNextPage: boolean
+        hasPrevPage: boolean
+        page: number
+        limit: number
+    }
+}
