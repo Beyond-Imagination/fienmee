@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react'
 import CameraIcon from '@/components/icon/Camera'
-import { getPresignedUrl, getViewUrl, uploadToS3 } from '@/api/event'
+import { getUploadUrl, getViewUrl, uploadToS3 } from '@/api/event'
 import { ClipLoader } from 'react-spinners'
 import { toast } from 'react-toastify'
 
@@ -12,7 +12,7 @@ interface PhotoUploaderProps {
 
 const uploadFile = async (file: File): Promise<string | null> => {
     try {
-        const { presignedUrl } = await getPresignedUrl({
+        const { presignedUrl } = await getUploadUrl({
             fileName: file.name,
             fileType: file.type,
         })

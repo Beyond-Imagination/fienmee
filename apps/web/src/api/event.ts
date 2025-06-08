@@ -89,9 +89,9 @@ export async function registerEventComments(request: IPostEventCommentRequest) {
     return
 }
 
-export async function getPresignedUrl(request: IGetPresignedUrlRequest): Promise<IGetPresignedUrlResponse> {
+export async function getUploadUrl(request: IGetPresignedUrlRequest): Promise<IGetPresignedUrlResponse> {
     const query = new URLSearchParams(request as unknown as Record<string, string>).toString()
-    const res = await fetch(`${SERVER_URL}/v1/events/presigned-url?${query}`, {
+    const res = await fetch(`${SERVER_URL}/v1/events/s3/upload-url?${query}`, {
         method: 'GET',
     })
 
@@ -103,7 +103,7 @@ export async function getPresignedUrl(request: IGetPresignedUrlRequest): Promise
 }
 
 export const getViewUrl = async (key: string) => {
-    const res = await fetch(`${SERVER_URL}/v1/events/view-url?key=${encodeURIComponent(key)}`, {
+    const res = await fetch(`${SERVER_URL}/v1/events/s3/view-url?key=${encodeURIComponent(key)}`, {
         method: 'GET',
     })
 
