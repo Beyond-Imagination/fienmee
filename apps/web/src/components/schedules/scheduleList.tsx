@@ -25,6 +25,7 @@ export default function ScheduleList({ date }: Prop) {
     const [isModalOpen, setIsModalOpen] = useState(false)
     const { schedule, setSchedule } = scheduleStore()
     const [modalType, setModalType] = useState<string>('none')
+    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
 
     useEffect(() => {
         if (inView) {
@@ -44,6 +45,7 @@ export default function ScheduleList({ date }: Prop) {
     const handleClose = () => {
         setIsModalOpen(false)
         setModalType('none')
+        setIsDeleteModalOpen(false)
     }
 
     if (isError) {
@@ -66,6 +68,7 @@ export default function ScheduleList({ date }: Prop) {
             return { id: doc._id, title: doc.name, time: `${hours}:${minutes}` }
         })
     }
+
     return (
         <div className="bg-white w-full border-t border-t-[#E4E4E4]">
             <div className="ml-5 mt-6 mb-3 text-xl font-bold text-left">{String(date.getDate()).padStart(2, '0')}일 일정</div>
@@ -78,13 +81,26 @@ export default function ScheduleList({ date }: Prop) {
             <div ref={ref}></div>
 
             {modalType === 'detail' && (
-                <ScheduleDetailModal isOpen={isModalOpen} onClose={handleClose} schedule={schedule} setModalType={setModalType} />
+                <ScheduleDetailModal
+                    isOpen={isModalOpen}
+                    onClose={handleClose}
+                    schedule={schedule}
+                    setModalType={setModalType}
+                    openDeleteModal={() => setIsDeleteModalOpen(true)}
+                />
             )}
+
             {modalType === 'update' && (
                 <ScheduleUpdateModal isOpen={isModalOpen} onClose={handleClose} initSchedule={schedule} setModalType={setModalType} />
             )}
-            {modalType === 'delete' && (
-                <ScheduleDeleteModal isOpen={isModalOpen} onClose={handleClose} scheduleId={schedule._id} setModalType={setModalType} />
+
+            {isDeleteModalOpen && (
+                <ScheduleDeleteModal
+                    isOpen={isDeleteModalOpen}
+                    onClose={() => setIsDeleteModalOpen(false)}
+                    scheduleId={schedule._id}
+                    setModalType={setModalType}
+                />
             )}
         </div>
     )

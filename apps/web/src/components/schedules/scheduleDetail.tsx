@@ -10,9 +10,10 @@ interface ScheduleDetailModalProps {
     onClose: () => void
     schedule: IScheduleItem
     setModalType: (type: string) => void
+    openDeleteModal: () => void
 }
 
-export default function ScheduleDetailModal({ isOpen, onClose, schedule, setModalType }: ScheduleDetailModalProps) {
+export default function ScheduleDetailModal({ isOpen, onClose, schedule, setModalType, openDeleteModal }: ScheduleDetailModalProps) {
     const { setEvent } = eventStore()
 
     const onClick = async (eventId: string) => {
@@ -40,7 +41,7 @@ export default function ScheduleDetailModal({ isOpen, onClose, schedule, setModa
                 <div className="p-10 flex-1 overflow-auto">
                     <div className="flex items-center justify-between mb-2">
                         <div className="text-lg font-semibold">{schedule.name}</div>
-                        <ScheduleOption onEdit={() => setModalType('update')} onDelete={() => setModalType('delete')} />
+                        <ScheduleOption onEdit={() => setModalType('update')} onDelete={openDeleteModal} />
                     </div>
                     <div className="text-sm text-gray-400 mb-4">{timeRange}</div>
                     <hr className="border-t border-gray-300 mb-4" />
