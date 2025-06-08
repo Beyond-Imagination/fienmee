@@ -10,9 +10,10 @@ interface ScheduleDetailModalProps {
     onClose: () => void
     schedule: IScheduleItem
     setModalType: (type: string) => void
+    openDeleteModal: () => void
 }
 
-export default function ScheduleDetailModal({ isOpen, onClose, schedule, setModalType }: ScheduleDetailModalProps) {
+export default function ScheduleDetailModal({ isOpen, onClose, schedule, setModalType, openDeleteModal }: ScheduleDetailModalProps) {
     const { setEvent } = eventStore()
 
     const onClick = async (eventId: string) => {
@@ -34,14 +35,13 @@ export default function ScheduleDetailModal({ isOpen, onClose, schedule, setModa
     }
     const timeRange = schedule.isAllDay ? '하루 종일' : `${formatTime(schedule.startDate)} - ${formatTime(schedule.endDate)}`
 
-    // TODO: 좌우 슬라이드를 통한 일정 상세 조회
     return (
         <div className="fixed inset-0 bg-black bg-opacity-40 z-50 flex items-end" onClick={handleBackdropClick}>
             <div className="bg-white w-full h-[70%] rounded-t-2xl shadow-lg overflow-y-auto flex flex-col">
                 <div className="p-10 flex-1 overflow-auto">
                     <div className="flex items-center justify-between mb-2">
                         <div className="text-lg font-semibold">{schedule.name}</div>
-                        <ScheduleOption onEdit={() => setModalType('update')} />
+                        <ScheduleOption onEdit={() => setModalType('update')} onDelete={openDeleteModal} />
                     </div>
                     <div className="text-sm text-gray-400 mb-4">{timeRange}</div>
                     <hr className="border-t border-gray-300 mb-4" />

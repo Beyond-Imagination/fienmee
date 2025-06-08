@@ -61,3 +61,11 @@ export async function getDailyScheduleCount(from: Date, to: Date): Promise<IGetD
     }
     return res.json()
 }
+
+export const deleteSchedule = async (scheduleId: string) => {
+    const res = await fetch(`${SERVER_URL}/v1/schedules/${scheduleId}`, {
+        method: 'DELETE',
+    })
+
+    if (!res.ok) throw new Error('삭제 실패')
+}
