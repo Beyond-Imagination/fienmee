@@ -102,6 +102,19 @@ export async function getPresignedUrl(request: IGetPresignedUrlRequest): Promise
     return res.json()
 }
 
+export const getViewUrl = async (key: string) => {
+    const res = await fetch(`${SERVER_URL}/v1/events/view-url?key=${encodeURIComponent(key)}`, {
+        method: 'GET',
+    })
+
+    if (!res.ok) {
+        throw await res.json()
+    }
+
+    const data = await res.json()
+    return data.signedUrl
+}
+
 export async function uploadToS3(presignedUrl: string, file: File): Promise<void> {
     const res = await fetch(presignedUrl, {
         method: 'PUT',

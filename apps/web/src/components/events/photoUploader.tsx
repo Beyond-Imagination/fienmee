@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react'
 import CameraIcon from '@/components/icon/Camera'
-import { getPresignedUrl, uploadToS3 } from '@/api/event'
+import { getPresignedUrl, getViewUrl, uploadToS3 } from '@/api/event'
 import { ClipLoader } from 'react-spinners'
 import { toast } from 'react-toastify'
 
@@ -16,8 +16,11 @@ const uploadFile = async (file: File): Promise<string | null> => {
             fileName: file.name,
             fileType: file.type,
         })
+        const key = presignedUrl.split('?')[0].split('/').pop()!
         await uploadToS3(presignedUrl, file)
-        return presignedUrl.split('?')[0]
+
+        const viewUrl = await getViewUrl(key)
+        return viewUrl
     } catch (error) {
         console.error(error)
         return null
@@ -92,6 +95,7 @@ const PhotoUploader: React.FC<PhotoUploaderProps> = ({ photos, onAddPhoto, onRem
                     </button>
                 </div>
             ))}
+
             {uploading && <ClipLoader color="#3b82f6" />}
         </div>
     )
