@@ -32,8 +32,8 @@ router.get('/s3/view-url', async (req, res) => {
         Expires: 3600,
     }
 
-    const signedUrl = await s3.getSignedUrlPromise('getObject', params)
-    res.json({ signedUrl })
+    const presignedUrl = await s3.getSignedUrlPromise('getObject', params)
+    res.json({ presignedUrl })
 })
 
 router.post('/category/initialize', async (req: Request, res: Response) => {

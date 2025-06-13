@@ -12,14 +12,14 @@ interface PhotoUploaderProps {
 
 const uploadFile = async (file: File): Promise<string | null> => {
     try {
-        const { presignedUrl } = await getUploadUrl({
+        const { presignedUrl: uploadUrl } = await getUploadUrl({
             fileName: file.name,
             fileType: file.type,
         })
-        const key = presignedUrl.split('?')[0].split('/').pop()!
-        await uploadToS3(presignedUrl, file)
+        const key = uploadUrl.split('?')[0].split('/').pop()!
+        await uploadToS3(uploadUrl, file)
 
-        const viewUrl = await getViewUrl(key)
+        const { presignedUrl: viewUrl } = await getViewUrl(key)
         return viewUrl
     } catch (error) {
         console.error(error)

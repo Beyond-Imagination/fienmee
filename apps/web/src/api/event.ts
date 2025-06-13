@@ -102,7 +102,7 @@ export async function getUploadUrl(request: IGetPresignedUrlRequest): Promise<IG
     return res.json()
 }
 
-export const getViewUrl = async (key: string) => {
+export async function getViewUrl(key: string): Promise<IGetPresignedUrlResponse> {
     const res = await fetch(`${SERVER_URL}/v1/events/s3/view-url?key=${encodeURIComponent(key)}`, {
         method: 'GET',
     })
@@ -111,8 +111,7 @@ export const getViewUrl = async (key: string) => {
         throw await res.json()
     }
 
-    const data = await res.json()
-    return data.signedUrl
+    return res.json()
 }
 
 export async function uploadToS3(presignedUrl: string, file: File): Promise<void> {
