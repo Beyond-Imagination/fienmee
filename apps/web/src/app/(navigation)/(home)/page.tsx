@@ -1,10 +1,13 @@
 'use client'
 
+import { useEffect, useState } from 'react'
+import { useSuspenseQuery } from '@tanstack/react-query'
+
 import SearchBar from '@/components/searchBar'
 import PreviewEventLst from '@/components/events/previewEventList'
-import { useSuspenseQuery } from '@tanstack/react-query'
+
 import { getEventsCategories } from '@/api/event'
-import { useEffect, useState } from 'react'
+import { CategoryCode } from '@fienmee/types'
 
 export default function Home() {
     const [isClient, setIsClient] = useState(false)
@@ -39,7 +42,7 @@ function PageComponent() {
                 <div className="bg-[#F6F5F5] shadow-inner shadow-[#E4E4E4] w-full h-2" />
                 <PreviewEventLst title="관심 카테고리" category={data.categories[0]._id} />
                 <div className="bg-[#F6F5F5] shadow-inner shadow-[#E4E4E4] w-full h-2" />
-                <PreviewEventLst title="인기 행사" category={data.categories[0]._id} />
+                <PreviewEventLst title="인기 행사" category={CategoryCode.HOTEVENT.toString()} />
             </div>
         </div>
     )
