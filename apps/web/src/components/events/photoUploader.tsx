@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react'
 import CameraIcon from '@/components/icon/Camera'
-import { getUploadUrl, getViewUrl, uploadToS3 } from '@/api/event'
+import { getUploadUrl, getViewUrl, uploadToS3 } from '@/api/s3'
 import { ClipLoader } from 'react-spinners'
 import { toast } from 'react-toastify'
 
