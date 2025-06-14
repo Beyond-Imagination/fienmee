@@ -34,7 +34,7 @@ export default function ScheduleDetailModal({ isOpen, onClose, schedule, setModa
         }
     }
 
-    const hanldeTouchStart = (e: React.TouchEvent) => {
+    const handleTouchStart = (e: React.TouchEvent) => {
         dragStartX.current = e.touches[0].clientX
     }
 
@@ -74,7 +74,7 @@ export default function ScheduleDetailModal({ isOpen, onClose, schedule, setModa
                         transition: dragX === 0 ? 'transform 0.3s ease' : 'none',
                     }}
                     onTouchMove={handleTouchMove}
-                    onTouchStart={hanldeTouchStart}
+                    onTouchStart={handleTouchStart}
                     onTouchEnd={handleTouchEnd}
                 >
                     <div className="bg-white w-full h-full rounded-t-2xl shadow-lg" />

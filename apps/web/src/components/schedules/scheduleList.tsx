@@ -43,7 +43,7 @@ export default function ScheduleList({ date }: Prop) {
         let [i, j] = index
         const curDocs = data?.pages[i]
         if (curDocs) {
-            if (j < curDocs.limit - 1) {
+            if (j < curDocs.docs.length - 1) {
                 j++
             } else if (i < data.pages.length - 1) {
                 i++
