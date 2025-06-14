@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { IScheduleItem } from '@fienmee/types'
+
 import { updateSchedule } from '@/api/schedules'
 import EventTimeSelector from '@/components/events/eventTimeSelector'
 import InputField from '@/components/events/inputField'

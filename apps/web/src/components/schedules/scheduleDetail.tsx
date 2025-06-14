@@ -1,3 +1,4 @@
+import React, { useRef, useState } from 'react'
 import Link from 'next/link'
 import { format } from 'date-fns'
 
@@ -6,7 +7,6 @@ import { getEventDetail } from '@/api/event'
 import { EventMap } from '@/components/events/eventMap'
 import ScheduleOption from '@/components/schedules/scheduleOption'
 import { eventStore } from '@/store'
-import React, { useRef, useState } from 'react'
 
 interface ScheduleDetailModalProps {
     isOpen: boolean
