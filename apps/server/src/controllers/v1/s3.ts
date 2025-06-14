@@ -5,7 +5,7 @@ import { AWS_S3_BUCKET } from '@/config'
 
 const router: Router = asyncify(express.Router())
 
-router.get('/s3/upload-url', async (req, res) => {
+router.get('/upload-url', async (req, res) => {
     const fileName = String(req.query.fileName)
 
     const params = {
@@ -18,11 +18,11 @@ router.get('/s3/upload-url', async (req, res) => {
     res.json({ presignedUrl })
 })
 
-router.get('/s3/view-url', async (req, res) => {
+router.get('/view-url', async (req, res) => {
     const key = req.query.key as string
 
     const params = {
-        Bucket: AWS_S3_BUCKET,
+        Bucket: AWS_S3_BUCKET!,
         Key: key,
         Expires: 3600,
     }
@@ -30,3 +30,5 @@ router.get('/s3/view-url', async (req, res) => {
     const presignedUrl = await s3.getSignedUrlPromise('getObject', params)
     res.json({ presignedUrl })
 })
+
+export default router

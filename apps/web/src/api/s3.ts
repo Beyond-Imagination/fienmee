@@ -4,7 +4,7 @@ import { SERVER_URL } from '@/config'
 
 export async function getUploadUrl(request: IGetPresignedUrlRequest): Promise<IGetPresignedUrlResponse> {
     const query = new URLSearchParams(request as unknown as Record<string, string>).toString()
-    const res = await fetch(`${SERVER_URL}/v1/events/s3/upload-url?${query}`, {
+    const res = await fetch(`${SERVER_URL}/v1/s3/upload-url?${query}`, {
         method: 'GET',
     })
 
@@ -16,7 +16,7 @@ export async function getUploadUrl(request: IGetPresignedUrlRequest): Promise<IG
 }
 
 export async function getViewUrl(key: string): Promise<IGetPresignedUrlResponse> {
-    const res = await fetch(`${SERVER_URL}/v1/events/s3/view-url?key=${encodeURIComponent(key)}`, {
+    const res = await fetch(`${SERVER_URL}/v1/s3/view-url?key=${encodeURIComponent(key)}`, {
         method: 'GET',
     })
 
