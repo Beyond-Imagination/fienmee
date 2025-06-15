@@ -107,12 +107,3 @@ export interface IGetEventCommentsResponse {
     }
     comments: IComment[]
 }
-
-export interface IGetPresignedUrlRequest {
-    fileName: string
-    fileType: string
-}
-
-export interface IGetPresignedUrlResponse {
-    presignedUrl: string
-}
