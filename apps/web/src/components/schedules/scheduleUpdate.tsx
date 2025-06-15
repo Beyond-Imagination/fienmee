@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { IScheduleItem } from '@fienmee/types'
+
 import { updateSchedule } from '@/api/schedules'
 import EventTimeSelector from '@/components/events/eventTimeSelector'
 import InputField from '@/components/events/inputField'
@@ -50,75 +51,85 @@ export default function ScheduleUpdateModal({ isOpen, onClose, initSchedule, set
     if (!isOpen || !schedule) return null
 
     return (
-        <div className="fixed inset-0 bg-black bg-opacity-40 z-50 flex items-end" onClick={handleBackdropClick}>
-            <div className="bg-white w-full h-[70%] rounded-t-2xl shadow-lg overflow-y-auto flex flex-col">
-                <div className="p-10 flex-1 overflow-auto">
-                    <div className="mb-4">
-                        <InputField
-                            label="일정 이름"
-                            placeholder="일정 이름을 입력해주세요"
-                            value={schedule.name}
-                            name="name"
-                            onChange={handleChange}
-                        />
-                    </div>
-                    <hr className="border-t border-gray-300 mb-4" />
-
-                    <div className="text-m text-left">일정 시간</div>
-                    <EventTimeSelector
-                        isAllDay={schedule.isAllDay}
-                        toggleAllDay={() => setScheduleForm({ ...schedule, isAllDay: !schedule.isAllDay })}
-                        initStartDate={schedule.startDate}
-                        initEndDate={schedule.endDate}
-                        onStartDateChange={onStartDateTimeChange}
-                        onEndDateChange={onEndDateTimeChange}
-                    />
-                    <div className="mb-4 py-2">
-                        <div className="mt-2 mb-4">
-                            <InputField
-                                label="장소"
-                                placeholder="장소를 입력해주세요"
-                                value={schedule.address}
-                                name="address"
-                                onChange={handleChange}
+        <div className="flex fixed inset-0 bg-black bg-opacity-40 z-50 items-end" onClick={handleBackdropClick}>
+            <div className="relative w-full h-[70%] overflow-hidden">
+                <div className="absolute grid grid-cols-5 w-[150%] h-full justify-between gap-2 -left-[25%]">
+                    <div className="bg-white w-full h-full rounded-t-2xl shadow-lg" />
+                    <div className="col-span-3 flex flex-col bg-white w-full h-full rounded-t-2xl shadow-lg overflow-auto">
+                        <div className="py-10 px-8 flex-1 overflow-auto">
+                            <div className="mb-4">
+                                <InputField
+                                    label="일정 이름"
+                                    placeholder="일정 이름을 입력해주세요"
+                                    value={schedule.name}
+                                    name="name"
+                                    onChange={handleChange}
+                                />
+                            </div>
+                            <hr className="border-t border-gray-300 mb-4" />
+                            <div className="text-m text-left">일정 시간</div>
+                            <EventTimeSelector
+                                isAllDay={schedule.isAllDay}
+                                toggleAllDay={() => setScheduleForm({ ...schedule, isAllDay: !schedule.isAllDay })}
+                                initStartDate={schedule.startDate}
+                                initEndDate={schedule.endDate}
+                                onStartDateChange={onStartDateTimeChange}
+                                onEndDateChange={onEndDateTimeChange}
                             />
+                            <div className="mb-4 py-2">
+                                <div className="mt-2 mb-4">
+                                    <InputField
+                                        label="장소"
+                                        placeholder="장소를 입력해주세요"
+                                        value={schedule.address}
+                                        name="address"
+                                        onChange={handleChange}
+                                    />
+                                </div>
+                                <div className="mt-2 border border-gray-200 rounded-lg h-32 overflow-hidden">
+                                    <EventVenueSelector
+                                        initialPosition={{
+                                            lat: schedule.location.coordinates[1],
+                                            lng: schedule.location.coordinates[0],
+                                        }}
+                                        onPositionChange={newPosition =>
+                                            setScheduleForm(prev => ({
+                                                ...prev!,
+                                                location: {
+                                                    type: 'Point',
+                                                    coordinates: [newPosition.lng, newPosition.lat],
+                                                },
+                                            }))
+                                        }
+                                    />
+                                </div>
+                            </div>
+
+                            <hr className="border-t border-gray-300 mb-4" />
+                            <div className="mb-4">
+                                <InputField
+                                    label="메모"
+                                    placeholder="일정에 대한 메모를 작성해주세요"
+                                    value={schedule.description}
+                                    type="textarea"
+                                    rows={4}
+                                    name="description"
+                                    onChange={handleChange}
+                                />
+                            </div>
+                            <hr className="border-t border-gray-300 mb-4" />
+
+                            <div className="px-14 py-4">
+                                <button
+                                    className="block text-center bg-[#FF9575] text-white py-3 rounded-lg w-full font-semibold"
+                                    onClick={() => onClick()}
+                                >
+                                    저장하기
+                                </button>
+                            </div>
                         </div>
-
-                        <div className="mt-2 border border-gray-200 rounded-lg h-32 overflow-hidden">
-                            <EventVenueSelector
-                                initialPosition={{ lat: schedule.location.coordinates[1], lng: schedule.location.coordinates[0] }}
-                                onPositionChange={newPosition =>
-                                    setScheduleForm(prev => ({
-                                        ...prev!,
-                                        location: {
-                                            type: 'Point',
-                                            coordinates: [newPosition.lng, newPosition.lat],
-                                        },
-                                    }))
-                                }
-                            />
-                        </div>
                     </div>
-
-                    <hr className="border-t border-gray-300 mb-4" />
-                    <div className="mb-4">
-                        <InputField
-                            label="메모"
-                            placeholder="일정에 대한 메모를 작성해주세요"
-                            value={schedule.description}
-                            type="textarea"
-                            rows={4}
-                            name="description"
-                            onChange={handleChange}
-                        />
-                    </div>
-                    <hr className="border-t border-gray-300 mb-4" />
-
-                    <div className="px-14 py-4">
-                        <button className="block text-center bg-[#FF9575] text-white py-3 rounded-lg w-full font-semibold" onClick={() => onClick()}>
-                            저장하기
-                        </button>
-                    </div>
+                    <div className="bg-white w-full h-full rounded-t-2xl shadow-lg" />
                 </div>
             </div>
         </div>

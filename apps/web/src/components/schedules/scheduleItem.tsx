@@ -1,14 +1,20 @@
+import { format } from 'date-fns'
+
 interface ScheduleProp {
-    time: string
+    startDate: Date
+    endDate: Date
     title: string
     onClick?: () => void
 }
 
-export default function ScheduleItem({ time, title, onClick }: ScheduleProp) {
+export default function ScheduleItem({ startDate, endDate, title, onClick }: ScheduleProp) {
+    const formatTime = (date: Date) => {
+        return format(date, 'MM.dd HH:mm a')
+    }
     return (
-        <div className="grid grid-cols-5 divide-x-1" onClick={onClick}>
-            <div className="col-span-1 pr-4 m-4 border-r-2 border-r-gray-500">{time}</div>
-            <div className="col-span-4 m-4">{title}</div>
+        <div className="flex flex-col" onClick={onClick}>
+            <div className="text-lg text-[#1B1B1B] p-4 pb-1">{title}</div>
+            <div className="text-base text-[#B8BABB] px-4 pb-1">{`${formatTime(startDate)} - ${formatTime(endDate)}`}</div>
         </div>
     )
 }
