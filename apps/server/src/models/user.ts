@@ -2,6 +2,8 @@ import mongoose from 'mongoose'
 import { getModelForClass, prop, ReturnModelType, defaultClasses } from '@typegoose/typegoose'
 import { IUser } from '@/types/oauth'
 
+import { Category } from '@/models/category'
+
 export class User extends defaultClasses.TimeStamps implements IUser {
     public _id: mongoose.Types.ObjectId
 
@@ -19,6 +21,9 @@ export class User extends defaultClasses.TimeStamps implements IUser {
 
     @prop()
     public refreshToken: string
+
+    @prop({ ref: () => Category, type: () => [String], default: [] })
+    public interests: mongoose.Types.Array<Category>
 
     @prop({ default: Date.now() })
     public lastLoggedInAt: Date

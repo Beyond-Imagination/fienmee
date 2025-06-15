@@ -1,10 +1,10 @@
-import mongoose from 'mongoose'
 import { defaultClasses, getModelForClass, prop, ReturnModelType } from '@typegoose/typegoose'
 
 import { CategoryCode, fixedCategory } from '@fienmee/types'
 
 export class Category extends defaultClasses.TimeStamps {
-    public _id: mongoose.Types.ObjectId
+    @prop({ required: true, type: String, enum: Object.values(CategoryCode) })
+    public _id: string
 
     @prop({ required: true })
     public title: string
@@ -12,14 +12,11 @@ export class Category extends defaultClasses.TimeStamps {
     @prop({ default: 'normal' })
     public type: string
 
-    @prop({ required: true, enum: Object.values(CategoryCode).filter(v => typeof v === 'number') })
-    public code: number
-
     public toJSON(): object {
         return {
             _id: this._id,
-            code: this.code,
             title: this.title,
+            type: this.type,
         }
     }
 
@@ -27,7 +24,10 @@ export class Category extends defaultClasses.TimeStamps {
         for (const category of Object.keys(fixedCategory)) {
             const exists = await this.exists(fixedCategory[category])
             if (!exists) {
-                await this.create(fixedCategory[category])
+                await this.create({
+                    _id: category,
+                    ...fixedCategory[category],
+                })
             }
         }
     }
