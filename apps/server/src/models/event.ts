@@ -52,8 +52,8 @@ export class Events extends defaultClasses.TimeStamps {
     @prop()
     public comments: mongoose.Types.ObjectId[]
 
-    @prop({ ref: Category })
-    public category: mongoose.Types.ObjectId[]
+    @prop({ ref: () => Category, type: () => [String] })
+    public category: string[]
 
     @prop()
     public targetAudience: string[]
@@ -84,16 +84,17 @@ export class Events extends defaultClasses.TimeStamps {
 
     public static async findByCategory(
         this: ReturnModelType<typeof Events>,
-        category: mongoose.Types.ObjectId,
+        category: string,
         options: mongoose.PaginateOptions,
     ): Promise<mongoose.PaginateResult<mongoose.PaginateDocument<typeof Events, object, object, mongoose.PaginateOptions>>> {
         return await this.paginate(
-            { category: category },
+            { category: { $in: [category] } },
             {
                 ...options,
                 populate: {
                     path: 'category',
                     select: 'title',
+                    model: 'Category',
                 },
             },
         )

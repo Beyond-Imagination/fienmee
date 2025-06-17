@@ -9,14 +9,13 @@ interface CategoryStore {
 
 export const categoryStore = create<CategoryStore>(set => ({
     category: {
-        _id: '',
+        _id: CategoryCode.MYEVENT,
         title: '',
-        code: CategoryCode.MYEVENT,
     },
     setCategory: category => {
         set({ category })
     },
     clearCategory: () => {
-        set({ category: { _id: '', title: '', code: CategoryCode.MYEVENT } })
+        set({ category: { _id: CategoryCode.MYEVENT, title: '' } })
     },
 }))

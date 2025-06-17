@@ -199,14 +199,13 @@ router.get(`/category/${CategoryCode.HOTEVENT}`, verifyToken, async (req: Reques
 
 router.get('/category/:category', verifyToken, async (req: Request, res: Response) => {
     const options = { sort: { startDate: 1, endDate: 1, createdAt: -1 }, page: Number(req.query.page) || 1, limit: Number(req.query.limit) || 10 }
-    const category = await CategoryModel.getCategoryById(req.params.category)
 
     let result: mongoose.PaginateResult<mongoose.PaginateDocument<typeof Events, object, object, mongoose.PaginateOptions>>
-    if (category.code === CategoryCode.MYEVENT) {
+    if (req.params.category === CategoryCode.MYEVENT) {
         result = await EventsModel.findByAuthor(req.user._id, options)
     } else {
         // TODO: add get hottest events
-        result = await EventsModel.findByCategory(category._id, options)
+        result = await EventsModel.findByCategory(req.params.category, options)
     }
     const events = result.docs.map(event => ({
         ...event.toJSON(),
