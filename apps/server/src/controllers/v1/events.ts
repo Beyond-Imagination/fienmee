@@ -5,6 +5,7 @@ import mongoose from 'mongoose'
 import { CategoryModel, Events, EventsModel, ReviewsModel, CommentsModel, NotificationModel } from '@/models'
 import { verifyToken } from '@/middlewares/auth'
 import { CategoryCode, NotificationType } from '@fienmee/types'
+import { verifyCommentAuthor } from '@/middlewares/events'
 
 const router: Router = asyncify(express.Router())
 
@@ -115,6 +116,18 @@ router.get('/:id/comments', verifyToken, async (req: Request, res: Response) => 
             limit: result.limit,
         },
     })
+})
+
+router.put('/:id/comments/:commentId', verifyToken, verifyCommentAuthor, async (req: Request, res: Response) => {
+    await CommentsModel.updateOne(
+        {
+            _id: req.params.commentId,
+        },
+        {
+            comment: req.body.comment,
+        },
+    )
+    res.sendStatus(204)
 })
 
 router.post('/:id/likes', verifyToken, async (req: Request, res: Response) => {
