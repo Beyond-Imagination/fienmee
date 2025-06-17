@@ -38,7 +38,7 @@ export default function RegisterPage() {
     }, [category])
 
     return (
-        <div className="min-h-screen flex flex-col px-4">
+        <div className="grid items-center justify-items-center min-h-screen">
             <PhotoUploader photos={event.photo ?? []} onAddPhoto={handleAddPhoto} onRemovePhoto={handleRemovePhoto} />
             <EventForm selectedCategories={selectedCategories} photos={event.photo ?? []} initEvent={event} isRegister={true} />
         </div>
