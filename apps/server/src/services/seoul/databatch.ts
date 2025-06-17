@@ -3,7 +3,7 @@ import { logger } from '@/utils/logger'
 import { ICulturalEvent } from '@/types/seoul.data'
 import { SeoulDataUpdateError } from '@/types/errors'
 import { EventsModel } from '@/models'
-import { categoryMapTitleToCode } from '@fienmee/types/api'
+import { CategoryCode, categoryMapTitleToCode } from '@fienmee/types/api'
 
 const BATCH_SIZE = 1000
 
