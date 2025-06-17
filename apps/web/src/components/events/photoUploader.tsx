@@ -74,7 +74,7 @@ const PhotoUploader: React.FC<PhotoUploaderProps> = ({ photos, onAddPhoto, onRem
     }
 
     return (
-        <div className="flex flex-row flex-wrap justify-start items-center w-full overflow-x-auto mt-8 mb-2 px-6 gap-2">
+        <div className="flex flex-row flex-wrap justify-start items-center w-full overflow-x-auto mt-8 mb-2 px-6 gap-4">
             <label
                 htmlFor="photo-upload"
                 className="w-16 h-16 border border-gray-400 rounded-lg flex items-center justify-center cursor-pointer bg-white flex-shrink-0"
