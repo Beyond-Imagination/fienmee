@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react'
+import { useState } from 'react'
+import { useSuspenseQuery } from '@tanstack/react-query'
 
 import { ICategory } from '@fienmee/types'
 import { getEventsCategories } from '@/api/event'
@@ -12,37 +13,22 @@ interface Props {
 }
 
 export function CategorySelectModal({ selectedCategories, handleCategories, isOpen, onClose }: Props) {
-    const [categories, setCategories] = useState<ICategory[]>([])
-    const [selected, setSelected] = useState<Set<ICategory>>(selectedCategories)
+    const [selected, setSelected] = useState<Set<string>>(new Set([...selectedCategories].map(sel => sel._id)))
 
-    useEffect(() => {
-        const fetchCategories = async () => {
-            try {
-                const data = await getEventsCategories()
-                if (!data || !data.categories) {
-                    throw new Error('카테고리 데이터가 없습니다.')
-                }
-                setCategories([...data.favoriteCategories, ...data.categories])
-            } catch (error) {
-                console.error('카테고리 불러오기 실패:', error)
-                throw error // `error.tsx` 자동 실행
-            }
-        }
-        fetchCategories()
-    }, [])
+    const { data } = useSuspenseQuery({
+        queryKey: ['categories'],
+        queryFn: () => getEventsCategories(),
+        refetchOnWindowFocus: false,
+    })
+    const categories = [...data.favoriteCategories, ...data.categories]
 
-    const handleCategory = (category: ICategory, exists: boolean) => {
+    const handleCategory = (category: ICategory) => {
         setSelected(prev => {
             const updated = new Set(prev)
-            if (exists) {
-                for (const cat of updated) {
-                    if (cat._id === category._id) {
-                        updated.delete(cat)
-                        break
-                    }
-                }
+            if (updated.has(category._id)) {
+                updated.delete(category._id)
             } else {
-                updated.add(category)
+                updated.add(category._id)
             }
             return updated
         })
@@ -53,23 +39,20 @@ export function CategorySelectModal({ selectedCategories, handleCategories, isOp
             <div className="flex flex-col h-full p-2 gap-4">
                 <h1 className="text-xl font-bold">카테고리 선택</h1>
                 <ul className="h-[75%] w-full overflow-y-auto">
-                    {categories.map(category => {
-                        const exists = [...selected].some(cat => cat._id === category._id)
-                        return (
-                            <li
-                                key={category._id}
-                                className={`p-2 border-b cursor-pointer ${exists ? 'bg-[#FF9575] text-white' : ''}`}
-                                onClick={() => handleCategory(category, exists)}
-                            >
-                                {category.title}
-                            </li>
-                        )
-                    })}
+                    {categories.map(category => (
+                        <li
+                            key={category._id}
+                            className={`p-2 border-b cursor-pointer ${selected.has(category._id) ? 'bg-[#FF9575] text-white' : ''}`}
+                            onClick={() => handleCategory(category)}
+                        >
+                            {category.title}
+                        </li>
+                    ))}
                 </ul>
                 <button
                     className="w-full bg-[#FF9575] text-white py-3 text-center font-semibold rounded-lg"
                     onClick={() => {
-                        handleCategories(selected)
+                        handleCategories(new Set(categories.filter(cat => selected.has(cat._id))))
                         onClose()
                     }}
                 >
