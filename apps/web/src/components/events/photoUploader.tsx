@@ -74,7 +74,7 @@ const PhotoUploader: React.FC<PhotoUploaderProps> = ({ photos, onAddPhoto, onRem
     }
 
     return (
-        <div className="mt-8 mb-2 px-6 flex items-center gap-4 overflow-x-auto">
+        <div className="flex flex-row flex-wrap justify-start items-center w-full overflow-x-auto mt-8 mb-2 px-6 gap-4">
             <label
                 htmlFor="photo-upload"
                 className="w-16 h-16 border border-gray-400 rounded-lg flex items-center justify-center cursor-pointer bg-white flex-shrink-0"
@@ -82,7 +82,6 @@ const PhotoUploader: React.FC<PhotoUploaderProps> = ({ photos, onAddPhoto, onRem
                 <CameraIcon className="h-10 w-10 object-contain" />
             </label>
             <input type="file" id="photo-upload" accept="image/*" className="hidden" multiple onChange={handlePhotoUpload} disabled={uploading} />
-
             {photos.map((photo, index) => (
                 <div key={index} className="relative w-16 h-16 border border-gray-300 rounded-lg overflow-hidden flex-shrink-0">
                     <img src={photo} alt={`Uploaded ${index}`} className="w-full h-full object-cover" />
@@ -95,7 +94,6 @@ const PhotoUploader: React.FC<PhotoUploaderProps> = ({ photos, onAddPhoto, onRem
                     </button>
                 </div>
             ))}
-
             {uploading && <ClipLoader color="#3b82f6" />}
         </div>
     )
