@@ -130,6 +130,11 @@ router.put('/:id/comments/:commentId', verifyToken, verifyCommentAuthor, async (
     res.sendStatus(204)
 })
 
+router.delete('/:id/comments/:commentId', verifyToken, verifyCommentAuthor, async (req: Request, res: Response) => {
+    await CommentsModel.deleteOne({ _id: req.params.commentId })
+    res.sendStatus(200)
+})
+
 router.post('/:id/likes', verifyToken, async (req: Request, res: Response) => {
     const event = await EventsModel.findById(req.params.id)
 
