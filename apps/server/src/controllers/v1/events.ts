@@ -132,7 +132,8 @@ router.put('/:id/comments/:commentId', verifyToken, verifyCommentAuthor, async (
 
 router.delete('/:id/comments/:commentId', verifyToken, verifyCommentAuthor, async (req: Request, res: Response) => {
     await CommentsModel.deleteOne({ _id: req.params.commentId })
-    res.sendStatus(200)
+    await EventsModel.updateOne({ _id: req.params.id }, { $pull: { comments: new mongoose.Types.ObjectId(req.params.commentId) } })
+    res.sendStatus(204)
 })
 
 router.post('/:id/likes', verifyToken, async (req: Request, res: Response) => {
