@@ -92,4 +92,16 @@ router.delete('/', verifyToken, async (req: Request, res: Response) => {
     res.sendStatus(204)
 })
 
+router.put('/interest', verifyToken, async (req: Request, res: Response) => {
+    const isInterested = req.user.interests.includes(req.body.interest)
+
+    if (isInterested) {
+        await UserModel.removeInterest(req.user._id, req.body.interest)
+    } else {
+        await UserModel.addInterest(req.user._id, req.body.interest)
+    }
+
+    res.sendStatus(204)
+})
+
 export default router

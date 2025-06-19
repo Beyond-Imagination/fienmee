@@ -57,6 +57,14 @@ export class User extends defaultClasses.TimeStamps implements IUser {
     public static async updateUserDeletionStatus(this: ReturnModelType<typeof User>, user: User) {
         return await this.findOneAndUpdate({ _id: user._id }, { isDeleted: user.isDeleted }).exec()
     }
+
+    public static async addInterest(this: ReturnModelType<typeof User>, userId: mongoose.Types.ObjectId, categoryId: string) {
+        return await this.findByIdAndUpdate(userId, { $addToSet: { interests: categoryId } }).exec()
+    }
+
+    public static async removeInterest(this: ReturnModelType<typeof User>, userId: mongoose.Types.ObjectId, categoryId: string) {
+        return await this.findByIdAndUpdate(userId, { $pull: { interests: categoryId } }).exec()
+    }
 }
 
 export const UserModel = getModelForClass(User)
