@@ -6,6 +6,7 @@ import { CategoryModel, Events, EventsModel, ReviewsModel, CommentsModel, Notifi
 import { verifyToken } from '@/middlewares/auth'
 import { CategoryCode, NotificationType } from '@fienmee/types'
 import { verifyCommentAuthor } from '@/middlewares/events'
+import { TransactionError } from '@/types/errors/database'
 
 const router: Router = asyncify(express.Router())
 
@@ -131,9 +132,19 @@ router.put('/:id/comments/:commentId', verifyToken, verifyCommentAuthor, async (
 })
 
 router.delete('/:id/comments/:commentId', verifyToken, verifyCommentAuthor, async (req: Request, res: Response) => {
-    await CommentsModel.deleteOne({ _id: req.params.commentId })
-    await EventsModel.updateOne({ _id: req.params.id }, { $pull: { comments: new mongoose.Types.ObjectId(req.params.commentId) } })
-    res.sendStatus(204)
+    const session = await mongoose.startSession()
+    try {
+        session.startTransaction()
+        await CommentsModel.deleteOne({ _id: req.params.commentId })
+        await EventsModel.updateOne({ _id: req.params.id }, { $pull: { comments: new mongoose.Types.ObjectId(req.params.commentId) } })
+        await session.commitTransaction()
+        res.sendStatus(204)
+    } catch (error) {
+        await session.abortTransaction()
+        throw new TransactionError(error)
+    } finally {
+        await session.endSession()
+    }
 })
 
 router.post('/:id/likes', verifyToken, async (req: Request, res: Response) => {
