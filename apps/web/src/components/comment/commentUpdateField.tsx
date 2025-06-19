@@ -25,7 +25,7 @@ export default function CommentUpdateField({ comment, onSuccess }: Props) {
         return () => {
             document.removeEventListener('mousedown', handleClickOutside)
         }
-    }, [])
+    }, [onSuccess])
 
     const mutation = useMutation({
         mutationFn: (request: IPutEventCommentRequest) => {
