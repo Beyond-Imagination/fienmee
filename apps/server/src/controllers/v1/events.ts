@@ -105,8 +105,13 @@ router.get('/:id/comments', verifyToken, async (req: Request, res: Response) => 
         limit: Number(req.query.limit) || 10,
     }
     const result = await CommentsModel.findByEventId(req.params.id, options)
+    const modifiedDocs = result.docs.map(comment => ({
+        ...comment.toJSON(),
+        isAuthor: comment.get('userId')?.equals(req.user._id),
+        // TODO: add isLiked field
+    }))
     res.status(200).json({
-        comments: result.docs,
+        comments: modifiedDocs,
         page: {
             totalDocs: result.totalDocs,
             totalPages: result.totalPages,

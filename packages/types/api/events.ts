@@ -89,11 +89,25 @@ export interface IPostEventCommentRequest {
     comment: string
 }
 
+export interface IPutEventCommentRequest {
+    uri: {
+        eventId: string
+        commentId: string
+    }
+    body: {
+        comment: string
+    }
+}
+
 export interface IComment {
     _id: string
+    userId: string
     eventId: string
     comment: string
     nickname: string
+    createdAt: Date
+    updatedAt: Date
+    isAuthor: boolean
 }
 
 export interface IGetEventCommentsResponse {
