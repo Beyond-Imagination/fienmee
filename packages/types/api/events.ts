@@ -101,13 +101,12 @@ export interface IPutEventCommentRequest {
 
 export interface IComment {
     _id: string
-    userId: string
     eventId: string
     comment: string
     nickname: string
+    isAuthor: boolean
     createdAt: Date
     updatedAt: Date
-    isAuthor: boolean
 }
 
 export interface IGetEventCommentsResponse {
