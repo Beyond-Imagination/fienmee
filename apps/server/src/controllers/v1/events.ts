@@ -192,6 +192,36 @@ router.get('/category/dates', verifyToken, async (req: Request, res: Response) =
     res.status(200).json({ events: events })
 })
 
+router.get('/category/interest', verifyToken, async (req: Request, res: Response) => {
+    const interests = req.user.interests as unknown as string[]
+
+    if (interests.length === 0) {
+        res.status(200).json({ events: [] })
+        return
+    }
+
+    const options = { sort: { startDate: 1, endDate: 1, createdAt: -1 }, page: Number(req.query.page) || 1, limit: Number(req.query.limit) || 10 }
+    const result = await EventsModel.findByCategory(interests, options)
+
+    const events = result.docs.map(event => ({
+        ...event.toJSON(),
+        isAuthor: event.get('authorId')?.equals(req.user._id),
+        isLiked: event.get('likes')?.includes(req.user._id),
+    }))
+
+    res.status(200).json({
+        events: events,
+        page: {
+            totalDocs: result.totalDocs,
+            totalPages: result.totalPages,
+            hasNextPage: result.hasNextPage,
+            hasPrevPage: result.hasPrevPage,
+            page: result.page,
+            limit: result.limit,
+        },
+    })
+})
+
 router.get(`/category/${CategoryCode.HOTEVENT}`, verifyToken, async (req: Request, res: Response) => {
     const today = new Date()
     const from = req.query.from ? new Date(req.query.from as string) : new Date(today.getFullYear(), today.getMonth(), today.getDate())
@@ -218,7 +248,7 @@ router.get('/category/:category', verifyToken, async (req: Request, res: Respons
         result = await EventsModel.findByAuthor(req.user._id, options)
     } else {
         // TODO: add get hottest events
-        result = await EventsModel.findByCategory(req.params.category, options)
+        result = await EventsModel.findByCategory([req.params.category], options)
     }
     const events = result.docs.map(event => ({
         ...event.toJSON(),
