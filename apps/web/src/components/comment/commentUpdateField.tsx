@@ -35,31 +35,16 @@ export default function CommentUpdateField({ comment, onSuccess }: Props) {
             await queryClient.invalidateQueries({ queryKey: ['comments', comment.eventId] })
             setBody('')
             onSuccess()
-            toast.success(
-                <span>
-                    댓글 수정에 성공하였습니다.
-                    <span style={{ fontSize: 0 }}>{Date.now()}</span>
-                </span>,
-            )
+            toast.success(<span>댓글 수정에 성공하였습니다.</span>)
         },
         onError: () => {
-            toast.error(
-                <span>
-                    댓글 수정에 실패했습니다.
-                    <span style={{ fontSize: 0 }}>{Date.now()}</span>
-                </span>,
-            )
+            toast.error(<span>댓글 수정에 실패했습니다.</span>)
         },
     })
 
     const handleSubmit = () => {
         if (body.trim() === '') {
-            toast.error(
-                <span>
-                    공백만 입력할 수 없습니다.
-                    <span style={{ fontSize: 0 }}>{Date.now()}</span>
-                </span>,
-            )
+            toast.error(<span>공백만 입력할 수 없습니다.</span>)
             return
         }
         const request: IPutEventCommentRequest = {
