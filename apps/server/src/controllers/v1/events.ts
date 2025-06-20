@@ -135,8 +135,8 @@ router.delete('/:id/comments/:commentId', verifyToken, verifyCommentAuthor, asyn
     const session = await mongoose.startSession()
     try {
         session.startTransaction()
-        await CommentsModel.deleteOne({ _id: req.params.commentId })
-        await EventsModel.updateOne({ _id: req.params.id }, { $pull: { comments: new mongoose.Types.ObjectId(req.params.commentId) } })
+        await CommentsModel.deleteOne({ _id: req.params.commentId }, { session })
+        await EventsModel.updateOne({ _id: req.params.id }, { $pull: { comments: new mongoose.Types.ObjectId(req.params.commentId) } }, { session })
         await session.commitTransaction()
         res.sendStatus(204)
     } catch (error) {
