@@ -6,6 +6,7 @@ import {
     IPostEventRequest,
     IPutEventRequest,
     IGetEventCommentsResponse,
+    IPutEventCommentRequest,
 } from '@fienmee/types'
 
 import { SERVER_URL } from '@/config'
@@ -80,6 +81,17 @@ export async function registerEventComments(request: IPostEventCommentRequest) {
     const res = await fetch(`${SERVER_URL}/v1/events/${request.eventId}/comments`, {
         method: 'POST',
         body: JSON.stringify({ comment: request.comment }),
+    })
+    if (!res.ok) {
+        throw await res.json()
+    }
+    return
+}
+
+export async function updateEventComment(request: IPutEventCommentRequest) {
+    const res = await fetch(`${SERVER_URL}/v1/events/${request.uri.eventId}/comments/${request.uri.commentId}`, {
+        method: 'PUT',
+        body: JSON.stringify(request.body),
     })
     if (!res.ok) {
         throw await res.json()
