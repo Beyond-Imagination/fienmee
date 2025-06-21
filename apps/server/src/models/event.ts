@@ -84,11 +84,11 @@ export class Events extends defaultClasses.TimeStamps {
 
     public static async findByCategory(
         this: ReturnModelType<typeof Events>,
-        category: string,
+        category: string[],
         options: mongoose.PaginateOptions,
     ): Promise<mongoose.PaginateResult<mongoose.PaginateDocument<typeof Events, object, object, mongoose.PaginateOptions>>> {
         return await this.paginate(
-            { category: { $in: [category] } },
+            { category: { $in: category } },
             {
                 ...options,
                 populate: {
