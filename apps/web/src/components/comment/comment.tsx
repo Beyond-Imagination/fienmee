@@ -1,6 +1,9 @@
 import { useState } from 'react'
 import { IComment } from '@fienmee/types'
+import { useRouter } from 'next/navigation'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 
+import { deleteEventCommentById } from '@/api/event'
 import CommentOption from '@/components/comment/commentOption'
 import CommentUpdateField from '@/components/comment/commentUpdateField'
 import { UnlikeIcon } from '@/components/icon'
@@ -10,7 +13,24 @@ interface Props {
 }
 
 export function EventComment({ comment }: Props) {
+    const router = useRouter()
+    const queryClient = useQueryClient()
     const [isEdit, setIsEdit] = useState<boolean>(false)
+
+    const deleteMutation = useMutation({
+        mutationFn: ({ id, commentId }: { id: string; commentId: string }) => deleteEventCommentById(id, commentId),
+        onSuccess: async () => {
+            await queryClient.invalidateQueries({ queryKey: ['comments', comment.eventId] })
+            router.refresh()
+        },
+    })
+
+    const handleDelete = () => {
+        console.log('handle delete')
+        deleteMutation.mutate({ id: comment.eventId, commentId: comment._id })
+        console.log('handle delete ok')
+    }
+
     return (
         <div className="flex flex-col gap-6 py-2 relative">
             <div className="flex justify-between items-center">
@@ -24,7 +44,7 @@ export function EventComment({ comment }: Props) {
                 </div>
                 <div className="flex flex-row justify-center items-center gap-2">
                     <UnlikeIcon width="1.5rem" height="1.25rem" />
-                    {comment.isAuthor && <CommentOption onEdit={() => setIsEdit(true)} />}
+                    {comment.isAuthor && <CommentOption onEdit={() => setIsEdit(true)} onDelete={handleDelete} />}
                 </div>
             </div>
         </div>

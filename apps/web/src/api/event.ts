@@ -119,3 +119,16 @@ export async function getEventCommentsByEventId(eventId: string, page: number = 
     }
     return res.json()
 }
+
+export async function deleteEventCommentById(id: string, commentId: string): Promise<void> {
+    console.log('api 보내기 직전')
+    const res = await fetch(`${SERVER_URL}/v1/events/${id}/comments/${commentId}`, {
+        method: 'DELETE',
+    })
+
+    if (!res.ok) {
+        console.log('api 완료')
+        throw await res.json()
+    }
+    return
+}
