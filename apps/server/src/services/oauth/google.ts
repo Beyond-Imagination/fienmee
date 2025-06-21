@@ -1,9 +1,6 @@
 import fetch from 'node-fetch'
 
-import {
-    GoogleNetworkError,
-    GoogleUserInformationError,
-} from '@/types/errors'
+import { GoogleNetworkError, GoogleUserInformationError } from '@/types/errors'
 import { ICredentials, IOAuth, IUser, getUserFromGoogleResponse } from '@/types/oauth'
 
 export class Google implements IOAuth {
