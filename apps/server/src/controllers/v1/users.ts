@@ -9,6 +9,7 @@ import { UserModel } from '@/models'
 import { issueAccessToken, getOAuthUser, expireJwt, issueRefreshToken, unlinkUser } from '@/services/oauth'
 import { verifyToken } from '@/middlewares/auth'
 import { registerUser } from '@/services/user'
+import axios from 'axios'
 
 const router: Router = asyncify(express.Router())
 
@@ -90,6 +91,25 @@ router.delete('/', verifyToken, async (req: Request, res: Response) => {
     expireJwt(jwt)
 
     res.sendStatus(204)
+})
+
+router.post('/google-token', async (req: Request, res: Response) => {
+    const serverAuthCode = req.body.code as string
+
+    const params = new URLSearchParams()
+    params.append('code', serverAuthCode)
+    params.append('client_id', process.env.GOOGLE_CLIENT_ID!)
+    params.append('client_secret', process.env.GOOGLE_CLIENT_SECRET!)
+    params.append('redirect_uri', '')
+    params.append('grant_type', 'authorization_code')
+
+    const response = await axios.post('https://oauth2.googleapis.com/token', params.toString(), {
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+    })
+
+    res.json(response.data.refresh_token)
 })
 
 export default router

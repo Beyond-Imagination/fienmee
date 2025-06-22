@@ -2,6 +2,10 @@ import { Image, StyleSheet, TouchableOpacity, Text } from 'react-native'
 import React from 'react'
 import { useNavigation } from '@react-navigation/native'
 import { LoginScreenProps } from '@/types'
+import { GoogleSignin, SignInSuccessResponse } from '@react-native-google-signin/google-signin'
+import { isErrorResponse } from '@fienmee/types'
+import { getGoogleRefreshToken, login } from '@/api'
+import { setToken } from '@/stores'
 
 const styles = StyleSheet.create({
     button: {
@@ -40,9 +44,34 @@ export function NaverOauthLogin() {
 
 export function GoogleOauthLogin() {
     const navigation = useNavigation<LoginScreenProps['navigation']>()
-    const onPress = () => {
-        // TODO: implement logic
-        navigation.navigate('WebView')
+    const onPress = async () => {
+        const userInfo = (await GoogleSignin.signIn()) as SignInSuccessResponse & { serverAuthCode?: string }
+        const serverAuthCode = userInfo.data.serverAuthCode
+        if (!serverAuthCode) {
+            throw new Error('Server Auth Code is missing')
+        }
+
+        const tokens = await GoogleSignin.getTokens()
+        const refreshToken = await getGoogleRefreshToken(serverAuthCode)
+        try {
+            const credential = await login({
+                ...tokens,
+                refreshToken: refreshToken,
+                provider: 'GOOGLE',
+            })
+            await setToken(credential)
+            navigation.navigate('WebView')
+        } catch (error) {
+            if (isErrorResponse(error) && (error.code === 4100 || error.code === 4101)) {
+                navigation.navigate('Register', {
+                    accessToken: tokens.accessToken,
+                    refreshToken: refreshToken,
+                    provider: 'GOOGLE',
+                })
+            } else {
+                navigation.navigate('Error')
+            }
+        }
     }
 
     return (
