@@ -8,6 +8,11 @@ import { getUserDailyScheduleCount } from '@/services/schedule'
 const router: Router = asyncify(express.Router())
 router.use(middlewares.auth.verifyToken)
 
+const parseKSTDate = (str: string, hour = 0, min = 0, sec = 0) => {
+    const [year, month, day] = str.split('.').map(Number)
+    return new Date(Date.UTC(year, month - 1, day, hour - 9, min, sec))
+}
+
 router.post('/', middlewares.schedules.addScheduleMiddleware, async (req: Request, res: Response) => {
     const { name, eventId, startDate, endDate, address, location, description, isAllDay } = req.body
     const schedule = await ScheduleModel.create({
@@ -32,9 +37,12 @@ router.get('/', async (req: Request, res: Response) => {
         limit: Number(req.query.limit) || 100,
     }
 
+    const fromStr = req.query.from as string
+    const toStr = req.query.to as string
+
     const filterOption = {
-        from: new Date(req.query.from as string) || new Date(0),
-        to: new Date(req.query.to as string) || new Date(),
+        from: fromStr ? parseKSTDate(fromStr, 0, 0, 0) : new Date(0),
+        to: toStr ? parseKSTDate(toStr, 23, 59, 59) : new Date(),
     }
 
     const userId = req.user?._id.toString()
@@ -44,8 +52,11 @@ router.get('/', async (req: Request, res: Response) => {
 })
 
 router.get('/dailyCount', async (req: Request, res: Response) => {
-    const from = new Date(req.query.from as string) || new Date(0)
-    const to = new Date(req.query.to as string) || new Date()
+    const fromStr = req.query.from as string
+    const toStr = req.query.to as string
+
+    const from = fromStr ? parseKSTDate(fromStr, 0, 0, 0) : new Date(0)
+    const to = toStr ? parseKSTDate(toStr, 23, 59, 59) : new Date()
 
     const dailyScheduleCount = await getUserDailyScheduleCount(req.user, from, to)
     res.status(200).json(dailyScheduleCount)
