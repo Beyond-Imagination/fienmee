@@ -15,10 +15,9 @@ function getKSTDateString(date: Date): string {
     return `${year}.${month}.${day}`
 }
 
-function toKSTISOString(date: Date, hour = 0, minute = 0, second = 0): string {
-    const kst = new Date(date)
-    kst.setHours(hour - 9, minute, second, 0)
-    return new Date(kst).toISOString()
+function toUTCISOStringFromKST(date: Date): string {
+    const utcDate = new Date(date.getTime() - 9 * 60 * 60 * 1000)
+    return utcDate.toISOString()
 }
 
 export async function getSchedulesByDate(date: Date, page: number, limit: number): Promise<IGetScheduleListResponse> {
@@ -38,8 +37,8 @@ export async function getSchedulesByDate(date: Date, page: number, limit: number
 export async function registerSchedule(schedule: IMakeNewScheduleRequest): Promise<IMakeNewScheduleResponse> {
     const adjustedSchedule = {
         ...schedule,
-        startDate: toKSTISOString(new Date(schedule.startDate)),
-        endDate: toKSTISOString(new Date(schedule.endDate)),
+        startDate: toUTCISOStringFromKST(new Date(schedule.startDate)),
+        endDate: toUTCISOStringFromKST(new Date(schedule.endDate)),
     }
 
     const res = await fetch(`${SERVER_URL}/v1/schedules`, {
@@ -67,8 +66,8 @@ export async function getScheduleDetail(scheduleId: string): Promise<IScheduleIt
 export async function updateSchedule(schedule: IScheduleItem): Promise<IScheduleItem> {
     const adjustedSchedule = {
         ...schedule,
-        startDate: toKSTISOString(new Date(schedule.startDate)),
-        endDate: toKSTISOString(new Date(schedule.endDate)),
+        startDate: toUTCISOStringFromKST(new Date(schedule.startDate)),
+        endDate: toUTCISOStringFromKST(new Date(schedule.endDate)),
     }
 
     const res = await fetch(`${SERVER_URL}/v1/schedules/${schedule._id}`, {
