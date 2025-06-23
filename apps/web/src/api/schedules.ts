@@ -7,22 +7,12 @@ import {
     IScheduleItem,
 } from '@fienmee/types'
 
-function getKSTDateString(date: Date): string {
-    const kstDate = new Date(date.toLocaleString('en-US', { timeZone: 'Asia/Seoul' }))
-    const year = kstDate.getFullYear()
-    const month = String(kstDate.getMonth() + 1).padStart(2, '0')
-    const day = String(kstDate.getDate()).padStart(2, '0')
-    return `${year}.${month}.${day}`
-}
-
-function toUTCISOStringFromKST(date: Date): string {
-    const utcDate = new Date(date.getTime() - 9 * 60 * 60 * 1000)
-    return utcDate.toISOString()
-}
-
 export async function getSchedulesByDate(date: Date, page: number, limit: number): Promise<IGetScheduleListResponse> {
-    const from = getKSTDateString(date)
-    const to = getKSTDateString(date)
+    const year = date.getFullYear()
+    const month = date.getMonth() + 1
+    const day = date.getDate()
+    const from = `${year}.${month}.${day}`
+    const to = `${year}.${month}.${day}`
 
     const res = await fetch(`${SERVER_URL}/v1/schedules?page=${page}&limit=${limit}&from=${from}&to=${to}`, {
         method: 'GET',
@@ -35,17 +25,10 @@ export async function getSchedulesByDate(date: Date, page: number, limit: number
 }
 
 export async function registerSchedule(schedule: IMakeNewScheduleRequest): Promise<IMakeNewScheduleResponse> {
-    const adjustedSchedule = {
-        ...schedule,
-        startDate: toUTCISOStringFromKST(new Date(schedule.startDate)),
-        endDate: toUTCISOStringFromKST(new Date(schedule.endDate)),
-    }
-
     const res = await fetch(`${SERVER_URL}/v1/schedules`, {
         method: 'POST',
-        body: JSON.stringify(adjustedSchedule),
+        body: JSON.stringify(schedule),
     })
-
     if (!res.ok) {
         throw await res.json()
     }
@@ -56,7 +39,6 @@ export async function getScheduleDetail(scheduleId: string): Promise<IScheduleIt
     const res = await fetch(`${SERVER_URL}/v1/schedules/${scheduleId}`, {
         method: 'GET',
     })
-
     if (!res.ok) {
         throw await res.json()
     }
@@ -64,17 +46,10 @@ export async function getScheduleDetail(scheduleId: string): Promise<IScheduleIt
 }
 
 export async function updateSchedule(schedule: IScheduleItem): Promise<IScheduleItem> {
-    const adjustedSchedule = {
-        ...schedule,
-        startDate: toUTCISOStringFromKST(new Date(schedule.startDate)),
-        endDate: toUTCISOStringFromKST(new Date(schedule.endDate)),
-    }
-
     const res = await fetch(`${SERVER_URL}/v1/schedules/${schedule._id}`, {
         method: 'PUT',
-        body: JSON.stringify(adjustedSchedule),
+        body: JSON.stringify(schedule),
     })
-
     if (!res.ok) {
         throw await res.json()
     }
@@ -82,13 +57,9 @@ export async function updateSchedule(schedule: IScheduleItem): Promise<ISchedule
 }
 
 export async function getDailyScheduleCount(from: Date, to: Date): Promise<IGetDailyScheduleCountResponse> {
-    const fromStr = getKSTDateString(from)
-    const toStr = getKSTDateString(to)
-
-    const res = await fetch(`${SERVER_URL}/v1/schedules/dailyCount?from=${fromStr}&to=${toStr}`, {
+    const res = await fetch(`${SERVER_URL}/v1/schedules/dailyCount?from=${from}&to=${to}`, {
         method: 'GET',
     })
-
     if (!res.ok) {
         throw await res.json()
     }
