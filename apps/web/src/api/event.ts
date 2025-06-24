@@ -7,6 +7,7 @@ import {
     IPutEventRequest,
     IGetEventCommentsResponse,
     IPutEventCommentRequest,
+    IDeleteCommentRequest,
 } from '@fienmee/types'
 
 import { SERVER_URL } from '@/config'
@@ -120,8 +121,8 @@ export async function getEventCommentsByEventId(eventId: string, page: number = 
     return res.json()
 }
 
-export async function deleteEventCommentById(id: string, commentId: string): Promise<void> {
-    const res = await fetch(`${SERVER_URL}/v1/events/${id}/comments/${commentId}`, {
+export async function deleteEventCommentById(request: IDeleteCommentRequest): Promise<void> {
+    const res = await fetch(`${SERVER_URL}/v1/events/${request.eventId}/comments/${request.commentId}`, {
         method: 'DELETE',
     })
 

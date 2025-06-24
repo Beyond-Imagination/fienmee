@@ -120,3 +120,8 @@ export interface IGetEventCommentsResponse {
     }
     comments: IComment[]
 }
+
+export interface IDeleteCommentRequest {
+    eventId: string
+    commentId: string
+}

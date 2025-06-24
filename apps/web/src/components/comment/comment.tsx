@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { IComment } from '@fienmee/types'
+import { IComment, IDeleteCommentRequest } from '@fienmee/types'
 import { useRouter } from 'next/navigation'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 
@@ -18,7 +18,7 @@ export function EventComment({ comment }: Props) {
     const [isEdit, setIsEdit] = useState<boolean>(false)
 
     const deleteMutation = useMutation({
-        mutationFn: ({ id, commentId }: { id: string; commentId: string }) => deleteEventCommentById(id, commentId),
+        mutationFn: (request: IDeleteCommentRequest) => deleteEventCommentById(request),
         onSuccess: async () => {
             await queryClient.invalidateQueries({ queryKey: ['comments', comment.eventId] })
             router.refresh()
@@ -26,7 +26,10 @@ export function EventComment({ comment }: Props) {
     })
 
     const handleDelete = () => {
-        deleteMutation.mutate({ id: comment.eventId, commentId: comment._id })
+        deleteMutation.mutate({
+            eventId: comment.eventId,
+            commentId: comment._id,
+        })
     }
 
     return (
