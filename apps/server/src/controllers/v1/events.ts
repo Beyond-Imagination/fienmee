@@ -87,7 +87,7 @@ router.post('/:id/comments', verifyToken, async (req: Request, res: Response) =>
     })
 
     const event = await EventsModel.findByIdAndUpdate(req.params.id, { $push: { comments: comment._id } })
-    if (!event.authorId.equals(req.user._id)) {
+    if (event.authorId && !event.authorId.equals(req.user._id)) {
         await NotificationModel.createAndSendNotification(
             NotificationType.COMMENT,
             event.authorId,
@@ -159,7 +159,7 @@ router.post('/:id/likes', verifyToken, async (req: Request, res: Response) => {
     const update = prevLiked ? { $pull: { likes: req.user._id } } : { $push: { likes: req.user._id } }
 
     await EventsModel.updateOne({ _id: req.params.id }, update)
-    if (!event.authorId.equals(req.user._id) && !prevLiked) {
+    if (event.authorId && !prevLiked && !event.authorId.equals(req.user._id)) {
         await NotificationModel.createAndSendNotification(
             NotificationType.LIKE,
             event.authorId,
@@ -182,7 +182,7 @@ router.post('/:id/reviews', verifyToken, async (req: Request, res: Response) => 
         body: req.body.body,
     })
 
-    if (!event.authorId.equals(req.user._id)) {
+    if (event.authorId && !event.authorId.equals(req.user._id)) {
         await NotificationModel.createAndSendNotification(
             NotificationType.REVIEW,
             event.authorId,
