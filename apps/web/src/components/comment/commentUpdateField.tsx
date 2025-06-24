@@ -35,7 +35,7 @@ export default function CommentUpdateField({ comment, onSuccess }: Props) {
             await queryClient.invalidateQueries({ queryKey: ['comments', comment.eventId] })
             setBody('')
             onSuccess()
-            toast.success(<span>댓글이 성공적으로 삭제되었어요.</span>)
+            toast.success(<span>댓글이 성공적으로 수정되었어요.</span>)
         },
         onError: () => {
             toast.error(<span>댓글 수정을 실패했어요. 다시 한 번 시도해주세요.</span>)
