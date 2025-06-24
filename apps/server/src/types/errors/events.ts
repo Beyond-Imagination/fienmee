@@ -15,3 +15,19 @@ export class CommentNotFound extends APIError {
         Error.captureStackTrace(this, CommentNotFound)
     }
 }
+
+export class EventNotFound extends APIError {
+    constructor(cause: Error | string = null) {
+        super(404, 6002, 'invalid event id error', cause)
+        Object.setPrototypeOf(this, EventNotFound.prototype)
+        Error.captureStackTrace(this, EventNotFound)
+    }
+}
+
+export class UnauthorizedEvent extends APIError {
+    constructor(cause: Error | string = null) {
+        super(401, 6003, 'unauthorized event error', cause)
+        Object.setPrototypeOf(this, UnauthorizedEvent.prototype)
+        Error.captureStackTrace(this, UnauthorizedEvent)
+    }
+}
