@@ -5,9 +5,8 @@ import {
     IPostEventCommentRequest,
     IPostEventRequest,
     IPutEventRequest,
-    IGetPresignedUrlRequest,
-    IGetPresignedUrlResponse,
     IGetEventCommentsResponse,
+    IPutEventCommentRequest,
 } from '@fienmee/types'
 
 import { SERVER_URL } from '@/config'
@@ -89,29 +88,15 @@ export async function registerEventComments(request: IPostEventCommentRequest) {
     return
 }
 
-export async function getPresignedUrl(request: IGetPresignedUrlRequest): Promise<IGetPresignedUrlResponse> {
-    const query = new URLSearchParams(request as unknown as Record<string, string>).toString()
-    const res = await fetch(`${SERVER_URL}/v1/events/presigned-url?${query}`, {
-        method: 'GET',
-    })
-
-    if (!res.ok) {
-        throw await res.json()
-    }
-
-    return res.json()
-}
-
-export async function uploadToS3(presignedUrl: string, file: File): Promise<void> {
-    const res = await fetch(presignedUrl, {
+export async function updateEventComment(request: IPutEventCommentRequest) {
+    const res = await fetch(`${SERVER_URL}/v1/events/${request.uri.eventId}/comments/${request.uri.commentId}`, {
         method: 'PUT',
-        body: file,
-        headers: { 'Content-Type': file.type },
+        body: JSON.stringify(request.body),
     })
-
     if (!res.ok) {
         throw await res.json()
     }
+    return
 }
 
 export async function getEventDetail(eventId: string): Promise<IEvent> {

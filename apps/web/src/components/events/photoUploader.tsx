@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react'
 import CameraIcon from '@/components/icon/Camera'
-import { getPresignedUrl, uploadToS3 } from '@/api/event'
+import { getUploadUrl, getViewUrl, uploadToS3 } from '@/api/s3'
 import { ClipLoader } from 'react-spinners'
 import { toast } from 'react-toastify'
 
@@ -12,12 +12,15 @@ interface PhotoUploaderProps {
 
 const uploadFile = async (file: File): Promise<string | null> => {
     try {
-        const { presignedUrl } = await getPresignedUrl({
+        const { presignedUrl: uploadUrl } = await getUploadUrl({
             fileName: file.name,
             fileType: file.type,
         })
-        await uploadToS3(presignedUrl, file)
-        return presignedUrl.split('?')[0]
+        const key = uploadUrl.split('?')[0].split('/').pop()!
+        await uploadToS3(uploadUrl, file)
+
+        const { presignedUrl: viewUrl } = await getViewUrl(key)
+        return viewUrl
     } catch (error) {
         console.error(error)
         return null
@@ -71,7 +74,7 @@ const PhotoUploader: React.FC<PhotoUploaderProps> = ({ photos, onAddPhoto, onRem
     }
 
     return (
-        <div className="mt-8 mb-2 px-6 flex items-center gap-4 overflow-x-auto">
+        <div className="flex flex-row flex-wrap justify-start items-center w-full overflow-x-auto mt-8 mb-2 px-6 gap-4">
             <label
                 htmlFor="photo-upload"
                 className="w-16 h-16 border border-gray-400 rounded-lg flex items-center justify-center cursor-pointer bg-white flex-shrink-0"
@@ -79,7 +82,6 @@ const PhotoUploader: React.FC<PhotoUploaderProps> = ({ photos, onAddPhoto, onRem
                 <CameraIcon className="h-10 w-10 object-contain" />
             </label>
             <input type="file" id="photo-upload" accept="image/*" className="hidden" multiple onChange={handlePhotoUpload} disabled={uploading} />
-
             {photos.map((photo, index) => (
                 <div key={index} className="relative w-16 h-16 border border-gray-300 rounded-lg overflow-hidden flex-shrink-0">
                     <img src={photo} alt={`Uploaded ${index}`} className="w-full h-full object-cover" />

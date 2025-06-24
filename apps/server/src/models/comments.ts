@@ -46,8 +46,8 @@ export class Comments extends defaultClasses.TimeStamps {
             page: number
             limit: number
         },
-    ) {
-        return this.paginate({ eventId: eventId }, options)
+    ): Promise<mongoose.PaginateResult<mongoose.PaginateDocument<typeof Comments, object, object, mongoose.PaginateOptions>>> {
+        return await this.paginate({ eventId: eventId }, options)
     }
 }
 

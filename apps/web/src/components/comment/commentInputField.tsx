@@ -1,5 +1,8 @@
 import React, { useState } from 'react'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+
 import { registerEventComments } from '@/api/event'
+import { IPostEventCommentRequest } from '@fienmee/types'
 
 interface Props {
     eventId: string
@@ -7,22 +10,32 @@ interface Props {
 
 export default function EventCommentInput({ eventId }: Props) {
     const [comment, setComment] = useState('')
+    const queryClient = useQueryClient()
+    const mutation = useMutation({
+        mutationFn: (request: IPostEventCommentRequest) => {
+            return registerEventComments(request)
+        },
+        onSuccess: async () => {
+            await queryClient.invalidateQueries({ queryKey: ['comments', eventId] })
+            setComment('')
+        },
+        onError: () => {
+            alert('댓글 등록에 실패했습니다.')
+        },
+    })
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        const { value } = e.target
-        setComment(value)
+        setComment(e.target.value)
     }
 
-    const handleSubmit = async () => {
-        if (comment === '') return
-        try {
-            await registerEventComments({
-                eventId: eventId,
-                comment: comment,
-            })
-            setComment('')
-        } catch {
-            alert('댓글 등록에 실패했습니다.')
+    const handleSubmit = () => {
+        if (comment.trim() === '') {
+            return
         }
+        const request: IPostEventCommentRequest = {
+            eventId: eventId,
+            comment: comment,
+        }
+        mutation.mutate(request)
     }
 
     return (

@@ -8,8 +8,12 @@ import {
 } from '@fienmee/types'
 
 export async function getSchedulesByDate(date: Date, page: number, limit: number): Promise<IGetScheduleListResponse> {
-    const from = `${date.getFullYear()}.${date.getMonth()}.${date.getDate()}`
-    const to = `${date.getFullYear()}.${date.getMonth()}.${date.getDate()}`
+    const year = date.getFullYear()
+    const month = date.getMonth() + 1
+    const day = date.getDate()
+    const from = `${year}.${month}.${day}`
+    const to = `${year}.${month}.${day}`
+
     const res = await fetch(`${SERVER_URL}/v1/schedules?page=${page}&limit=${limit}&from=${from}&to=${to}`, {
         method: 'GET',
     })
@@ -60,4 +64,12 @@ export async function getDailyScheduleCount(from: Date, to: Date): Promise<IGetD
         throw await res.json()
     }
     return res.json()
+}
+
+export const deleteSchedule = async (scheduleId: string) => {
+    const res = await fetch(`${SERVER_URL}/v1/schedules/${scheduleId}`, {
+        method: 'DELETE',
+    })
+
+    if (!res.ok) throw new Error('삭제 실패')
 }

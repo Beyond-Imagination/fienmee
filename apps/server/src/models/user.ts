@@ -2,6 +2,8 @@ import mongoose from 'mongoose'
 import { getModelForClass, prop, ReturnModelType, defaultClasses } from '@typegoose/typegoose'
 import { IUser } from '@/types/oauth'
 
+import { Category } from '@/models/category'
+
 export class User extends defaultClasses.TimeStamps implements IUser {
     public _id: mongoose.Types.ObjectId
 
@@ -19,6 +21,9 @@ export class User extends defaultClasses.TimeStamps implements IUser {
 
     @prop()
     public refreshToken: string
+
+    @prop({ ref: () => Category, type: () => [String], default: [] })
+    public interests: mongoose.Types.Array<Category>
 
     @prop({ default: Date.now() })
     public lastLoggedInAt: Date
@@ -51,6 +56,14 @@ export class User extends defaultClasses.TimeStamps implements IUser {
 
     public static async updateUserDeletionStatus(this: ReturnModelType<typeof User>, user: User) {
         return await this.findOneAndUpdate({ _id: user._id }, { isDeleted: user.isDeleted }).exec()
+    }
+
+    public static async addInterest(this: ReturnModelType<typeof User>, userId: mongoose.Types.ObjectId, categoryId: string): Promise<User> {
+        return await this.findByIdAndUpdate(userId, { $addToSet: { interests: categoryId } }, { new: true }).exec()
+    }
+
+    public static async removeInterest(this: ReturnModelType<typeof User>, userId: mongoose.Types.ObjectId, categoryId: string): Promise<User> {
+        return await this.findByIdAndUpdate(userId, { $pull: { interests: categoryId } }, { new: true }).exec()
     }
 }
 

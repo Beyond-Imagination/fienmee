@@ -1,26 +1,41 @@
 export enum CategoryCode {
-    MYEVENT = 1,
-    HOTEVENT,
-    GAME,
-    TECHNOLOGY,
-    MOVIE_TV,
-    ANIME,
-    ARTS,
-    BUSINESS,
-    COLLECTIBLES,
-    EDUCATION,
-    CAREER,
-    FASHION_BEAUTY,
-    FOOD_DRINKS,
-    HOME,
-    GARDEN,
-    MUSIC,
-    NATURE_OUTDOORS,
-    SCIENCE,
-    SPORTS,
-    VEHICLES,
-    WELLNESS,
-    OTHERS,
+    MYEVENT = 'MYEVENT',
+    HOTEVENT = 'HOTEVENT',
+    GAME = 'GAME',
+    TECHNOLOGY = 'TECHNOLOGY',
+    MOVIE_TV = 'MOVIE_TV',
+    ANIME = 'ANIME',
+    ARTS = 'ARTS',
+    BUSINESS = 'BUSINESS',
+    COLLECTIBLES = 'COLLECTIBLES',
+    EDUCATION = 'EDUCATION',
+    CAREER = 'CAREER',
+    FASHION_BEAUTY = 'FASHION_BEAUTY',
+    FOOD_DRINKS = 'FOOD_DRINKS',
+    HOME = 'HOME',
+    GARDEN = 'GARDEN',
+    MUSIC = 'MUSIC',
+    NATURE_OUTDOORS = 'NATURE_OUTDOORS',
+    SCIENCE = 'SCIENCE',
+    SPORTS = 'SPORTS',
+    VEHICLES = 'VEHICLES',
+    WELLNESS = 'WELLNESS',
+    OTHERS = 'OTHERS',
+}
+
+export const categoryMapTitleToCode = {
+    영화: CategoryCode.MOVIE_TV,
+    연극: CategoryCode.ARTS,
+    '전시/미술': CategoryCode.ARTS,
+    '축제-문화/예술': CategoryCode.ARTS,
+    '교육/체험': CategoryCode.EDUCATION,
+    '축제-자연/경관': CategoryCode.NATURE_OUTDOORS,
+    국악: CategoryCode.MUSIC,
+    '독주/독창회': CategoryCode.MUSIC,
+    '뮤지컬/오페라': CategoryCode.MUSIC,
+    무용: CategoryCode.MUSIC,
+    콘서트: CategoryCode.MUSIC,
+    클래식: CategoryCode.MUSIC,
 }
 
 export const fixedCategory = {
@@ -51,7 +66,6 @@ export const fixedCategory = {
 export interface ICategory {
     _id: string
     title: string
-    code: CategoryCode
 }
 
 export interface IGetEventCategoriesResponse {

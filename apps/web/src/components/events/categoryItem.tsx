@@ -18,14 +18,14 @@ export function CategoryItem({ category, isFavorites }: Props) {
         setCategory(category)
         setTitle(category.title)
     }
-    if (category.code === CategoryCode.MYEVENT) {
+    if (category._id === CategoryCode.MYEVENT) {
         return (
             <Link className="flex flex-row w-full items-center justify-start p-4 gap-4" href={`/events/category`} onClick={onClick}>
                 <WrittenCategoryIcon width="2.5rem" height="2.5rem" />
                 <div className="text-3xl text-center">{category.title}</div>
             </Link>
         )
-    } else if (category.code === CategoryCode.HOTEVENT) {
+    } else if (category._id === CategoryCode.HOTEVENT) {
         return (
             <Link className="flex flex-row w-full items-center justify-start p-4 gap-4" href={`/events/category`} onClick={onClick}>
                 <HottestCategoryIcon width="2.5rem" height="2.5rem" />

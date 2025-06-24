@@ -70,5 +70,6 @@ const useCommentsQuery = ({ eventId, startPage }: UseCommentsQueryProps) => {
             }
             return undefined
         },
+        staleTime: 1000 * 30,
     })
 }

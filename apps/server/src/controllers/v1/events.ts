@@ -5,25 +5,10 @@ import mongoose from 'mongoose'
 import { CategoryModel, Events, EventsModel, ReviewsModel, CommentsModel, NotificationModel } from '@/models'
 import { verifyToken } from '@/middlewares/auth'
 import { CategoryCode, NotificationType } from '@fienmee/types'
-import { s3 } from '@/services/aws'
-import { AWS_S3_BUCKET } from '@/config'
+import { verifyCommentAuthor } from '@/middlewares/events'
+import { TransactionError } from '@/types/errors/database'
 
 const router: Router = asyncify(express.Router())
-
-router.get('/presigned-url', async (req, res) => {
-    const fileName = String(req.query.fileName)
-    const fileType = String(req.query.fileType)
-
-    const params = {
-        Bucket: AWS_S3_BUCKET!,
-        Key: `${Date.now()}-${fileName}`,
-        Expires: 3600,
-        ContentType: fileType,
-    }
-
-    const presignedUrl = await s3.getSignedUrlPromise('putObject', params)
-    res.json({ presignedUrl })
-})
 
 router.post('/category/initialize', async (req: Request, res: Response) => {
     await CategoryModel.initialize()
@@ -86,7 +71,11 @@ router.delete('/:id', async (req: Request, res: Response) => {
 router.get('/:id', verifyToken, async (req: Request, res: Response) => {
     const event = await EventsModel.findById(req.params.id)
 
-    res.status(200).json({ ...event, isAuthor: event.authorId.equals(req.user._id) })
+    res.status(200).json({
+        ...event.toJSON(),
+        isAuthor: event.get('authorId')?.equals(req.user._id),
+        isLiked: event.get('likes')?.includes(req.user._id),
+    })
 })
 
 router.post('/:id/comments', verifyToken, async (req: Request, res: Response) => {
@@ -117,8 +106,13 @@ router.get('/:id/comments', verifyToken, async (req: Request, res: Response) => 
         limit: Number(req.query.limit) || 10,
     }
     const result = await CommentsModel.findByEventId(req.params.id, options)
+    const modifiedDocs = result.docs.map(comment => ({
+        ...comment.toJSON(),
+        isAuthor: comment.get('userId')?.equals(req.user._id),
+        // TODO: add isLiked field
+    }))
     res.status(200).json({
-        comments: result.docs,
+        comments: modifiedDocs,
         page: {
             totalDocs: result.totalDocs,
             totalPages: result.totalPages,
@@ -128,6 +122,34 @@ router.get('/:id/comments', verifyToken, async (req: Request, res: Response) => 
             limit: result.limit,
         },
     })
+})
+
+router.put('/:id/comments/:commentId', verifyToken, verifyCommentAuthor, async (req: Request, res: Response) => {
+    await CommentsModel.updateOne(
+        {
+            _id: req.params.commentId,
+        },
+        {
+            comment: req.body.comment,
+        },
+    )
+    res.sendStatus(204)
+})
+
+router.delete('/:id/comments/:commentId', verifyToken, verifyCommentAuthor, async (req: Request, res: Response) => {
+    const session = await mongoose.startSession()
+    try {
+        session.startTransaction()
+        await CommentsModel.deleteOne({ _id: req.params.commentId }, { session })
+        await EventsModel.updateOne({ _id: req.params.id }, { $pull: { comments: new mongoose.Types.ObjectId(req.params.commentId) } }, { session })
+        await session.commitTransaction()
+        res.sendStatus(204)
+    } catch (error) {
+        await session.abortTransaction()
+        throw new TransactionError(error)
+    } finally {
+        await session.endSession()
+    }
 })
 
 router.post('/:id/likes', verifyToken, async (req: Request, res: Response) => {
@@ -175,8 +197,9 @@ router.post('/:id/reviews', verifyToken, async (req: Request, res: Response) => 
 })
 
 router.get('/category/dates', verifyToken, async (req: Request, res: Response) => {
-    const from = new Date(req.query.from as string)
-    const to = new Date(req.query.to as string)
+    const today = new Date()
+    const from = req.query.from ? new Date(req.query.from as string) : new Date(today.getFullYear(), today.getMonth(), today.getDate())
+    const to = req.query.to ? new Date(req.query.to as string) : new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1)
     const limit = req.query.limit ? Number(req.query.limit) : 0
     const page = req.query.page ? Number(req.query.page) : 1
 
@@ -191,16 +214,63 @@ router.get('/category/dates', verifyToken, async (req: Request, res: Response) =
     res.status(200).json({ events: events })
 })
 
+router.get('/category/interest', verifyToken, async (req: Request, res: Response) => {
+    const interests = req.user.interests as unknown as string[]
+
+    if (interests.length === 0) {
+        res.status(200).json({ events: [] })
+        return
+    }
+
+    const options = { sort: { startDate: 1, endDate: 1, createdAt: -1 }, page: Number(req.query.page) || 1, limit: Number(req.query.limit) || 10 }
+    const result = await EventsModel.findByCategory(interests, options)
+
+    const events = result.docs.map(event => ({
+        ...event.toJSON(),
+        isAuthor: event.get('authorId')?.equals(req.user._id),
+        isLiked: event.get('likes')?.includes(req.user._id),
+    }))
+
+    res.status(200).json({
+        events: events,
+        page: {
+            totalDocs: result.totalDocs,
+            totalPages: result.totalPages,
+            hasNextPage: result.hasNextPage,
+            hasPrevPage: result.hasPrevPage,
+            page: result.page,
+            limit: result.limit,
+        },
+    })
+})
+
+router.get(`/category/${CategoryCode.HOTEVENT}`, verifyToken, async (req: Request, res: Response) => {
+    const today = new Date()
+    const from = req.query.from ? new Date(req.query.from as string) : new Date(today.getFullYear(), today.getMonth(), today.getDate())
+    const to = req.query.to ? new Date(req.query.to as string) : new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1)
+    const limit = req.query.limit ? Number(req.query.limit) : 3
+    const page = req.query.page ? Number(req.query.page) : 1
+
+    const result = await EventsModel.findHot(from, to, limit, page)
+
+    const events = result.docs.map(event => ({
+        ...event,
+        isAuthor: event['authorId']?.equals(req.user._id),
+        isLiked: event['likes']?.includes(req.user._id),
+    }))
+
+    res.status(200).json({ events: events })
+})
+
 router.get('/category/:category', verifyToken, async (req: Request, res: Response) => {
     const options = { sort: { startDate: 1, endDate: 1, createdAt: -1 }, page: Number(req.query.page) || 1, limit: Number(req.query.limit) || 10 }
-    const category = await CategoryModel.getCategoryById(req.params.category)
 
     let result: mongoose.PaginateResult<mongoose.PaginateDocument<typeof Events, object, object, mongoose.PaginateOptions>>
-    if (category.code === CategoryCode.MYEVENT) {
+    if (req.params.category === CategoryCode.MYEVENT) {
         result = await EventsModel.findByAuthor(req.user._id, options)
     } else {
         // TODO: add get hottest events
-        result = await EventsModel.findByCategory(category._id, options)
+        result = await EventsModel.findByCategory([req.params.category], options)
     }
     const events = result.docs.map(event => ({
         ...event.toJSON(),

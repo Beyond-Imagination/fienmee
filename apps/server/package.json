@@ -29,6 +29,7 @@
         "jsonwebtoken": "^9.0.2",
         "lru-cache": "^11.0.2",
         "mongoose": "^8.9.5",
+        "mongoose-aggregate-paginate-v2": "^1.1.4",
         "mongoose-paginate-v2": "^1.8.5",
         "node-fetch": "^2.7.0",
         "node-schedule": "^2.1.1",

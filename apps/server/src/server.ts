@@ -40,6 +40,7 @@ export default class Server {
         this.app.use('/v1/enquiries', controllers.v1.enquiries)
         this.app.use('/v1/schedules', controllers.v1.schedules)
         this.app.use('/v1/notification', controllers.v1.notifications)
+        this.app.use('/v1/s3', controllers.v1.s3)
     }
 
     setPostMiddleware() {

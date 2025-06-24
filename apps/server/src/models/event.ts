@@ -1,12 +1,15 @@
 import { getModelForClass, plugin, prop, ReturnModelType, defaultClasses } from '@typegoose/typegoose'
 import mongoose from 'mongoose'
 import mongoosePaginate from 'mongoose-paginate-v2'
+import aggregatePaginate from 'mongoose-aggregate-paginate-v2'
 
 import { Category, User } from '@/models'
 
 @plugin(mongoosePaginate)
+@plugin(aggregatePaginate)
 export class Events extends defaultClasses.TimeStamps {
     static paginate: mongoose.PaginateModel<typeof Events>['paginate']
+    static aggregatePaginate: mongoose.AggregatePaginateModel<typeof Events>['aggregatePaginate']
 
     public _id: mongoose.Types.ObjectId
 
@@ -49,8 +52,8 @@ export class Events extends defaultClasses.TimeStamps {
     @prop()
     public comments: mongoose.Types.ObjectId[]
 
-    @prop({ ref: Category })
-    public category: mongoose.Types.ObjectId[]
+    @prop({ ref: () => Category, type: () => [String] })
+    public category: string[]
 
     @prop()
     public targetAudience: string[]
@@ -81,16 +84,17 @@ export class Events extends defaultClasses.TimeStamps {
 
     public static async findByCategory(
         this: ReturnModelType<typeof Events>,
-        category: mongoose.Types.ObjectId,
+        category: string[],
         options: mongoose.PaginateOptions,
     ): Promise<mongoose.PaginateResult<mongoose.PaginateDocument<typeof Events, object, object, mongoose.PaginateOptions>>> {
         return await this.paginate(
-            { category: category },
+            { category: { $in: category } },
             {
                 ...options,
                 populate: {
                     path: 'category',
                     select: 'title',
+                    model: 'Category',
                 },
             },
         )
@@ -135,6 +139,39 @@ export class Events extends defaultClasses.TimeStamps {
                 path: 'category',
                 select: 'title',
             },
+        })
+    }
+
+    public static async findHot(
+        this: ReturnModelType<typeof Events>,
+        from: Date,
+        to: Date,
+        limit = 3,
+        page = 1,
+    ): Promise<mongoose.AggregatePaginateResult<mongoose.PaginateDocument<typeof Events, object, object, mongoose.PaginateOptions>>> {
+        const pipeline: mongoose.PipelineStage[] = [
+            {
+                $match: {
+                    $nor: [{ endDate: { $lt: from } }, { startDate: { $gt: to } }],
+                },
+            },
+            {
+                $addFields: {
+                    likeCount: { $size: { $ifNull: ['$likes', []] } },
+                },
+            },
+            {
+                $sort: {
+                    likeCount: -1,
+                    startDate: 1,
+                },
+            },
+        ]
+
+        return await this.aggregatePaginate(this.aggregate(pipeline), {
+            page,
+            limit,
+            populate: { path: 'category', select: 'title' },
         })
     }
 }
