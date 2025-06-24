@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { IComment, IDeleteCommentRequest } from '@fienmee/types'
 import { useRouter } from 'next/navigation'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { toast } from 'react-toastify'
 
 import { deleteEventCommentById } from '@/api/event'
 import CommentOption from '@/components/comment/commentOption'
@@ -22,6 +23,10 @@ export function EventComment({ comment }: Props) {
         onSuccess: async () => {
             await queryClient.invalidateQueries({ queryKey: ['comments', comment.eventId] })
             router.refresh()
+            toast.success(<span>댓글 삭제에 성공하였습니다.</span>)
+        },
+        onError: () => {
+            toast.error(<span>댓글 삭제에 실패했습니다.</span>)
         },
     })
 
