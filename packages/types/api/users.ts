@@ -1,5 +1,3 @@
-import { CategoryCode } from '@/api/category'
-
 export interface ICredential {
     accessToken: string
     accessTokenExpiresAt: Date
@@ -36,6 +34,6 @@ export interface refreshResponse {
 
 export interface toggleInterestRequest {
     body: {
-        interest: CategoryCode
+        interest: string
     }
 }
