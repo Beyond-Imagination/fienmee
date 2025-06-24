@@ -15,7 +15,7 @@ router.post('/category/initialize', async (req: Request, res: Response) => {
     res.sendStatus(204)
 })
 
-router.get('/categories', async (req: Request, res: Response) => {
+router.get('/categories', verifyToken, async (req: Request, res: Response) => {
     // TODO: find user favorite categories
     const categories = await CategoryModel.getCategoriesByType('normal')
     const defaultCategories = await CategoryModel.getCategoriesByType('special')
@@ -43,7 +43,7 @@ router.post('/', verifyToken, async (req: Request, res: Response) => {
     res.sendStatus(204)
 })
 
-router.put('/:id', async (req: Request, res: Response) => {
+router.put('/:id', verifyToken, async (req: Request, res: Response) => {
     await EventsModel.updateOne(
         { _id: req.params.id },
         {
@@ -62,7 +62,7 @@ router.put('/:id', async (req: Request, res: Response) => {
     res.sendStatus(204)
 })
 
-router.delete('/:id', async (req: Request, res: Response) => {
+router.delete('/:id', verifyToken, async (req: Request, res: Response) => {
     // TODO : Delete comments
     await EventsModel.deleteOne({ _id: req.params.id })
     res.sendStatus(200)
