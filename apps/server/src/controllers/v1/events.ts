@@ -18,7 +18,7 @@ router.post('/category/initialize', async (req: Request, res: Response) => {
 router.get('/categories', verifyToken, async (req: Request, res: Response) => {
     let categories = await CategoryModel.getCategoriesByType('normal')
     const defaultCategories = await CategoryModel.getCategoriesByType('special')
-    categories = categories.filter(defaultCategory => !req.user.interests.some(category => category._id === defaultCategory._id))
+    categories = categories.filter(normal => !req.user.interests.some(interest => interest._id === normal._id))
     res.status(200).json({
         favoriteCategories: req.user.interests,
         categories: categories,
