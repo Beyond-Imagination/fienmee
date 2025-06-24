@@ -1,5 +1,7 @@
-import { deleteSchedule } from '@/api/schedules'
+import React from 'react'
+import { toast } from 'react-toastify'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { deleteSchedule } from '@/api/schedules'
 
 interface ScheduleDeleteModalProps {
     isOpen: boolean
@@ -13,14 +15,14 @@ export default function ScheduleDeleteModal({ isOpen, onClose, scheduleId, setMo
 
     const { mutate } = useMutation({
         mutationFn: deleteSchedule,
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['schedules'] })
-            alert('삭제 완료')
+        onSuccess: async () => {
+            await queryClient.invalidateQueries({ queryKey: ['schedules'] })
+            toast.success(<span>일정이 성공적으로 삭제되었어요.</span>)
             setModalType('none')
             onClose()
         },
         onError: () => {
-            alert('삭제 실패')
+            toast.error(<span>일정 삭제를 실패했어요. 다시 한 번 시도해주세요.</span>)
         },
     })
 

@@ -22,7 +22,6 @@ export function EventList({ category }: { category: string }) {
     const { ref, inView } = useInView()
     useEffect(() => {
         if (inView) {
-            console.log('무한 스크롤 요청중')
             fetchNextPage()
         }
     }, [inView, fetchNextPage])

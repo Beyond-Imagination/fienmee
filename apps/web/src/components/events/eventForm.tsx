@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { toast } from 'react-toastify'
 import { useRouter } from 'next/navigation'
 
 import { ICategory, IEvent } from '@fienmee/types'
@@ -52,8 +53,6 @@ const EventForm: React.FC<EventFormProps> = ({ selectedCategories, handleCategor
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
-        console.log(formData)
-
         try {
             if (!isRegister) {
                 await updateEvent({
@@ -68,7 +67,7 @@ const EventForm: React.FC<EventFormProps> = ({ selectedCategories, handleCategor
                     },
                     uri: { _id: initEvent._id },
                 })
-                alert('이벤트가 성공적으로 수정되었습니다.')
+                toast.success(<span>행사가 성공적으로 수정되었어요.</span>)
                 setEvent(formData)
                 router.push('/events/detail')
             } else {
@@ -83,11 +82,11 @@ const EventForm: React.FC<EventFormProps> = ({ selectedCategories, handleCategor
                         },
                     },
                 })
-                alert('이벤트가 성공적으로 등록되었습니다.')
+                toast.success(<span>행사가 성공적으로 등록되었어요.</span>)
             }
         } catch (error) {
             console.error('이벤트 등록 실패:', error)
-            alert('이벤트 등록에 실패했습니다.')
+            toast.error(<span>행사 등록을 실패했어요. 다시 한 번 시도해주세요.</span>)
         }
     }
 

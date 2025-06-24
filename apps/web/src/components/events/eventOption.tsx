@@ -1,4 +1,5 @@
 import React from 'react'
+import { toast } from 'react-toastify'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
@@ -18,6 +19,10 @@ export default function EventOption({ eventId }: { eventId: string }) {
         onSuccess: async () => {
             await queryClient.invalidateQueries({ queryKey: ['events'] })
             router.push('/events/category')
+            toast.success(<span>행사가 성공적으로 삭제되었어요</span>)
+        },
+        onError: () => {
+            toast.error(<span>행사 삭제를 실패했어요. 다시 한 번 시도해주세요.</span>)
         },
     })
 
