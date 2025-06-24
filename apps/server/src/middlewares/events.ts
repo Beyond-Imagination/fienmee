@@ -8,7 +8,7 @@ export const verifyEventAuthor = async (req: Request, res: Response, next: NextF
     if (!event) {
         throw new EventNotFound()
     }
-    if (req.user._id.equals(event.authorId)) {
+    if (!event.authorId || !req.user._id.equals(event.authorId)) {
         throw new UnauthorizedEvent()
     }
     next()
