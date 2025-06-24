@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { toast } from 'react-toastify'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 
 import { registerEventComments } from '@/api/event'
@@ -20,7 +21,7 @@ export default function EventCommentInput({ eventId }: Props) {
             setComment('')
         },
         onError: () => {
-            alert('댓글 등록에 실패했습니다.')
+            toast.error(<span>댓글 등록을 실패했어요. 다시 한 번 시도해주세요.</span>)
         },
     })
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {

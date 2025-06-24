@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { toast } from 'react-toastify'
 import { IScheduleItem } from '@fienmee/types'
 
 import { updateSchedule } from '@/api/schedules'
@@ -23,9 +24,9 @@ export default function ScheduleUpdateModal({ isOpen, onClose, initSchedule, set
             const newSchedule = await updateSchedule(schedule)
             setSchedule(newSchedule)
             setModalType('detail')
-            alert('일정이 수정되었습니다.')
+            toast.success(<span>일정이 성공적으로 수정되었어요.</span>)
         } catch {
-            alert('일정 수정에 실패했습니다.')
+            toast.error(<span>일정 수정을 실패했어요. 다시 한번 시도해주세요.</span>)
         }
     }
 
