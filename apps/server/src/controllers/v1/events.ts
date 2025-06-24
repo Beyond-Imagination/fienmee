@@ -5,7 +5,7 @@ import mongoose from 'mongoose'
 import { CategoryModel, Events, EventsModel, ReviewsModel, CommentsModel, NotificationModel } from '@/models'
 import { verifyToken } from '@/middlewares/auth'
 import { CategoryCode, NotificationType } from '@fienmee/types'
-import { verifyCommentAuthor } from '@/middlewares/events'
+import { verifyCommentAuthor, verifyEventAuthor } from '@/middlewares/events'
 import { TransactionError } from '@/types/errors/database'
 
 const router: Router = asyncify(express.Router())
@@ -43,7 +43,7 @@ router.post('/', verifyToken, async (req: Request, res: Response) => {
     res.sendStatus(204)
 })
 
-router.put('/:id', async (req: Request, res: Response) => {
+router.put('/:id', verifyToken, verifyEventAuthor, async (req: Request, res: Response) => {
     await EventsModel.updateOne(
         { _id: req.params.id },
         {
@@ -62,7 +62,7 @@ router.put('/:id', async (req: Request, res: Response) => {
     res.sendStatus(204)
 })
 
-router.delete('/:id', async (req: Request, res: Response) => {
+router.delete('/:id', verifyToken, verifyEventAuthor, async (req: Request, res: Response) => {
     // TODO : Delete comments
     await EventsModel.deleteOne({ _id: req.params.id })
     res.sendStatus(200)
