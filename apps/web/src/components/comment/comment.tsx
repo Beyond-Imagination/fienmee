@@ -26,9 +26,7 @@ export function EventComment({ comment }: Props) {
     })
 
     const handleDelete = () => {
-        console.log('handle delete')
         deleteMutation.mutate({ id: comment.eventId, commentId: comment._id })
-        console.log('handle delete ok')
     }
 
     return (

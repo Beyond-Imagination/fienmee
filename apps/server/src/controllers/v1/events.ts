@@ -137,7 +137,6 @@ router.put('/:id/comments/:commentId', verifyToken, verifyCommentAuthor, async (
 })
 
 router.delete('/:id/comments/:commentId', verifyToken, verifyCommentAuthor, async (req: Request, res: Response) => {
-    console.log('요청 받음')
     const session = await mongoose.startSession()
     try {
         session.startTransaction()
