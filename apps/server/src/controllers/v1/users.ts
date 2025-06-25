@@ -110,6 +110,7 @@ router.post('/google-token', async (req: Request, res: Response) => {
     })
 
     res.json(response.data.refresh_token)
+})
 
 router.put('/interest', verifyToken, async (req: Request, res: Response) => {
     const isInterested = req.user.interests.includes(req.body.interest)
