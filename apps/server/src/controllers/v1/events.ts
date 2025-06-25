@@ -63,9 +63,19 @@ router.put('/:id', verifyToken, verifyEventAuthor, async (req: Request, res: Res
 })
 
 router.delete('/:id', verifyToken, verifyEventAuthor, async (req: Request, res: Response) => {
-    // TODO : Delete comments
-    await EventsModel.deleteOne({ _id: req.params.id })
-    res.sendStatus(200)
+    const session = await mongoose.startSession()
+    try {
+        session.startTransaction()
+        await EventsModel.deleteOne({ _id: req.params.id }, { session })
+        await CommentsModel.deleteMany({ eventId: req.params.id }, { session })
+        await session.commitTransaction()
+        res.sendStatus(204)
+    } catch (error) {
+        await session.abortTransaction()
+        throw new TransactionError(error)
+    } finally {
+        await session.endSession()
+    }
 })
 
 router.get('/:id', verifyToken, async (req: Request, res: Response) => {
