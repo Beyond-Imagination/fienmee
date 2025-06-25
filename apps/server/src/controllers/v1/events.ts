@@ -16,12 +16,12 @@ router.post('/category/initialize', async (req: Request, res: Response) => {
     res.sendStatus(204)
 })
 
-router.get('/categories', async (req: Request, res: Response) => {
-    // TODO: find user favorite categories
-    const categories = await CategoryModel.getCategoriesByType('normal')
+router.get('/categories', verifyToken, async (req: Request, res: Response) => {
+    let categories = await CategoryModel.getCategoriesByType('normal')
     const defaultCategories = await CategoryModel.getCategoriesByType('special')
+    categories = categories.filter(normal => !req.user.interests.some(interest => interest._id === normal._id))
     res.status(200).json({
-        favoriteCategories: [],
+        favoriteCategories: req.user.interests,
         categories: categories,
         defaultCategories: defaultCategories,
     })

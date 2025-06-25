@@ -93,7 +93,7 @@ router.delete('/', verifyToken, async (req: Request, res: Response) => {
 })
 
 router.put('/interest', verifyToken, async (req: Request, res: Response) => {
-    const isInterested = req.user.interests.includes(req.body.interest)
+    const isInterested = req.user.interests.some(category => category._id === req.body.interest)
 
     if (isInterested) {
         await UserModel.removeInterest(req.user._id, req.body.interest)

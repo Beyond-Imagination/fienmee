@@ -31,3 +31,9 @@ export interface refreshResponse {
     refreshToken?: string
     refreshTokenExpiresAt?: Date
 }
+
+export interface toggleInterestRequest {
+    body: {
+        interest: string
+    }
+}
