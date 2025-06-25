@@ -7,6 +7,7 @@ import { verifyToken } from '@/middlewares/auth'
 import { CategoryCode, NotificationType } from '@fienmee/types'
 import { verifyCommentAuthor, verifyEventAuthor } from '@/middlewares/events'
 import { TransactionError } from '@/types/errors/database'
+import { EventNotFound } from '@/types/errors/events'
 
 const router: Router = asyncify(express.Router())
 
@@ -203,6 +204,26 @@ router.post('/:id/reviews', verifyToken, async (req: Request, res: Response) => 
     }
     res.status(200).json({
         reviewId: review._id,
+    })
+})
+
+router.get('/:id/reviews', verifyToken, async (req: Request, res: Response) => {
+    const event = await EventsModel.findById(req.params.id)
+    if (!event) {
+        throw new EventNotFound()
+    }
+    const options = { sort: { createdAt: -1 }, page: Number(req.query.page) || 1, limit: Number(req.query.limit) || 10 }
+    const result = await ReviewsModel.findByEventId(event._id, options)
+    res.status(200).json({
+        reviews: result.docs,
+        page: {
+            totalDocs: result.totalDocs,
+            totalPages: result.totalPages,
+            hasNextPage: result.hasNextPage,
+            hasPrevPage: result.hasPrevPage,
+            page: result.page,
+            limit: result.limit,
+        },
     })
 })
 
