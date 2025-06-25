@@ -196,6 +196,23 @@ router.post('/:id/reviews', verifyToken, async (req: Request, res: Response) => 
     })
 })
 
+router.get('/:id/reviews', verifyToken, async (req: Request, res: Response) => {
+    const event = await EventsModel.findById(req.params.id)
+    const options = { sort: { createdAt: -1 }, page: Number(req.query.page) || 1, limit: Number(req.query.limit) || 10 }
+    const result = await ReviewsModel.findByEventId(event._id, options)
+    res.status(200).json({
+        reviews: result.docs,
+        page: {
+            totalDocs: result.totalDocs,
+            totalPages: result.totalPages,
+            hasNextPage: result.hasNextPage,
+            hasPrevPage: result.hasPrevPage,
+            page: result.page,
+            limit: result.limit,
+        },
+    })
+})
+
 router.get('/category/dates', verifyToken, async (req: Request, res: Response) => {
     const today = new Date()
     const from = req.query.from ? new Date(req.query.from as string) : new Date(today.getFullYear(), today.getMonth(), today.getDate())

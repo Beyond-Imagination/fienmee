@@ -1,11 +1,11 @@
 import mongoose from 'mongoose'
-import { defaultClasses, getModelForClass, plugin, prop } from '@typegoose/typegoose'
+import { defaultClasses, getModelForClass, plugin, prop, ReturnModelType } from '@typegoose/typegoose'
 import mongoosePaginate from 'mongoose-paginate-v2'
 import { Events, User } from '@/models'
 
 @plugin(mongoosePaginate)
 export class Reviews extends defaultClasses.TimeStamps {
-    public paginate: mongoose.PaginateModel<typeof Reviews>['paginate']
+    static paginate: mongoose.PaginateModel<typeof Reviews>['paginate']
 
     public _id: mongoose.Types.ObjectId
 
@@ -34,6 +34,24 @@ export class Reviews extends defaultClasses.TimeStamps {
             photo: this.photo,
             createdAt: this.createdAt,
         }
+    }
+
+    public static async findByEventId(
+        this: ReturnModelType<typeof Reviews>,
+        eventId: mongoose.Types.ObjectId,
+        options: mongoose.PaginateOptions,
+    ): Promise<mongoose.PaginateResult<mongoose.PaginateDocument<typeof Reviews, object, object, mongoose.PaginateOptions>>> {
+        return await this.paginate(
+            { eventId },
+            {
+                ...options,
+                populate: {
+                    path: 'userId',
+                    select: 'nickname',
+                    model: 'User',
+                },
+            },
+        )
     }
 }
 
