@@ -206,3 +206,22 @@ export function StarIcon({ stroke, color, width, height }: CustomIconProps) {
         </svg>
     )
 }
+
+export function InfoIcon({ color, stroke, width, height }: CustomIconProps) {
+    return (
+        <svg xmlns="http://www.w3.org/2000/svg" width={width} height={height} viewBox="0 0 61 60" fill="none">
+            <path
+                opacity="0.5"
+                d="M30.5 55C44.3071 55 55.5 43.8071 55.5 30C55.5 16.1929 44.3071 5 30.5 5C16.6929 5 5.5 16.1929 5.5 30C5.5 43.8071 16.6929 55 30.5 55Z"
+                stroke={stroke}
+                strokeWidth="3.75"
+            />
+            <path opacity="0.5" d="M30.5 42.5V27.5" stroke={stroke} strokeWidth="3.75" strokeLinecap="round" />
+            <path
+                opacity="0.5"
+                d="M30.5 17.5C31.8807 17.5 33 18.6193 33 20C33 21.3807 31.8807 22.5 30.5 22.5C29.1193 22.5 28 21.3807 28 20C28 18.6193 29.1193 17.5 30.5 17.5Z"
+                fill={color}
+            />
+        </svg>
+    )
+}

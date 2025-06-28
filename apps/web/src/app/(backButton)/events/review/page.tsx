@@ -1,6 +1,9 @@
 import { useMemo } from 'react'
-import TabBar from '@/components/tabBar'
 import Link from 'next/link'
+
+import TabBar from '@/components/tabBar'
+import ReviewList from '@/components/review/reviewList'
+import ReviewsStatistic from '@/components/review/reviewsStatistic'
 
 export default function Page() {
     const [items, links, selected] = useMemo(() => {
@@ -12,13 +15,13 @@ export default function Page() {
     }, [])
 
     return (
-        <div className="flex flex-col h-full gap-[0.9375rem] px-4 pb-6">
+        <div className="flex flex-col h-full overflow-y-auto gap-[0.9375rem] px-6">
             <TabBar items={items} links={links} selected={selected} />
-            {/*TODO: add review statistics*/}
+            <ReviewsStatistic />
             <Link className="self-center w-full bg-[#FF9575] text-base text-white text-center rounded-lg py-2" href="/events/review/create">
                 리뷰 작성하기
             </Link>
-            {/*TODO: add review List*/}
+            <ReviewList />
         </div>
     )
 }
