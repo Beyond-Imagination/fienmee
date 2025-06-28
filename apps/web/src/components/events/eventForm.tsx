@@ -69,7 +69,7 @@ const EventForm: React.FC<EventFormProps> = ({ selectedCategories, handleCategor
                 })
                 toast.success(<span>행사가 성공적으로 수정되었어요.</span>)
                 setEvent(formData)
-                router.push('/events/detail')
+                router.back()
             } else {
                 await registerEvent({
                     body: {
@@ -83,6 +83,7 @@ const EventForm: React.FC<EventFormProps> = ({ selectedCategories, handleCategor
                     },
                 })
                 toast.success(<span>행사가 성공적으로 등록되었어요.</span>)
+                router.back()
             }
         } catch (error) {
             console.error('이벤트 등록 실패:', error)
