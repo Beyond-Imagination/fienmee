@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import { IComment, IDeleteCommentRequest } from '@fienmee/types'
-import { useRouter } from 'next/navigation'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'react-toastify'
 
@@ -14,7 +13,6 @@ interface Props {
 }
 
 export function EventComment({ comment }: Props) {
-    const router = useRouter()
     const queryClient = useQueryClient()
     const [isEdit, setIsEdit] = useState<boolean>(false)
 
@@ -22,7 +20,6 @@ export function EventComment({ comment }: Props) {
         mutationFn: (request: IDeleteCommentRequest) => deleteEventCommentById(request),
         onSuccess: async () => {
             await queryClient.invalidateQueries({ queryKey: ['comments', comment.eventId] })
-            router.refresh()
             toast.success(<span>댓글 삭제에 성공하였습니다.</span>)
         },
         onError: () => {
