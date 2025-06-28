@@ -41,7 +41,7 @@ export default function Review({ review }: Props) {
                                 </div>
                             ))}
                         </div>
-                        <div className="border-l boder-l-[#CCCCCC]" />
+                        <div className="border-l border-l-[#CCCCCC]" />
                         <span className="text-xs text-[#757575]">{format(review.createdAt, 'yyyy.MM.dd HH:mm')}</span>
                     </div>
                 </div>
@@ -55,8 +55,6 @@ export default function Review({ review }: Props) {
                                 key={`${review._id}-reviewImg-${img}`}
                                 alt={`review img`}
                                 src={img}
-                                width="7.5rem"
-                                height="7.5rem"
                             />
                         ))}
                     </div>

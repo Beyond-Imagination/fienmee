@@ -71,8 +71,9 @@ export default function ReviewList() {
 const useReviewQuery = ({ eventId, startPage }: useReviewsQueryProps) => {
     const { data, isLoading, isError, fetchNextPage, isFetchingNextPage, refetch } = useInfiniteQuery<IGetReviewResponse>({
         queryKey: ['review', eventId],
-        queryFn: ({ pageParam }) => getReview(eventId, pageParam as number, 5),
+        queryFn: ({ pageParam }) => getReview(eventId, pageParam as number, 10),
         initialPageParam: startPage,
+        enabled: !!eventId,
         getNextPageParam: lastPage => {
             if (lastPage.page.hasNextPage) {
                 return lastPage.page.page + 1
