@@ -5,6 +5,7 @@ import hpp from 'hpp'
 import helmet from 'helmet'
 import cors from 'cors'
 import newrelic from 'newrelic'
+import path from 'path'
 
 import { logger, loggerMiddleware } from '@/utils/logger'
 import { NODE_ENV, HOST, PORT } from '@/config'
@@ -36,12 +37,14 @@ export default class Server {
     }
 
     setController() {
+        this.app.use('/documents', express.static(path.join(__dirname, '../public')))
         this.app.use('/v1/users', controllers.v1.users)
         this.app.use('/v1/events', controllers.v1.events)
         this.app.use('/v1/enquiries', controllers.v1.enquiries)
         this.app.use('/v1/schedules', controllers.v1.schedules)
         this.app.use('/v1/notification', controllers.v1.notifications)
         this.app.use('/v1/s3', controllers.v1.s3)
+        this.app.use('/v1/agreements', controllers.v1.agreements)
     }
 
     setPostMiddleware() {
