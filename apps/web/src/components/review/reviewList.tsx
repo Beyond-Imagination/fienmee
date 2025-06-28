@@ -39,7 +39,7 @@ export default function ReviewList() {
     if (isError) {
         return (
             <div className="flex flex-col w-full h-full justify-center items-center gap-4 pt-6">
-                <div className="w-full text-center text-xl font-semibold">
+                <div className="w-full text-center text-lg font-semibold">
                     리뷰를 불러오는 데 문제가 발생했습니다.
                     <br />
                     이용에 불편을 드려 죄송합니다.
