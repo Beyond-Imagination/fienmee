@@ -18,6 +18,7 @@ export default class Server {
     constructor() {
         this.app = express()
         this.app.locals.newrelic = newrelic
+        this.app.set('etag', false)
 
         this.setPreMiddleware()
         this.setController()

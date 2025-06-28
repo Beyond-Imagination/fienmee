@@ -24,7 +24,7 @@ export const verifyToken = async (req: Request, res: Response, next: NextFunctio
         return next(new UnauthorizedTokenError(e))
     }
 
-    const user = await UserModel.findOne({ _id: jwtPayload.userId }).exec()
+    const user = await UserModel.findOne({ _id: jwtPayload.userId }).populate('interests').exec()
     if (!user) {
         return next(new UnknownUserError())
     }

@@ -1,11 +1,14 @@
 'use client'
+
 import React, { useState } from 'react'
+import { toast } from 'react-toastify'
+import { useRouter } from 'next/navigation'
+
 import { IMakeNewScheduleRequest } from '@fienmee/types'
 import { registerSchedule } from '@/api/schedules'
 import EventTimeSelector from '@/components/events/eventTimeSelector'
-import { useRouter } from 'next/navigation'
-import { eventStore } from '@/store'
 import InputField from '@/components/events/inputField'
+import { eventStore } from '@/store'
 
 export default function ScheduleForm() {
     const router = useRouter()
@@ -38,11 +41,11 @@ export default function ScheduleForm() {
         // todo: add logic for validating and organizing request body object
         try {
             await registerSchedule(formData)
-            alert('일정이 등록되었습니다.')
+            toast.success(<span>일정이 성공적으로 등록되었어요.</span>)
             router.push('/')
         } catch (error) {
             console.error('일정 등록 실패:', error)
-            alert('일정 등록에 실패했습니다.')
+            toast.error(<span>일정 등록을 실패했어요. 다시 한번 시도해 주세요.</span>)
         }
     }
 

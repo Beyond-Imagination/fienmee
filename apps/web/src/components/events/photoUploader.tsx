@@ -1,8 +1,9 @@
 import React, { useRef, useState } from 'react'
-import CameraIcon from '@/components/icon/Camera'
-import { getUploadUrl, getViewUrl, uploadToS3 } from '@/api/s3'
 import { ClipLoader } from 'react-spinners'
 import { toast } from 'react-toastify'
+
+import { getUploadUrl, getViewUrl, uploadToS3 } from '@/api/s3'
+import CameraIcon from '@/components/icon/Camera'
 
 interface PhotoUploaderProps {
     photos: string[]
@@ -65,12 +66,7 @@ const PhotoUploader: React.FC<PhotoUploaderProps> = ({ photos, onAddPhoto, onRem
     }
 
     const showUploadFailToast = () => {
-        toast.error(
-            <span>
-                사진 업로드에 실패했습니다.
-                <span style={{ fontSize: 0 }}>{Date.now()}</span>
-            </span>,
-        )
+        toast.error(<span>사진 업로드를 실패했어요. 다시 한번 시도해주세요.</span>)
     }
 
     return (

@@ -5,8 +5,9 @@ import mongoose from 'mongoose'
 import { CategoryModel, Events, EventsModel, ReviewsModel, CommentsModel, NotificationModel } from '@/models'
 import { verifyToken } from '@/middlewares/auth'
 import { CategoryCode, NotificationType } from '@fienmee/types'
-import { verifyCommentAuthor } from '@/middlewares/events'
+import { verifyCommentAuthor, verifyEventAuthor } from '@/middlewares/events'
 import { TransactionError } from '@/types/errors/database'
+import { EventNotFound } from '@/types/errors/events'
 
 const router: Router = asyncify(express.Router())
 
@@ -15,12 +16,12 @@ router.post('/category/initialize', async (req: Request, res: Response) => {
     res.sendStatus(204)
 })
 
-router.get('/categories', async (req: Request, res: Response) => {
-    // TODO: find user favorite categories
-    const categories = await CategoryModel.getCategoriesByType('normal')
+router.get('/categories', verifyToken, async (req: Request, res: Response) => {
+    let categories = await CategoryModel.getCategoriesByType('normal')
     const defaultCategories = await CategoryModel.getCategoriesByType('special')
+    categories = categories.filter(normal => !req.user.interests.some(interest => interest._id === normal._id))
     res.status(200).json({
-        favoriteCategories: [],
+        favoriteCategories: req.user.interests,
         categories: categories,
         defaultCategories: defaultCategories,
     })
@@ -43,7 +44,7 @@ router.post('/', verifyToken, async (req: Request, res: Response) => {
     res.sendStatus(204)
 })
 
-router.put('/:id', async (req: Request, res: Response) => {
+router.put('/:id', verifyToken, verifyEventAuthor, async (req: Request, res: Response) => {
     await EventsModel.updateOne(
         { _id: req.params.id },
         {
@@ -62,10 +63,20 @@ router.put('/:id', async (req: Request, res: Response) => {
     res.sendStatus(204)
 })
 
-router.delete('/:id', async (req: Request, res: Response) => {
-    // TODO : Delete comments
-    await EventsModel.deleteOne({ _id: req.params.id })
-    res.sendStatus(200)
+router.delete('/:id', verifyToken, verifyEventAuthor, async (req: Request, res: Response) => {
+    const session = await mongoose.startSession()
+    try {
+        session.startTransaction()
+        await EventsModel.deleteOne({ _id: req.params.id }, { session })
+        await CommentsModel.deleteMany({ eventId: req.params.id }, { session })
+        await session.commitTransaction()
+        res.sendStatus(204)
+    } catch (error) {
+        await session.abortTransaction()
+        throw new TransactionError(error)
+    } finally {
+        await session.endSession()
+    }
 })
 
 router.get('/:id', verifyToken, async (req: Request, res: Response) => {
@@ -87,7 +98,7 @@ router.post('/:id/comments', verifyToken, async (req: Request, res: Response) =>
     })
 
     const event = await EventsModel.findByIdAndUpdate(req.params.id, { $push: { comments: comment._id } })
-    if (!event.authorId.equals(req.user._id)) {
+    if (event.authorId && !event.authorId.equals(req.user._id)) {
         await NotificationModel.createAndSendNotification(
             NotificationType.COMMENT,
             event.authorId,
@@ -159,7 +170,7 @@ router.post('/:id/likes', verifyToken, async (req: Request, res: Response) => {
     const update = prevLiked ? { $pull: { likes: req.user._id } } : { $push: { likes: req.user._id } }
 
     await EventsModel.updateOne({ _id: req.params.id }, update)
-    if (!event.authorId.equals(req.user._id) && !prevLiked) {
+    if (event.authorId && !prevLiked && !event.authorId.equals(req.user._id)) {
         await NotificationModel.createAndSendNotification(
             NotificationType.LIKE,
             event.authorId,
@@ -182,7 +193,7 @@ router.post('/:id/reviews', verifyToken, async (req: Request, res: Response) => 
         body: req.body.body,
     })
 
-    if (!event.authorId.equals(req.user._id)) {
+    if (event.authorId && !event.authorId.equals(req.user._id)) {
         await NotificationModel.createAndSendNotification(
             NotificationType.REVIEW,
             event.authorId,
@@ -193,6 +204,26 @@ router.post('/:id/reviews', verifyToken, async (req: Request, res: Response) => 
     }
     res.status(200).json({
         reviewId: review._id,
+    })
+})
+
+router.get('/:id/reviews', verifyToken, async (req: Request, res: Response) => {
+    const event = await EventsModel.findById(req.params.id)
+    if (!event) {
+        throw new EventNotFound()
+    }
+    const options = { sort: { createdAt: -1 }, page: Number(req.query.page) || 1, limit: Number(req.query.limit) || 10 }
+    const result = await ReviewsModel.findByEventId(event._id, options)
+    res.status(200).json({
+        reviews: result.docs,
+        page: {
+            totalDocs: result.totalDocs,
+            totalPages: result.totalPages,
+            hasNextPage: result.hasNextPage,
+            hasPrevPage: result.hasPrevPage,
+            page: result.page,
+            limit: result.limit,
+        },
     })
 })
 
@@ -212,6 +243,36 @@ router.get('/category/dates', verifyToken, async (req: Request, res: Response) =
     }))
 
     res.status(200).json({ events: events })
+})
+
+router.get('/category/interest', verifyToken, async (req: Request, res: Response) => {
+    const interests = req.user.interests as unknown as string[]
+
+    if (interests.length === 0) {
+        res.status(200).json({ events: [] })
+        return
+    }
+
+    const options = { sort: { startDate: 1, endDate: 1, createdAt: -1 }, page: Number(req.query.page) || 1, limit: Number(req.query.limit) || 10 }
+    const result = await EventsModel.findByCategory(interests, options)
+
+    const events = result.docs.map(event => ({
+        ...event.toJSON(),
+        isAuthor: event.get('authorId')?.equals(req.user._id),
+        isLiked: event.get('likes')?.includes(req.user._id),
+    }))
+
+    res.status(200).json({
+        events: events,
+        page: {
+            totalDocs: result.totalDocs,
+            totalPages: result.totalPages,
+            hasNextPage: result.hasNextPage,
+            hasPrevPage: result.hasPrevPage,
+            page: result.page,
+            limit: result.limit,
+        },
+    })
 })
 
 router.get(`/category/${CategoryCode.HOTEVENT}`, verifyToken, async (req: Request, res: Response) => {
@@ -240,7 +301,7 @@ router.get('/category/:category', verifyToken, async (req: Request, res: Respons
         result = await EventsModel.findByAuthor(req.user._id, options)
     } else {
         // TODO: add get hottest events
-        result = await EventsModel.findByCategory(req.params.category, options)
+        result = await EventsModel.findByCategory([req.params.category], options)
     }
     const events = result.docs.map(event => ({
         ...event.toJSON(),
