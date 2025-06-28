@@ -28,6 +28,7 @@ export function EventComment({ comment }: Props) {
     })
 
     const handleDelete = () => {
+        if (deleteMutation.isPending) return
         deleteMutation.mutate({
             eventId: comment.eventId,
             commentId: comment._id,
@@ -47,7 +48,9 @@ export function EventComment({ comment }: Props) {
                 </div>
                 <div className="flex flex-row justify-center items-center gap-2">
                     <UnlikeIcon width="1.5rem" height="1.25rem" />
-                    {comment.isAuthor && <CommentOption onEdit={() => setIsEdit(true)} onDelete={handleDelete} />}
+                    {comment.isAuthor && (
+                        <CommentOption onEdit={() => setIsEdit(true)} onDelete={handleDelete} isDeleteDisabled={deleteMutation.isPending} />
+                    )}
                 </div>
             </div>
         </div>
