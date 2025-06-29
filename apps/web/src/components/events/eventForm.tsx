@@ -73,7 +73,6 @@ const EventForm: React.FC<EventFormProps> = ({ selectedCategories, handleCategor
                 toast.success(<span>행사가 성공적으로 수정되었어요.</span>)
                 setEvent(formData)
 
-                await queryClient.invalidateQueries({ queryKey: ['events'] })
                 await queryClient.refetchQueries({ queryKey: ['events'] })
                 router.back()
             } else {
@@ -89,7 +88,6 @@ const EventForm: React.FC<EventFormProps> = ({ selectedCategories, handleCategor
                     },
                 })
 
-                await queryClient.invalidateQueries({ queryKey: ['events'] })
                 await queryClient.refetchQueries({ queryKey: ['events'] })
                 toast.success(<span>행사가 성공적으로 등록되었어요.</span>)
                 router.back()
