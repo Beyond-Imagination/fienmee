@@ -11,6 +11,7 @@ import InputField from '@/components/events/inputField'
 import SubmitButton from '@/components/events/submitButton'
 import { ArrowIcon } from '@/components/icon'
 import { eventStore } from '@/store'
+import { useQueryClient } from '@tanstack/react-query'
 
 interface EventFormProps {
     selectedCategories: Set<ICategory>
@@ -51,6 +52,7 @@ const EventForm: React.FC<EventFormProps> = ({ selectedCategories, handleCategor
         setFormData(prevState => ({ ...prevState, isAllDay: !prevState.isAllDay }))
     }
 
+    const queryClient = useQueryClient()
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
         try {
@@ -67,9 +69,12 @@ const EventForm: React.FC<EventFormProps> = ({ selectedCategories, handleCategor
                     },
                     uri: { _id: initEvent._id },
                 })
+
                 toast.success(<span>행사가 성공적으로 수정되었어요.</span>)
                 setEvent(formData)
-                router.push('/events/detail')
+
+                await queryClient.refetchQueries({ queryKey: ['events'] })
+                router.back()
             } else {
                 await registerEvent({
                     body: {
@@ -82,7 +87,10 @@ const EventForm: React.FC<EventFormProps> = ({ selectedCategories, handleCategor
                         },
                     },
                 })
+
+                await queryClient.refetchQueries({ queryKey: ['events'] })
                 toast.success(<span>행사가 성공적으로 등록되었어요.</span>)
+                router.back()
             }
         } catch (error) {
             console.error('이벤트 등록 실패:', error)

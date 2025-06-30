@@ -17,8 +17,8 @@ export default function EventOption({ eventId }: { eventId: string }) {
     const deleteMutation = useMutation({
         mutationFn: deleteEventById,
         onSuccess: async () => {
-            await queryClient.invalidateQueries({ queryKey: ['events'] })
-            router.push('/events/category')
+            await queryClient.refetchQueries({ queryKey: ['events'] })
+            router.back()
             toast.success(<span>행사가 성공적으로 삭제되었어요</span>)
         },
         onError: () => {
