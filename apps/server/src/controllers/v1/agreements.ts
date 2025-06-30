@@ -9,12 +9,12 @@ router.get('/', async (req: Request, res: Response) => {
             {
                 name: '서비스 이용 약관',
                 required: true,
-                link: `documents/terms-of-service.md`,
+                path: `documents/terms-of-service.md`,
             },
             {
                 name: '개인정보 수집 및 이용 동의',
                 required: true,
-                link: `documents/privacy-policy.md`,
+                path: `documents/privacy-policy.md`,
             },
         ],
     })

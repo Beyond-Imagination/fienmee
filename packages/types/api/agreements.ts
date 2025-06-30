@@ -1,7 +1,7 @@
 export interface IDocument {
     name: string
     required: boolean
-    link: string
+    path: string
 }
 
 export interface getAgreementsResponse {

@@ -9,7 +9,7 @@ import { setToken } from '@/stores'
 import { RegisterScreenProps } from '@/types'
 import { IDocument } from '@fienmee/types/api'
 import { BE_URL } from '@/config'
-import { MarkdownModal } from '@/components/modal/MarkdownModal.tsx'
+import { MarkdownModal } from '@/components/modal/MarkdownModal'
 
 type props = StaticScreenProps<{
     accessToken: string
@@ -92,7 +92,7 @@ export function RegisterScreen({ route }: props) {
                         <Text>
                             {doc.name} {doc.required && '(필수)'}
                         </Text>
-                        <MarkdownModal link={`${BE_URL}/${doc.link}`} />
+                        <MarkdownModal link={`${BE_URL}/${doc.path}`} />
                     </View>
                 ))}
             </View>
