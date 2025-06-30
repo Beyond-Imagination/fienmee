@@ -80,10 +80,6 @@ export interface IPostReviewRequest {
     }
 }
 
-export interface IPostReviewResponse {
-    reviewId: string
-}
-
 export interface IPostEventCommentRequest {
     eventId: string
     comment: string

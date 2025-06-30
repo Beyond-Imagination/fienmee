@@ -1,21 +1,22 @@
 'use client'
 
 import React, { useEffect } from 'react'
-import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
-import { useMutation } from '@tanstack/react-query'
+import Image from 'next/image'
+import { useRouter } from 'next/navigation'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 
-import { eventStore, titleStore } from '@/store'
-import { CloseIcon, StarIcon } from '@/components/icon'
 import { IPostReviewRequest, IReviewFormInputs } from '@fienmee/types'
 import { postReview } from '@/api/review'
-import Image from 'next/image'
+import { CloseIcon, StarIcon } from '@/components/icon'
 import CameraIcon from '@/components/icon/Camera'
+import { eventStore, titleStore } from '@/store'
 
 export default function Page() {
     const { setTitle } = titleStore()
     const { event } = eventStore()
     const router = useRouter()
+    const queryClient = useQueryClient()
 
     useEffect(() => {
         setTitle('리뷰 작성하기')
@@ -36,10 +37,11 @@ export default function Page() {
 
     const mutation = useMutation({
         mutationFn: (request: IPostReviewRequest) => postReview(request),
-        onSuccess: () => {
+        onSuccess: async () => {
+            // TODO: reset cache for review statistics
+            await queryClient.invalidateQueries({ queryKey: ['review', event._id] })
             router.back()
             setTitle('')
-            // TODO: reset cache for the review list and statistics
         },
     })
 
