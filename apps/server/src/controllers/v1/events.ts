@@ -45,7 +45,7 @@ router.post('/', verifyToken, async (req: Request, res: Response) => {
 })
 
 router.put('/:id', verifyToken, verifyEventAuthor, async (req: Request, res: Response) => {
-    await EventsModel.updateOne(
+    const event = await EventsModel.findOneAndUpdate(
         { _id: req.params.id },
         {
             name: req.body.name,
@@ -59,8 +59,13 @@ router.put('/:id', verifyToken, verifyEventAuthor, async (req: Request, res: Res
             targetAudience: req.body.targetAudience,
             isAllDay: req.body.isAllDay,
         },
+        { returnDocument: 'after' },
     )
-    res.sendStatus(204)
+    res.status(200).json({
+        ...event.toJSON(),
+        isAuthor: event.get('authorId')?.equals(req.user._id),
+        isLiked: event.get('likes')?.includes(req.user._id),
+    })
 })
 
 router.delete('/:id', verifyToken, verifyEventAuthor, async (req: Request, res: Response) => {

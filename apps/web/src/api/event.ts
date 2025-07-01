@@ -57,7 +57,7 @@ export async function registerEvent(eventData: IPostEventRequest): Promise<void>
     return
 }
 
-export async function updateEvent(request: IPutEventRequest): Promise<void> {
+export async function updateEvent(request: IPutEventRequest): Promise<IEvent> {
     const res = await fetch(`${SERVER_URL}/v1/events/${request.uri._id}`, {
         method: 'PUT',
         body: JSON.stringify(request.body),
@@ -65,7 +65,7 @@ export async function updateEvent(request: IPutEventRequest): Promise<void> {
     if (!res.ok) {
         throw await res.json()
     }
-    return
+    return res.json()
 }
 
 export async function updateEventLikes(id: string) {

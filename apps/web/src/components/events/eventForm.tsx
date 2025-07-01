@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation'
 import { useQueryClient } from '@tanstack/react-query'
 
 import { ICategory, IEvent } from '@fienmee/types'
-import { getEventDetail, registerEvent, updateEvent } from '@/api/event'
+import { registerEvent, updateEvent } from '@/api/event'
 import { CategorySelectModal } from '@/components/events/categorySelectModal'
 import EventTimeSelector from '@/components/events/eventTimeSelector'
 import EventVenueSelector from '@/components/events/eventVenueSelector'
@@ -57,7 +57,7 @@ const EventForm: React.FC<EventFormProps> = ({ selectedCategories, handleCategor
         e.preventDefault()
         try {
             if (!isRegister) {
-                await updateEvent({
+                const event = await updateEvent({
                     body: {
                         ...formData,
                         category: Array.from(selectedCategories).map(category => category._id),
@@ -69,10 +69,8 @@ const EventForm: React.FC<EventFormProps> = ({ selectedCategories, handleCategor
                     },
                     uri: { _id: initEvent._id },
                 })
-
-                toast.success(<span>행사가 성공적으로 수정되었어요.</span>)
-                const event = await getEventDetail(initEvent._id)
                 setEvent(event)
+                toast.success(<span>행사가 성공적으로 수정되었어요.</span>)
 
                 await queryClient.refetchQueries({ queryKey: ['events'] })
                 router.back()
