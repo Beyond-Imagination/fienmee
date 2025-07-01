@@ -1,11 +1,15 @@
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { useNavigation } from '@react-navigation/native'
 import type { StaticScreenProps } from '@react-navigation/native'
+import CheckBox from '@react-native-community/checkbox'
 
-import { register } from '@/api'
+import { register, getAgreements } from '@/api'
 import { setToken } from '@/stores'
 import { RegisterScreenProps } from '@/types'
+import { IDocument } from '@fienmee/types/api'
+import { BE_URL } from '@/config'
+import { MarkdownModal } from '@/components/modal/MarkdownModal'
 
 type props = StaticScreenProps<{
     accessToken: string
@@ -21,6 +25,27 @@ const styles = StyleSheet.create({
 
 export function RegisterScreen({ route }: props) {
     const navigation = useNavigation<RegisterScreenProps['navigation']>()
+
+    const [documents, setDocuments] = useState<IDocument[]>([])
+    const [agreements, setAgreements] = useState<Record<string, boolean>>({})
+
+    useEffect(() => {
+        async function fetchDocuments() {
+            const result = await getAgreements()
+            setDocuments(result.documents)
+
+            const initial = Object.fromEntries(result.documents.map((d: IDocument) => [d.name, false]))
+            setAgreements(initial)
+        }
+
+        fetchDocuments()
+    }, [])
+
+    const toggleAgreement = (name: string) => {
+        setAgreements(prev => ({ ...prev, [name]: !prev[name] }))
+    }
+
+    const allRequiredAgreed = documents.filter(d => d.required).every(d => agreements[d.name])
 
     const onPress = async () => {
         try {
@@ -39,7 +64,12 @@ export function RegisterScreen({ route }: props) {
 
     return (
         <ScrollView
-            contentContainerStyle={{ flexGrow: 1, justifyContent: 'center' }}
+            contentContainerStyle={{
+                paddingHorizontal: 10,
+                paddingTop: 60,
+                paddingBottom: 80,
+                backgroundColor: '#fff',
+            }}
             style={[styles.container, { padding: 30, backgroundColor: '#FFFFFF' }]}
         >
             <View
@@ -48,25 +78,38 @@ export function RegisterScreen({ route }: props) {
                     margin: 30,
                     alignItems: 'stretch',
                     alignSelf: 'center',
-                    backgroundColor: '#D9D9D9',
                 }}
             >
-                <Text>유저 동의 내용.</Text>
-                <Text>
-                    aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
-                </Text>
+                <View style={{ marginBottom: 32, marginTop: 40 }}>
+                    <Text style={{ fontSize: 24, fontWeight: 'bold', color: '#333', marginBottom: 8 }}>회원가입을 시작합니다</Text>
+                    <Text style={{ fontSize: 16, color: '#666' }}>서비스를 이용하려면 아래 약관에 동의해주세요.</Text>
+                </View>
+                <View style={{ marginBottom: 60, borderBottomColor: '#eee', borderBottomWidth: 1 }} />
+
+                {documents.map(doc => (
+                    <View key={doc.name} style={{ flexDirection: 'row' }}>
+                        <CheckBox value={agreements[doc.name]} onValueChange={() => toggleAgreement(doc.name)} />
+                        <Text>
+                            {doc.name} {doc.required && '(필수)'}
+                        </Text>
+                        <MarkdownModal link={`${BE_URL}/${doc.path}`} />
+                    </View>
+                ))}
             </View>
-            <TouchableOpacity onPress={onPress}>
+            <TouchableOpacity onPress={onPress} disabled={!allRequiredAgreed}>
                 <View
                     style={{
-                        flex: 1,
-                        backgroundColor: '#FF9575',
+                        backgroundColor: allRequiredAgreed ? '#FF7F50' : '#dddddd',
+                        paddingVertical: 14,
+                        paddingHorizontal: 20,
                         borderRadius: 12,
-                        height: 50,
-                        width: 120,
-                        justifyContent: 'center',
-                        alignItems: 'stretch',
-                        alignSelf: 'center',
+                        alignItems: 'center',
+                        marginTop: 24,
+                        shadowColor: '#000000',
+                        shadowOffset: { width: 0, height: 2 },
+                        shadowOpacity: 0.15,
+                        shadowRadius: 4,
+                        elevation: 4,
                     }}
                 >
                     <Text style={{ color: 'white', textAlign: 'center', fontSize: 20 }}>회원 가입</Text>
