@@ -16,24 +16,25 @@ export default function EventUpdate() {
 }
 
 function UpdatePageContent() {
-    const { event, setEvent } = eventStore()
+    const { event } = eventStore()
+    const [photo, setPhoto] = useState<string[]>(event.photo)
     const [selectedCategories, setSelectedCategories] = useState<Set<ICategory>>(new Set(event.category ?? []))
 
     const handleAddPhoto = (photoUrls: string[]) => {
-        setEvent({ ...event, photo: [...event.photo, ...photoUrls] })
+        setPhoto([...photo, ...photoUrls])
     }
 
     const handleRemovePhoto = (index: number) => {
-        setEvent({ ...event, photo: event.photo.filter((_, i) => i !== index) })
+        setPhoto(photo.filter((_, i) => i !== index))
     }
 
     return (
         <div className="grid items-center justify-items-center min-h-screen">
-            <PhotoUploader photos={event.photo} onAddPhoto={handleAddPhoto} onRemovePhoto={handleRemovePhoto} />
+            <PhotoUploader photos={photo} onAddPhoto={handleAddPhoto} onRemovePhoto={handleRemovePhoto} />
             <EventForm
                 selectedCategories={selectedCategories}
                 handleCategories={setSelectedCategories}
-                photos={event.photo}
+                photos={photo}
                 initEvent={event}
                 isRegister={false}
             />
