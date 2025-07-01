@@ -1,9 +1,10 @@
 import React, { useState } from 'react'
 import { toast } from 'react-toastify'
 import { useRouter } from 'next/navigation'
+import { useQueryClient } from '@tanstack/react-query'
 
 import { ICategory, IEvent } from '@fienmee/types'
-import { registerEvent, updateEvent } from '@/api/event'
+import { getEventDetail, registerEvent, updateEvent } from '@/api/event'
 import { CategorySelectModal } from '@/components/events/categorySelectModal'
 import EventTimeSelector from '@/components/events/eventTimeSelector'
 import EventVenueSelector from '@/components/events/eventVenueSelector'
@@ -11,7 +12,6 @@ import InputField from '@/components/events/inputField'
 import SubmitButton from '@/components/events/submitButton'
 import { ArrowIcon } from '@/components/icon'
 import { eventStore } from '@/store'
-import { useQueryClient } from '@tanstack/react-query'
 
 interface EventFormProps {
     selectedCategories: Set<ICategory>
@@ -71,7 +71,8 @@ const EventForm: React.FC<EventFormProps> = ({ selectedCategories, handleCategor
                 })
 
                 toast.success(<span>행사가 성공적으로 수정되었어요.</span>)
-                setEvent(formData)
+                const event = await getEventDetail(initEvent._id)
+                setEvent(event)
 
                 await queryClient.refetchQueries({ queryKey: ['events'] })
                 router.back()
