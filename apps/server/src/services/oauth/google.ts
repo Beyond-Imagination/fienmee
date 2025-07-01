@@ -15,6 +15,9 @@ export class Google implements IOAuth {
             throw new GoogleUserInformationError(e)
         })
 
+        if (!response.ok) {
+            throw new GoogleUserInformationError(response.message)
+        }
         const data = (await response.json()) as getUserFromGoogleResponse
 
         return {

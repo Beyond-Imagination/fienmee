@@ -1,8 +1,8 @@
-import { Image, StyleSheet, TouchableOpacity, Text } from 'react-native'
+import { Image, StyleSheet, TouchableOpacity, Text, Alert } from 'react-native'
 import React from 'react'
 import { useNavigation } from '@react-navigation/native'
 import { LoginScreenProps } from '@/types'
-import { GoogleSignin, SignInSuccessResponse } from '@react-native-google-signin/google-signin'
+import { GoogleSignin, isErrorWithCode, SignInSuccessResponse, statusCodes } from '@react-native-google-signin/google-signin'
 import { isErrorResponse } from '@fienmee/types'
 import { getGoogleRefreshToken, login } from '@/api'
 import { setToken } from '@/stores'
@@ -69,7 +69,17 @@ export function GoogleOauthLogin() {
                     provider: 'GOOGLE',
                 })
             } else {
-                navigation.navigate('Error')
+                if (isErrorWithCode(error)) {
+                    switch (error.code) {
+                        case statusCodes.SIGN_IN_CANCELLED:
+                            return
+                        case statusCodes.IN_PROGRESS:
+                            Alert.alert('중복된 요청입니다.')
+                            return
+                    }
+                } else {
+                    navigation.navigate('Error')
+                }
             }
         }
     }
