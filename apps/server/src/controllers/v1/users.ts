@@ -9,7 +9,6 @@ import { UserModel } from '@/models'
 import { issueAccessToken, getOAuthUser, expireJwt, issueRefreshToken, unlinkUser } from '@/services/oauth'
 import { verifyToken } from '@/middlewares/auth'
 import { registerUser } from '@/services/user'
-import axios from 'axios'
 
 const router: Router = asyncify(express.Router())
 
@@ -103,13 +102,16 @@ router.post('/google-token', async (req: Request, res: Response) => {
     params.append('redirect_uri', '')
     params.append('grant_type', 'authorization_code')
 
-    const response = await axios.post('https://oauth2.googleapis.com/token', params.toString(), {
+    const response = await fetch('https://oauth2.googleapis.com/token', {
+        method: 'POST',
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
         },
+        body: params.toString(),
     })
 
-    res.json(response.data.refresh_token)
+    const data = (await response.json()) as { refresh_token: string }
+    res.json(data.refresh_token)
 })
 
 router.put('/interest', verifyToken, async (req: Request, res: Response) => {
