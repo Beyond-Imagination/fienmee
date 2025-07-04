@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useInView } from 'react-intersection-observer'
 import { ClipLoader } from 'react-spinners'
+import { format } from 'date-fns'
 import { useInfiniteQuery } from '@tanstack/react-query'
 
 import { getSchedulesByDate } from '@/api/schedules'
@@ -91,7 +92,7 @@ export default function ScheduleList({ date }: Prop) {
     if (isLoading) {
         return (
             <div className="bg-white w-full border-t border-t-[#E4E4E4]">
-                <div className="ml-5 mt-6 mb-3 text-xl font-bold text-left">{String(date.getDate()).padStart(2, '0')}일 일정</div>
+                <div className="ml-5 mt-6 mb-3 text-xl font-bold text-left">{format(date, 'dd')}일 일정</div>
                 <div className="flex justify-center">
                     <ClipLoader color="#FF6B6B" size={50} />
                 </div>
@@ -101,7 +102,7 @@ export default function ScheduleList({ date }: Prop) {
 
     return (
         <div className="bg-white w-full border-t border-t-[#E4E4E4] pb-3">
-            <div className="text-xl font-bold text-left px-4 pb-3 pt-6">{String(date.getDate()).padStart(2, '0')}일 일정</div>
+            <div className="text-xl font-bold text-left px-4 pb-3 pt-6">{format(date, 'dd')}일 일정</div>
             <div className="flex flex-col">
                 {data &&
                     data.pages.map((docs, i) =>

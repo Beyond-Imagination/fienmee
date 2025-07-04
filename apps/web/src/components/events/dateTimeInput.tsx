@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { format } from 'date-fns'
 
 interface DateTimeInputProps {
     value: Date
@@ -7,8 +8,8 @@ interface DateTimeInputProps {
 }
 
 const DateTimeInput: React.FC<DateTimeInputProps> = ({ value, onChange, hideTime }) => {
-    const [date, setDate] = useState(new Date(value).toISOString().split('T')[0])
-    const [time, setTime] = useState(new Date(value).toTimeString().slice(0, 5))
+    const [date, setDate] = useState(format(value, 'yyyy-MM-dd'))
+    const [time, setTime] = useState(format(value, 'HH:mm'))
 
     const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const newDate = e.target.value
