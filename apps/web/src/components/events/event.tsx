@@ -38,7 +38,7 @@ export default function Event({ event }: Props) {
         >
             <div className="flex flex-col min-h-32 w-2/3 ps-2">
                 <div className="text-lg font-semibold">{event.name}</div>
-                <div className="text-base text-gray-600">{`${format(event.startDate, 'yyyy-MM-dd')} ~ ${format(event.endDate, 'yyyy-MM-dd')}`}</div>
+                <div className="text-base text-gray-600">{`${format(event.startDate, 'yyyy-MM-dd')}~${format(event.endDate, 'yyyy-MM-dd')}`}</div>
                 <div className="text-base text-gray-600">{event.address}</div>
             </div>
             <div className="flex-1 bg-[#D9D9D9] overflow-hidden mt-1 me-2 rounded">
