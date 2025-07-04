@@ -11,7 +11,7 @@ const BATCH_SIZE = 1000
 
 function parseEndDate(date: string): Date {
     const datePart = date.split(' ')[0]
-    return toZonedTime(new Date(`${datePart} 23:59:59`), 'Asia/Seoul')
+    return toZonedTime(`${datePart} 23:59:59`, 'Asia/Seoul')
 }
 
 async function saveSeoulData(data: Array<ICulturalEvent>, today: Date): Promise<void> {
