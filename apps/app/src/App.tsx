@@ -19,6 +19,8 @@ import PushNotificationService from '@/services/pushNotificationService.ts'
 import { getToken } from '@/stores'
 import { IRequestNotificationToken } from '@fienmee/types'
 import { submitFCMToken } from '@/api'
+import { GoogleSignin } from '@react-native-google-signin/google-signin'
+import { GOOGLE_CLIENT_ID } from '@/config'
 
 function App(): React.JSX.Element {
     const isDarkMode = useColorScheme() === 'dark'
@@ -53,6 +55,10 @@ function App(): React.JSX.Element {
                 accessToken: credential.accessToken,
             }
             await submitFCMToken(request)
+        })
+        GoogleSignin.configure({
+            webClientId: GOOGLE_CLIENT_ID,
+            offlineAccess: true, // refresh token 받기 위해 필요
         })
     }, [])
 

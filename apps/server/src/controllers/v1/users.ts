@@ -92,6 +92,28 @@ router.delete('/', verifyToken, async (req: Request, res: Response) => {
     res.sendStatus(204)
 })
 
+router.post('/google-token', async (req: Request, res: Response) => {
+    const serverAuthCode = req.body.code as string
+
+    const params = new URLSearchParams()
+    params.append('code', serverAuthCode)
+    params.append('client_id', process.env.GOOGLE_CLIENT_ID!)
+    params.append('client_secret', process.env.GOOGLE_CLIENT_SECRET!)
+    params.append('redirect_uri', '')
+    params.append('grant_type', 'authorization_code')
+
+    const response = await fetch('https://oauth2.googleapis.com/token', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: params.toString(),
+    })
+
+    const data = (await response.json()) as { refresh_token: string }
+    res.json(data.refresh_token)
+})
+
 router.put('/interest', verifyToken, async (req: Request, res: Response) => {
     const isInterested = req.user.interests.some(category => category._id === req.body.interest)
 

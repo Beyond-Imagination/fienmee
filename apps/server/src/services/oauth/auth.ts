@@ -1,5 +1,5 @@
 import { ICredentials, IOAuth, IUser } from '@/types/oauth'
-import { Kakao } from '@/services/oauth/kakao'
+import { Kakao, Google } from '@/services/oauth'
 import { UnknownProviderError } from '@/types/errors/oauth'
 import { User, UserModel } from '@/models'
 
@@ -12,6 +12,8 @@ function getOAuthProvider(provider: string): IOAuth {
     switch (provider) {
         case 'KAKAO':
             return new Kakao()
+        case 'GOOGLE':
+            return new Google()
         default:
             throw new UnknownProviderError(provider)
     }

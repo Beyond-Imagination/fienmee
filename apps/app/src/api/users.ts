@@ -42,3 +42,17 @@ export async function refresh(request: refreshRequest): Promise<refreshResponse>
 
     return res.json()
 }
+
+export async function getGoogleRefreshToken(request: string): Promise<string> {
+    const res = await fetch(`${BE_URL}/v1/users/google-token`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ code: request }),
+    })
+
+    if (!res.ok) {
+        throw await res.json()
+    }
+
+    return res.json()
+}
