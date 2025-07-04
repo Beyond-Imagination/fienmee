@@ -103,7 +103,7 @@ export class Schedule extends defaultClasses.TimeStamps {
                                     day: '$_id.day',
                                 },
                             },
-                            timezone: timezone, // 이 부분 중요!
+                            timezone: timezone,
                         },
                     },
                     count: 1,
