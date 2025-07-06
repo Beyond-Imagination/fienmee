@@ -1,19 +1,12 @@
-import { IEvent } from '@fienmee/types'
 import Link from 'next/link'
+import { format } from 'date-fns'
+import { IEvent } from '@fienmee/types'
+
 import { eventStore } from '@/store/event'
 import { titleStore } from '@/store'
 
 interface Props {
     event: IEvent | undefined
-}
-
-const formatDate = (date: Date) => {
-    const formattedDate = new Date(date).toLocaleDateString('ko-KR', {
-        year: 'numeric',
-        month: '2-digit',
-        day: '2-digit',
-    })
-    return formattedDate.replace(/\s/g, '').replace(/\.$/, '')
 }
 
 export default function Event({ event }: Props) {
@@ -45,7 +38,7 @@ export default function Event({ event }: Props) {
         >
             <div className="flex flex-col min-h-32 w-2/3 ps-2">
                 <div className="text-lg font-semibold">{event.name}</div>
-                <div className="text-base text-gray-600">{`${formatDate(event.startDate)}~${formatDate(event.endDate)}`}</div>
+                <div className="text-base text-gray-600">{`${format(event.startDate, 'yyyy-MM-dd')}~${format(event.endDate, 'yyyy-MM-dd')}`}</div>
                 <div className="text-base text-gray-600">{event.address}</div>
             </div>
             <div className="flex-1 bg-[#D9D9D9] overflow-hidden mt-1 me-2 rounded">

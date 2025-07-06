@@ -8,11 +8,10 @@ import {
 } from '@fienmee/types'
 
 export async function getSchedulesByDate(date: Date, page: number, limit: number): Promise<IGetScheduleListResponse> {
-    const year = date.getFullYear()
-    const month = date.getMonth() + 1
-    const day = date.getDate()
-    const from = `${year}.${month}.${day}`
-    const to = `${year}.${month}.${day}`
+    const tomorrow = new Date(date)
+    tomorrow.setDate(date.getDate() + 1)
+    const from = date.toISOString()
+    const to = tomorrow.toISOString()
 
     const res = await fetch(`${SERVER_URL}/v1/schedules?page=${page}&limit=${limit}&from=${from}&to=${to}`, {
         method: 'GET',
@@ -57,7 +56,8 @@ export async function updateSchedule(schedule: IScheduleItem): Promise<ISchedule
 }
 
 export async function getDailyScheduleCount(from: Date, to: Date): Promise<IGetDailyScheduleCountResponse> {
-    const res = await fetch(`${SERVER_URL}/v1/schedules/dailyCount?from=${from}&to=${to}`, {
+    const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone
+    const res = await fetch(`${SERVER_URL}/v1/schedules/dailyCount?from=${from.toISOString()}&to=${to.toISOString()}&timezone=${timezone}`, {
         method: 'GET',
     })
     if (!res.ok) {
