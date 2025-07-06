@@ -56,7 +56,7 @@ export class Schedule extends defaultClasses.TimeStamps {
             limit: number
         },
     ) {
-        return await this.paginate({ authorId: userId, startDate: { $lte: filterOption.to }, endDate: { $gte: filterOption.from } }, options)
+        return await this.paginate({ authorId: userId, startDate: { $lt: filterOption.to }, endDate: { $gt: filterOption.from } }, options)
     }
 
     public static async findDailyCountByUserId(
@@ -64,6 +64,7 @@ export class Schedule extends defaultClasses.TimeStamps {
         user: User,
         from: Date,
         to: Date,
+        timezone: string,
     ): Promise<IDailyScheduleCount[]> {
         return this.aggregate([
             {
@@ -73,11 +74,18 @@ export class Schedule extends defaultClasses.TimeStamps {
                 },
             },
             {
+                $addFields: {
+                    localStartDate: {
+                        $dateToParts: { date: '$startDate', timezone: timezone },
+                    },
+                },
+            },
+            {
                 $group: {
                     _id: {
-                        year: { $year: '$startDate' },
-                        month: { $month: '$startDate' },
-                        day: { $dayOfMonth: '$startDate' },
+                        year: '$localStartDate.year',
+                        month: '$localStartDate.month',
+                        day: '$localStartDate.day',
                     },
                     count: { $sum: 1 },
                 },
@@ -95,6 +103,7 @@ export class Schedule extends defaultClasses.TimeStamps {
                                     day: '$_id.day',
                                 },
                             },
+                            timezone: timezone,
                         },
                     },
                     count: 1,

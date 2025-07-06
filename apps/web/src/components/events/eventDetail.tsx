@@ -1,24 +1,24 @@
+import { useMemo } from 'react'
+import Link from 'next/link'
+import { format } from 'date-fns'
+
 import { IEvent } from '@fienmee/types'
-import dayjs from 'dayjs'
-import 'dayjs/locale/ko'
 import { CommentIcon, ShareIcon } from '@/components/icon'
 import { EventMap } from '@/components/events/eventMap'
 import EventOption from '@/components/events/eventOption'
 import EventPhoto from '@/components/events/eventPhoto'
 import EventLikes from '@/components/events/eventLikes'
-import { useMemo } from 'react'
 import TabBar from '@/components/tabBar'
 import EventCommentInput from '@/components/comment/commentInputField'
-import Link from 'next/link'
 import { CommentList } from '@/components/comment/commentList'
+import { ko } from 'date-fns/locale'
 
 interface Props {
     event: IEvent
 }
 
-dayjs.locale('ko')
 const formatDate = (date: Date) => {
-    return dayjs(date).format('YYYY.MM.DD(ddd)')
+    return format(date, 'yyyy.MM.dd(eee)', { locale: ko })
 }
 
 export default function EventDetail({ event }: Props) {
