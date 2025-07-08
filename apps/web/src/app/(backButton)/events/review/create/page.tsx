@@ -87,11 +87,11 @@ export default function Page() {
             }
 
             if (failed.length > 0) {
-                toast.error(<span>사진 업로드를 실패했어요. 다시 한번 시도해주세요.</span>)
+                toast.error(<span>`${failed.length}개의 사진 업로드를 실패했어요. 다시 한번 시도해주세요.</span>)
             }
         } catch (error) {
             console.error(error)
-            toast.error(<span>사진 업로드를 실패했어요. 다시 한번 시도해주세요.</span>)
+            toast.error(<span>사진 업로드 중 예상치 못한 오류가 발생했어요. 다시 시도해주세요.</span>)
         } finally {
             setIsUploading(false)
             event.target.value = ''
@@ -153,7 +153,7 @@ export default function Page() {
             ) : (
                 <div className="flex flex-row flex-wrap items-center gap-y-2 gap-x-5">
                     {watch('photo').map((p, i) => (
-                        <div className="relative w-20 h-20" key={`review-image-${i}`}>
+                        <div className="relative w-20 h-20" key={p}>
                             <div className="relative top-0 left-0 w-20 h-20 overflow-hidden rounded-lg">
                                 <Image loader={() => p} src={p} alt={`review-image`} fill />
                             </div>
