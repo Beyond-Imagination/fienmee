@@ -1,13 +1,16 @@
 'use client'
 
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
+import { ClipLoader } from 'react-spinners'
+import { toast } from 'react-toastify'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 
 import { IPostReviewRequest, IReviewFormInputs } from '@fienmee/types'
 import { postReview } from '@/api/review'
+import { getUploadUrl, getViewUrl, uploadToS3 } from '@/api/s3'
 import { CloseIcon, StarIcon } from '@/components/icon'
 import CameraIcon from '@/components/icon/Camera'
 import { eventStore, titleStore } from '@/store'
@@ -17,6 +20,24 @@ export default function Page() {
     const { event } = eventStore()
     const router = useRouter()
     const queryClient = useQueryClient()
+    const [isUploading, setIsUploading] = useState(false)
+
+    const uploadFile = async (file: File): Promise<string | null> => {
+        try {
+            const { presignedUrl: uploadUrl } = await getUploadUrl({
+                fileName: file.name,
+                fileType: file.type,
+            })
+            const key = uploadUrl.split('?')[0].split('/').pop()!
+            await uploadToS3(uploadUrl, file)
+
+            const { presignedUrl: viewUrl } = await getViewUrl(key)
+            return viewUrl
+        } catch (error) {
+            console.error(error)
+            return null
+        }
+    }
 
     useEffect(() => {
         setTitle('리뷰 작성하기')
@@ -50,21 +71,30 @@ export default function Page() {
         setValue('rating', newRating)
     }
 
-    const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
         const files = event.target.files
-        // TODO: add s3 image upload
-        if (files) {
-            const newPhotos = [...watch('photo')]
-            Array.from(files).forEach(file => {
-                const reader = new FileReader()
-                reader.onload = e => {
-                    if (e.target?.result) {
-                        newPhotos.push(e.target.result as string)
-                        setValue('photo', newPhotos)
-                    }
-                }
-                reader.readAsDataURL(file)
-            })
+        if (!files || files.length === 0) return
+
+        setIsUploading(true)
+
+        try {
+            const results = await Promise.all(Array.from(files).map(uploadFile))
+            const succeeded = results.filter((url): url is string => url !== null)
+            const failed = Array.from(files).filter((_, idx) => results[idx] === null)
+
+            if (succeeded.length > 0) {
+                setValue('photo', [...watch('photo'), ...succeeded])
+            }
+
+            if (failed.length > 0) {
+                toast.error(<span>`${failed.length}개의 사진 업로드를 실패했어요. 다시 한번 시도해주세요.</span>)
+            }
+        } catch (error) {
+            console.error(error)
+            toast.error(<span>사진 업로드 중 예상치 못한 오류가 발생했어요. 다시 시도해주세요.</span>)
+        } finally {
+            setIsUploading(false)
+            event.target.value = ''
         }
     }
 
@@ -118,14 +148,14 @@ export default function Page() {
                 <label className="flex flex-row justify-center items-center gap-[0.3125rem] w-full h-20 border-2 border-[#FF9575] border-dashed rounded-lg">
                     <CameraIcon className="w-6 h-6 text-[#FF9575]" />
                     <span className="text-[#FF9575]">사진 추가</span>
-                    <input type="file" accept="image/*" className="hidden" multiple onChange={handleImageUpload} />
+                    <input type="file" accept="image/*" className="hidden" multiple onChange={handleImageUpload} disabled={isUploading} />
                 </label>
             ) : (
-                <div className="flex flex-row flex-wrap gap-y-2 gap-x-5">
+                <div className="flex flex-row flex-wrap items-center gap-y-2 gap-x-5">
                     {watch('photo').map((p, i) => (
-                        <div className="relative w-20 h-20" key={`review-image-${i}`}>
+                        <div className="relative w-20 h-20" key={p}>
                             <div className="relative top-0 left-0 w-20 h-20 overflow-hidden rounded-lg">
-                                <Image loader={() => p} src="me.png" alt={`review-image`} fill />
+                                <Image loader={() => p} src={p} alt={`review-image`} fill />
                             </div>
                             <div
                                 className="absolute -top-1 -right-1 flex justify-center items-center w-6 h-6 bg-[#1E1E1E] rounded-3xl"
@@ -135,16 +165,17 @@ export default function Page() {
                             </div>
                         </div>
                     ))}
+                    {isUploading && <ClipLoader color="#FF9575" />}
                     <label className="w-20 h-20 border-2 border-[#FF9575] border-dashed rounded-lg">
                         <CameraIcon className="relative top-5 left-5  w-6 h-6 text-[#FF9575]" />
-                        <input type="file" accept="image/*" className="hidden" multiple onChange={handleImageUpload} />
+                        <input type="file" accept="image/*" className="hidden" multiple onChange={handleImageUpload} disabled={isUploading} />
                     </label>
                 </div>
             )}
             <button
                 type="submit"
                 className="self-center w-full bg-[#FF9575] text-base text-white text-center rounded-lg py-2"
-                disabled={isSubmitting || mutation.isPending}
+                disabled={isSubmitting || mutation.isPending || isUploading}
             >
                 등록 하기
             </button>
