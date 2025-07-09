@@ -1,11 +1,7 @@
 import React from 'react'
 import { PageTitleHeader } from '@/components/header'
+import { BaseLayout } from '@/components/layout/BaseLayout'
 
 export default function BackButtonLayout({ children }: { children: React.ReactNode }) {
-    return (
-        <div className="flex flex-col w-full h-dvh">
-            <PageTitleHeader />
-            <div className="w-full overflow-y-scroll">{children}</div>
-        </div>
-    )
+    return <BaseLayout header={<PageTitleHeader />}>{children}</BaseLayout>
 }

@@ -3,7 +3,7 @@ import { NotificationIcon, TextLogo } from '@/components/icon'
 
 export function LogoHeader() {
     return (
-        <div className="flex flex-row w-full h-[6.25rem] items-center justify-between bg-white pt-10 p-2">
+        <div className="flex flex-row w-full h-[5rem] items-center justify-between bg-white p-2">
             <div className="ps-4">
                 <TextLogo width="9.375rem" height="3rem" />
             </div>
