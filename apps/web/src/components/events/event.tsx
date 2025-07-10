@@ -4,6 +4,7 @@ import { IEvent } from '@fienmee/types'
 
 import { eventStore } from '@/store/event'
 import { titleStore } from '@/store'
+import EventImage from '@/components/events/EventImage'
 
 interface Props {
     event: IEvent | undefined
@@ -41,9 +42,12 @@ export default function Event({ event }: Props) {
                 <div className="text-base text-gray-600">{`${format(event.startDate, 'yyyy-MM-dd')}~${format(event.endDate, 'yyyy-MM-dd')}`}</div>
                 <div className="text-base text-gray-600">{event.address}</div>
             </div>
-            <div className="flex-1 bg-[#D9D9D9] overflow-hidden mt-1 me-2 rounded">
-                {/*TODO: change image tag*/}
-                <img src={event.photo[0]} alt="대표 사진" className="w-full h-full object-cover object-top" />
+            <div className="flex-1 h-36 bg-[#D9D9D9] overflow-hidden mt-1 me-2 rounded">
+                {event.photo && event.photo.length > 0 ? (
+                    <EventImage s3Key={event.photo[0]} alt="대표 사진" className="w-full h-full object-cover object-top" />
+                ) : (
+                    <div className="w-full h-full bg-gray-300 flex items-center justify-center text-gray-500">이미지 없음</div>
+                )}
             </div>
         </Link>
     )
