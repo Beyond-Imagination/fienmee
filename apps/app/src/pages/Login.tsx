@@ -1,7 +1,7 @@
 import { View, StyleSheet, ScrollView, Image } from 'react-native'
 import React from 'react'
 
-import { AppleOauthLogin, GoogleOauthLogin, KakaoOauthLogin, NaverOauthLogin } from '@/components/login'
+import { /* AppleOauthLogin, */ GoogleOauthLogin, KakaoOauthLogin /* , NaverOauthLogin */ } from '@/components/login'
 
 const styles = StyleSheet.create({
     container: {
@@ -35,8 +35,8 @@ export function LoginScreen() {
             </View>
             <View style={styles.container}>
                 <KakaoOauthLogin />
-                <NaverOauthLogin />
-                <AppleOauthLogin />
+                {/* <NaverOauthLogin /> */}
+                {/* <AppleOauthLogin /> */}
                 <GoogleOauthLogin />
             </View>
         </ScrollView>
