@@ -29,6 +29,10 @@ export default function EventCommentInput({ eventId }: Props) {
     }
 
     const handleSubmit = () => {
+        if (mutation.isPending) {
+            return
+        }
+
         if (comment.trim() === '') {
             return
         }
@@ -47,7 +51,11 @@ export default function EventCommentInput({ eventId }: Props) {
                 value={comment}
                 onChange={handleChange}
             />
-            <button className="bg-[#FF9575] text-white px-4 h-10 rounded-lg flex items-center justify-center min-w-[60px]" onClick={handleSubmit}>
+            <button
+                className="bg-[#FF9575] text-white px-4 h-10 rounded-lg flex items-center justify-center min-w-[60px]"
+                onClick={handleSubmit}
+                disabled={mutation.isPending}
+            >
                 등록
             </button>
         </div>
