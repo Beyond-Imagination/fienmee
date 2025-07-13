@@ -10,22 +10,22 @@ import EventTimeSelector from '@/components/events/eventTimeSelector'
 import EventVenueSelector from '@/components/events/eventVenueSelector'
 import InputField from '@/components/events/inputField'
 import SubmitButton from '@/components/events/submitButton'
+import PhotoUploader from '@/components/events/photoUploader'
 import { ArrowIcon } from '@/components/icon'
 import { eventStore } from '@/store'
 
 interface EventFormProps {
     selectedCategories: Set<ICategory>
     handleCategories: (categories: Set<ICategory>) => void
-    photos: string[]
     initEvent: IEvent
     isRegister: boolean
 }
 
-const EventForm: React.FC<EventFormProps> = ({ selectedCategories, handleCategories, photos, initEvent, isRegister }) => {
+const EventForm: React.FC<EventFormProps> = ({ selectedCategories, handleCategories, initEvent, isRegister }) => {
     const router = useRouter()
     const { setEvent } = eventStore()
     const [position, setPosition] = useState({ lat: initEvent.location.coordinates[1], lng: initEvent.location.coordinates[0] })
-    const [formData, setFormData] = useState<IEvent>(initEvent)
+    const [formData, setFormData] = useState<IEvent>({ ...initEvent })
     const [showCategoryModal, setShowCategoryModal] = useState<boolean>(false)
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -38,6 +38,10 @@ const EventForm: React.FC<EventFormProps> = ({ selectedCategories, handleCategor
         } else {
             setFormData(prevState => ({ ...prevState, [name]: value }))
         }
+    }
+
+    const handlePhotoKeysChange = (keys: string[]) => {
+        setFormData(prevState => ({ ...prevState, photo: keys }))
     }
 
     const onStartDateTimeChange = (dateTime: string) => {
@@ -56,17 +60,18 @@ const EventForm: React.FC<EventFormProps> = ({ selectedCategories, handleCategor
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
         try {
+            const submissionData = {
+                ...formData,
+                category: Array.from(selectedCategories).map(category => category._id),
+                location: {
+                    type: 'Point' as const,
+                    coordinates: [position.lng, position.lat],
+                },
+            }
+
             if (!isRegister) {
                 const event = await updateEvent({
-                    body: {
-                        ...formData,
-                        category: Array.from(selectedCategories).map(category => category._id),
-                        photo: photos,
-                        location: {
-                            type: 'Point',
-                            coordinates: [position.lng, position.lat],
-                        },
-                    },
+                    body: submissionData,
                     uri: { _id: initEvent._id },
                 })
                 setEvent(event)
@@ -76,15 +81,7 @@ const EventForm: React.FC<EventFormProps> = ({ selectedCategories, handleCategor
                 router.back()
             } else {
                 await registerEvent({
-                    body: {
-                        ...formData,
-                        category: Array.from(selectedCategories).map(category => category._id),
-                        photo: photos,
-                        location: {
-                            type: 'Point',
-                            coordinates: [position.lng, position.lat],
-                        },
-                    },
+                    body: submissionData,
                 })
 
                 await queryClient.refetchQueries({ queryKey: ['events'] })
@@ -99,6 +96,7 @@ const EventForm: React.FC<EventFormProps> = ({ selectedCategories, handleCategor
 
     return (
         <>
+            <PhotoUploader photoKeys={formData.photo} onKeysChange={handlePhotoKeysChange} />
             <form className="p-6 w-full max-w-lg mx-auto flex flex-col gap-6" onSubmit={handleSubmit}>
                 <InputField label="행사 제목" placeholder="행사 제목을 입력해주세요" value={formData.name} name="name" onChange={handleChange} />
                 <div className="flex items-center">

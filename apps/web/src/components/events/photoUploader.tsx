@@ -1,72 +1,30 @@
-import React, { useRef, useState } from 'react'
+import React, { useRef } from 'react'
 import { ClipLoader } from 'react-spinners'
-import { toast } from 'react-toastify'
 
-import { getUploadUrl, getViewUrl, uploadToS3 } from '@/api/s3'
+import { useS3Upload, useImageLoader } from '@/hooks/s3'
 import CameraIcon from '@/components/icon/Camera'
 
 interface PhotoUploaderProps {
-    photos: string[]
-    onAddPhoto: (photoUrls: string[]) => void
-    onRemovePhoto: (index: number) => void
+    photoKeys: string[]
+    onKeysChange: (keys: string[]) => void
 }
 
-const uploadFile = async (file: File): Promise<string | null> => {
-    try {
-        const { presignedUrl: uploadUrl } = await getUploadUrl({
-            fileName: file.name,
-            fileType: file.type,
-        })
-        const key = uploadUrl.split('?')[0].split('/').pop()!
-        await uploadToS3(uploadUrl, file)
-
-        const { presignedUrl: viewUrl } = await getViewUrl(key)
-        return viewUrl
-    } catch (error) {
-        console.error(error)
-        return null
-    }
-}
-
-const PhotoUploader: React.FC<PhotoUploaderProps> = ({ photos, onAddPhoto, onRemovePhoto }) => {
-    const [uploading, setUploading] = useState(false)
+const PhotoUploader: React.FC<PhotoUploaderProps> = ({ photoKeys, onKeysChange }) => {
+    const { isUploading, handleImageUpload } = useS3Upload()
     const inputRef = useRef<HTMLInputElement | null>(null)
 
-    const handlePhotoUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
-        const files = event.target.files
-        if (!files || files.length === 0) return
-
-        setUploading(true)
-
-        try {
-            const results = await Promise.all(Array.from(files).map(uploadFile))
-            const succeeded = results.filter((url): url is string => url !== null)
-            const failed = Array.from(files).filter((_, idx) => results[idx] === null)
-
-            if (succeeded.length > 0) {
-                onAddPhoto(succeeded)
-            }
-
-            if (failed.length > 0) {
-                showUploadFailToast()
-            }
-        } catch (error) {
-            console.error(error)
-            showUploadFailToast()
-        } finally {
-            setUploading(false)
-            resetInput()
-        }
-    }
-
-    const resetInput = () => {
+    const onImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+        handleImageUpload(event.target.files, newPhotos => {
+            const newKeys = newPhotos.map(p => p.key)
+            onKeysChange([...photoKeys, ...newKeys])
+        })
         if (inputRef.current) {
             inputRef.current.value = ''
         }
     }
 
-    const showUploadFailToast = () => {
-        toast.error(<span>사진 업로드를 실패했어요. 다시 한번 시도해주세요.</span>)
+    const handleRemovePhoto = (indexToRemove: number) => {
+        onKeysChange(photoKeys.filter((_, index) => index !== indexToRemove))
     }
 
     return (
@@ -77,20 +35,36 @@ const PhotoUploader: React.FC<PhotoUploaderProps> = ({ photos, onAddPhoto, onRem
             >
                 <CameraIcon className="h-10 w-10 object-contain" />
             </label>
-            <input type="file" id="photo-upload" accept="image/*" className="hidden" multiple onChange={handlePhotoUpload} disabled={uploading} />
-            {photos.map((photo, index) => (
-                <div key={index} className="relative w-16 h-16 border border-gray-300 rounded-lg overflow-hidden flex-shrink-0">
-                    <img src={photo} alt={`Uploaded ${index}`} className="w-full h-full object-cover" />
-                    <button
-                        type="button"
-                        onClick={() => onRemovePhoto(index)}
-                        className="absolute top-1 right-1 w-5 h-5 bg-black text-white rounded-full flex items-center justify-center"
-                    >
-                        ×
-                    </button>
-                </div>
+            <input type="file" id="photo-upload" accept="image/*" className="hidden" multiple onChange={onImageUpload} disabled={isUploading} />
+            {photoKeys.map((key, index) => (
+                <ImagePreview key={key} s3Key={key} onRemove={() => handleRemovePhoto(index)} />
             ))}
-            {uploading && <ClipLoader color="#3b82f6" />}
+            {isUploading && <ClipLoader color="#3b82f6" />}
+        </div>
+    )
+}
+
+const ImagePreview: React.FC<{ s3Key: string; onRemove: () => void }> = ({ s3Key, onRemove }) => {
+    const { imageUrl, isLoading } = useImageLoader(s3Key)
+
+    if (isLoading) {
+        return (
+            <div className="w-16 h-16 border border-gray-300 rounded-lg flex items-center justify-center flex-shrink-0">
+                <ClipLoader size={20} />
+            </div>
+        )
+    }
+
+    return (
+        <div className="relative w-16 h-16 border border-gray-300 rounded-lg overflow-hidden flex-shrink-0">
+            <img src={imageUrl} alt={`Uploaded image`} className="w-full h-full object-cover" />
+            <button
+                type="button"
+                onClick={onRemove}
+                className="absolute top-1 right-1 w-5 h-5 bg-black bg-opacity-50 text-white rounded-full flex items-center justify-center text-xs"
+            >
+                ×
+            </button>
         </div>
     )
 }

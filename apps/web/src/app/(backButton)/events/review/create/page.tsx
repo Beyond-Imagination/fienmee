@@ -5,12 +5,11 @@ import { useForm } from 'react-hook-form'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { ClipLoader } from 'react-spinners'
-import { toast } from 'react-toastify'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 
 import { IPostReviewRequest, IReviewFormInputs } from '@fienmee/types'
 import { postReview } from '@/api/review'
-import { getUploadUrl, getViewUrl, uploadToS3 } from '@/api/s3'
+import { useS3Upload } from '@/hooks/s3'
 import { CloseIcon, StarIcon } from '@/components/icon'
 import CameraIcon from '@/components/icon/Camera'
 import { eventStore, titleStore } from '@/store'
@@ -18,26 +17,10 @@ import { eventStore, titleStore } from '@/store'
 export default function Page() {
     const { setTitle } = titleStore()
     const { event } = eventStore()
+    const [photoViewUrls, setPhotoViewUrls] = useState<string[]>([])
     const router = useRouter()
     const queryClient = useQueryClient()
-    const [isUploading, setIsUploading] = useState(false)
-
-    const uploadFile = async (file: File): Promise<string | null> => {
-        try {
-            const { presignedUrl: uploadUrl } = await getUploadUrl({
-                fileName: file.name,
-                fileType: file.type,
-            })
-            const key = uploadUrl.split('?')[0].split('/').pop()!
-            await uploadToS3(uploadUrl, file)
-
-            const { presignedUrl: viewUrl } = await getViewUrl(key)
-            return viewUrl
-        } catch (error) {
-            console.error(error)
-            return null
-        }
-    }
+    const { isUploading, handleImageUpload } = useS3Upload()
 
     useEffect(() => {
         setTitle('리뷰 작성하기')
@@ -71,31 +54,12 @@ export default function Page() {
         setValue('rating', newRating)
     }
 
-    const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
-        const files = event.target.files
-        if (!files || files.length === 0) return
-
-        setIsUploading(true)
-
-        try {
-            const results = await Promise.all(Array.from(files).map(uploadFile))
-            const succeeded = results.filter((url): url is string => url !== null)
-            const failed = Array.from(files).filter((_, idx) => results[idx] === null)
-
-            if (succeeded.length > 0) {
-                setValue('photo', [...watch('photo'), ...succeeded])
-            }
-
-            if (failed.length > 0) {
-                toast.error(<span>`${failed.length}개의 사진 업로드를 실패했어요. 다시 한번 시도해주세요.</span>)
-            }
-        } catch (error) {
-            console.error(error)
-            toast.error(<span>사진 업로드 중 예상치 못한 오류가 발생했어요. 다시 시도해주세요.</span>)
-        } finally {
-            setIsUploading(false)
-            event.target.value = ''
-        }
+    const onImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+        handleImageUpload(event.target.files, newPhotos => {
+            setValue('photo', [...watch('photo'), ...newPhotos.map(p => p.key)])
+            setPhotoViewUrls(prev => [...prev, ...newPhotos.map(p => p.viewUrl)])
+        })
+        event.target.value = ''
     }
 
     const handleRemoveImage = (index: number) => {
@@ -103,6 +67,7 @@ export default function Page() {
             'photo',
             watch('photo').filter((_, i) => i !== index),
         )
+        setPhotoViewUrls(prev => prev.filter((_, i) => i !== index))
     }
 
     const onSubmit = (data: IReviewFormInputs) => {
@@ -144,15 +109,15 @@ export default function Page() {
                     })}
                 />
             </div>
-            {watch('photo').length === 0 ? (
+            {photoViewUrls.length === 0 ? (
                 <label className="flex flex-row justify-center items-center gap-[0.3125rem] w-full h-20 border-2 border-[#FF9575] border-dashed rounded-lg">
                     <CameraIcon className="w-6 h-6 text-[#FF9575]" />
                     <span className="text-[#FF9575]">사진 추가</span>
-                    <input type="file" accept="image/*" className="hidden" multiple onChange={handleImageUpload} disabled={isUploading} />
+                    <input type="file" accept="image/*" className="hidden" multiple onChange={onImageUpload} disabled={isUploading} />
                 </label>
             ) : (
                 <div className="flex flex-row flex-wrap items-center gap-y-2 gap-x-5">
-                    {watch('photo').map((p, i) => (
+                    {photoViewUrls.map((p, i) => (
                         <div className="relative w-20 h-20" key={p}>
                             <div className="relative top-0 left-0 w-20 h-20 overflow-hidden rounded-lg">
                                 <Image loader={() => p} src={p} alt={`review-image`} fill />
@@ -168,7 +133,7 @@ export default function Page() {
                     {isUploading && <ClipLoader color="#FF9575" />}
                     <label className="w-20 h-20 border-2 border-[#FF9575] border-dashed rounded-lg">
                         <CameraIcon className="relative top-5 left-5  w-6 h-6 text-[#FF9575]" />
-                        <input type="file" accept="image/*" className="hidden" multiple onChange={handleImageUpload} disabled={isUploading} />
+                        <input type="file" accept="image/*" className="hidden" multiple onChange={onImageUpload} disabled={isUploading} />
                     </label>
                 </div>
             )}
