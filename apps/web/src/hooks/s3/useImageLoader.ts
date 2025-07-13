@@ -1,50 +1,51 @@
 import { useState, useEffect } from 'react'
 import { getViewUrl } from '@/api/s3'
 
-export const useImageLoader = (s3KeyOrUrl: string) => {
-    const [imageUrl, setImageUrl] = useState<string>('')
-    const [isLoading, setIsLoading] = useState<boolean>(true)
-    const [error, setError] = useState<string | null>(null)
+interface ImageState {
+    imageUrl: string
+    isLoading: boolean
+    error: string | null
+}
+
+export const useImageLoader = (s3KeyOrUrl: string): ImageState => {
+    const [state, setState] = useState<ImageState>({
+        imageUrl: '',
+        isLoading: true,
+        error: null,
+    })
 
     useEffect(() => {
         let isMounted = true
 
         const loadImage = async () => {
+            const newState: ImageState = {
+                imageUrl: '',
+                isLoading: true,
+                error: null,
+            }
+
             if (!s3KeyOrUrl) {
-                if (isMounted) {
-                    setImageUrl('')
-                    setIsLoading(false)
-                    setError(null)
-                }
+                newState.isLoading = false
+                if (isMounted) setState(newState)
                 return
             }
 
-            setIsLoading(true)
-            setError(null)
-
             if (s3KeyOrUrl.startsWith('http://') || s3KeyOrUrl.startsWith('https://')) {
-                if (isMounted) {
-                    setImageUrl(s3KeyOrUrl)
-                    setIsLoading(false)
-                }
+                newState.isLoading = false
+                newState.imageUrl = s3KeyOrUrl
             } else {
                 try {
                     const { presignedUrl } = await getViewUrl(s3KeyOrUrl)
-                    if (isMounted) {
-                        setImageUrl(presignedUrl)
-                    }
+                    newState.imageUrl = presignedUrl
                 } catch (err) {
                     console.error('Error fetching presigned URL:', err)
-                    if (isMounted) {
-                        setError('Failed to load image from S3 key')
-                        setImageUrl('')
-                    }
+                    newState.imageUrl = ''
+                    newState.error = 'Failed to load image from S3 key'
                 } finally {
-                    if (isMounted) {
-                        setIsLoading(false)
-                    }
+                    newState.isLoading = false
                 }
             }
+            if (isMounted) setState(newState)
         }
 
         loadImage()
@@ -54,5 +55,5 @@ export const useImageLoader = (s3KeyOrUrl: string) => {
         }
     }, [s3KeyOrUrl])
 
-    return { imageUrl, isLoading, error }
+    return state
 }
