@@ -7,6 +7,7 @@ import { deleteEventCommentById } from '@/api/event'
 import CommentOption from '@/components/comment/commentOption'
 import CommentUpdateField from '@/components/comment/commentUpdateField'
 import { UnlikeIcon } from '@/components/icon'
+import LoadingOverlay from '@/components/comment/commentLoadingOverlay'
 
 interface Props {
     comment: IComment
@@ -37,6 +38,7 @@ export function EventComment({ comment }: Props) {
 
     return (
         <div className="flex flex-col gap-6 py-2 relative">
+            {deleteMutation.isPending && <LoadingOverlay />}
             <div className="flex justify-between items-center">
                 <div>
                     <div className="text-sm text-gray-500">{comment.nickname}</div>
