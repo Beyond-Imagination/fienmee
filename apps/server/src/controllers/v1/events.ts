@@ -295,7 +295,17 @@ router.get(`/category/${CategoryCode.HOTEVENT}`, verifyToken, async (req: Reques
         isLiked: event['likes']?.includes(req.user._id),
     }))
 
-    res.status(200).json({ events: events })
+    res.status(200).json({
+        events: events,
+        page: {
+            totalDocs: result.totalDocs,
+            totalPages: result.totalPages,
+            hasNextPage: result.hasNextPage,
+            hasPrevPage: result.hasPrevPage,
+            page: result.page,
+            limit: result.limit,
+        },
+    })
 })
 
 router.get('/category/:category', verifyToken, async (req: Request, res: Response) => {
@@ -305,7 +315,6 @@ router.get('/category/:category', verifyToken, async (req: Request, res: Respons
     if (req.params.category === CategoryCode.MYEVENT) {
         result = await EventsModel.findByAuthor(req.user._id, options)
     } else {
-        // TODO: add get hottest events
         result = await EventsModel.findByCategory([req.params.category], options)
     }
     const events = result.docs.map(event => ({
