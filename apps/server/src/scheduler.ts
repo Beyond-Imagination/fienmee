@@ -18,7 +18,7 @@ export default class DateBatchScheduler {
         schedule.scheduleJob('0 3 * * *', async () => {
             try {
                 const deletedUsers = await deleteOldDeletedUsers()
-                logger.info('Scheduler job finished for old deleted user data: ', deletedUsers)
+                logger.info(`Scheduler job finished for old deleted user data: ${deletedUsers}`)
             } catch (error) {
                 logger.error(`Delete User data Scheduler failed.`, { error: error })
             }
