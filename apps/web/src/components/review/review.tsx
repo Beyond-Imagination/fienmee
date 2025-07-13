@@ -3,6 +3,7 @@ import { format } from 'date-fns'
 
 import { IReview } from '@fienmee/types'
 import { StarIcon } from '@/components/icon'
+import ReviewImage from '@/components/review/ReviewImage'
 
 interface Props {
     review: IReview | undefined
@@ -49,13 +50,8 @@ export default function Review({ review }: Props) {
             {review.photo.length !== 0 && (
                 <div className="overflow-x-auto scroll-smooth snap-x px-2.5">
                     <div className="flex flex-row w-max gap-[0.3125rem]">
-                        {review.photo.map(img => (
-                            <img
-                                className="w-[7.5rem] h-[7.5rem] object-cover object-center"
-                                key={`${review._id}-reviewImg-${img}`}
-                                alt={`review img`}
-                                src={img}
-                            />
+                        {review.photo.map((s3Key, index) => (
+                            <ReviewImage key={`${review._id}-reviewImg-${index}`} s3Key={s3Key} />
                         ))}
                     </div>
                 </div>
