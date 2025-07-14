@@ -1,4 +1,4 @@
-import { getModelForClass, plugin, prop, ReturnModelType, defaultClasses } from '@typegoose/typegoose'
+import { getModelForClass, plugin, prop, ReturnModelType, defaultClasses, modelOptions, Severity } from '@typegoose/typegoose'
 import mongoosePaginate from 'mongoose-paginate-v2'
 import mongoose from 'mongoose'
 
@@ -6,6 +6,7 @@ import { User, Events } from '@/models'
 import { IDailyScheduleCount } from '@fienmee/types/api'
 
 @plugin(mongoosePaginate)
+@modelOptions({ options: { allowMixed: Severity.ALLOW } })
 export class Schedule extends defaultClasses.TimeStamps {
     static paginate: mongoose.PaginateModel<typeof Schedule>['paginate']
 

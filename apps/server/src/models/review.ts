@@ -1,9 +1,10 @@
 import mongoose from 'mongoose'
-import { defaultClasses, getModelForClass, plugin, prop, ReturnModelType } from '@typegoose/typegoose'
+import { defaultClasses, getModelForClass, modelOptions, plugin, prop, ReturnModelType, Severity } from '@typegoose/typegoose'
 import mongoosePaginate from 'mongoose-paginate-v2'
 import { Events, User } from '@/models'
 
 @plugin(mongoosePaginate)
+@modelOptions({ options: { allowMixed: Severity.ALLOW } })
 export class Reviews extends defaultClasses.TimeStamps {
     static paginate: mongoose.PaginateModel<typeof Reviews>['paginate']
 

@@ -1,4 +1,4 @@
-import { getModelForClass, plugin, prop, ReturnModelType, defaultClasses } from '@typegoose/typegoose'
+import { getModelForClass, plugin, prop, ReturnModelType, defaultClasses, modelOptions, Severity } from '@typegoose/typegoose'
 import mongoose from 'mongoose'
 import mongoosePaginate from 'mongoose-paginate-v2'
 import aggregatePaginate from 'mongoose-aggregate-paginate-v2'
@@ -7,6 +7,7 @@ import { Category, User } from '@/models'
 
 @plugin(mongoosePaginate)
 @plugin(aggregatePaginate)
+@modelOptions({ options: { allowMixed: Severity.ALLOW } })
 export class Events extends defaultClasses.TimeStamps {
     static paginate: mongoose.PaginateModel<typeof Events>['paginate']
     static aggregatePaginate: mongoose.AggregatePaginateModel<typeof Events>['aggregatePaginate']
