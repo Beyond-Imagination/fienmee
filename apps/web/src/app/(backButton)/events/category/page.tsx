@@ -16,7 +16,7 @@ export default function Page() {
     return (
         <div className="items-center justify-items-center bg-inherit">
             <div className="w-full h-full bg-inherit">
-                <EventList category={category._id} />
+                <EventList category={category._id.toString()} />
             </div>
         </div>
     )
