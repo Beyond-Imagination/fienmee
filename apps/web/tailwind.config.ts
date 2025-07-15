@@ -8,6 +8,9 @@ const config: Config = {
                 background: 'var(--background)',
                 foreground: 'var(--foreground)',
             },
+            height: {
+                screen: 'var(--app-height, 100vh)',
+            },
         },
     },
     plugins: [],
