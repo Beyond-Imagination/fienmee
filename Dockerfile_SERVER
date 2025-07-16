@@ -26,7 +26,7 @@ FROM base AS runner
 
 COPY --from=build /fienmee/apps/server/package.json /fienmee/apps/server/package.json
 COPY --from=build /fienmee/apps/server/dist /fienmee/apps/server/dist
-COPY --from=build /fienmee/apps/server/newrelic.js /fienmee/apps/server/dist/newrelic.js
+COPY --from=build /fienmee/apps/server/newrelic.cjs /fienmee/apps/server/dist/newrelic.cjs
 COPY --from=build /fienmee/packages/types/package.json /fienmee/packages/types/package.json
 COPY --from=build /fienmee/packages/types/dist /fienmee/packages/types
 
