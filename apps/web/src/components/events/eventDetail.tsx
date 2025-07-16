@@ -82,7 +82,7 @@ export default function EventDetail({ event }: Props) {
                 <CommentList eventId={event._id} />
             </div>
             {!isKeyboardOpen && (
-                <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 px-4 py-4 z-10">
+                <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 px-4 py-4 pb-safe z-10">
                     <div className="flex justify-between items-center">
                         <EventLikes />
                         <div className="flex items-center space-x-3">
