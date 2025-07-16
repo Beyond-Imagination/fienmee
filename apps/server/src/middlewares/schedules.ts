@@ -16,7 +16,10 @@ export const verifyAuthorMiddleware = async (req: Request, res: Response, next: 
 }
 
 const verifyEventId = async (req: Request, res: Response, next: NextFunction) => {
-    const { eventId } = req.body
+    const eventId = req.body?.eventId
+    if (!eventId) {
+        return next()
+    }
     const target = await EventsModel.findOne({ _id: eventId }).exec()
     if (!target) {
         throw new InvalidRequestFormat(new Error(`not found event => id: ${eventId}`))

@@ -9,13 +9,14 @@ import { registerSchedule } from '@/api/schedules'
 import EventTimeSelector from '@/components/events/eventTimeSelector'
 import InputField from '@/components/events/inputField'
 import { eventStore } from '@/store'
+import EventVenueSelector from '@/components/events/eventVenueSelector'
 
 export default function ScheduleForm() {
     const router = useRouter()
     const { event } = eventStore()
     const [formData, setFormData] = useState<IMakeNewScheduleRequest>({
         name: event.name,
-        eventId: event._id,
+        eventId: event._id === '' ? undefined : event._id,
         isAllDay: event.isAllDay,
         startDate: event.startDate,
         endDate: event.endDate,
@@ -29,6 +30,10 @@ export default function ScheduleForm() {
 
     const onEndDateTimeChange = (dateTime: string) => {
         setFormData(prevState => ({ ...prevState, endDate: new Date(dateTime) }))
+    }
+
+    const onPositionChange = (position: { lat: number; lng: number }) => {
+        setFormData(prevState => ({ ...prevState, location: { type: 'Point', coordinates: [position.lng, position.lat] } }))
     }
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -55,7 +60,6 @@ export default function ScheduleForm() {
                 <div className={'flex flex-col mb-8 w-full'}>
                     <InputField label="일정 제목" placeholder="일정 제목을 입력해주세요" value={formData.name} name="name" onChange={handleChange} />
                 </div>
-
                 <div className="w-full mb-5">
                     <label className="block text-base font-medium mb-2">일정 시간</label>
                     <EventTimeSelector
@@ -67,7 +71,6 @@ export default function ScheduleForm() {
                         onEndDateChange={onEndDateTimeChange}
                     />
                 </div>
-
                 <div className={'flex flex-col mb-6 w-full'}>
                     <InputField
                         label="메모"
@@ -79,7 +82,15 @@ export default function ScheduleForm() {
                         onChange={handleChange}
                     />
                 </div>
-
+                {!formData.eventId && (
+                    <div className="flex flex-col mb-6 w-full">
+                        <label className="font-medium">일정 장소</label>
+                        <EventVenueSelector
+                            initialPosition={{ lat: formData.location.coordinates[1], lng: formData.location.coordinates[0] }}
+                            onPositionChange={onPositionChange}
+                        />
+                    </div>
+                )}
                 <div className="w-full mt-10 flex flex-row justify-between gap-5 flex-center item-center">
                     <button type="submit" className="w-full bg-[#FF9575] text-white font-semibold p-2 rounded-lg hover:bg-[#FF7A58]">
                         등록하기

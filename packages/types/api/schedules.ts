@@ -5,7 +5,7 @@ export interface IMakeNewScheduleRequest {
     startDate: Date
     endDate: Date
     address?: string
-    location?: {
+    location: {
         type: string
         coordinates: number[]
     }
