@@ -48,8 +48,19 @@ const loggerMiddleware = expressWinston.logger({
     ...winstonOption,
     requestWhitelist: ['headers.origin', 'body', 'query'],
     responseWhitelist: ['body', 'statusCode'],
-    bodyBlacklist: ['password', 'clientSecret', 'token', 'jwt', 'jwtPayload'],
+    bodyBlacklist: ['accessToken', 'refreshToken', 'idToken', 'token', 'deviceId'],
     headerBlacklist: ['authorization'],
+    responseFilter: (res: expressWinston.FilterResponse, propName: string) => {
+        if (propName === 'body' && res['body']) {
+            if (res['body']['accessToken']) {
+                delete res['body']['accessToken']
+            }
+            if (res['body']['refreshToken']) {
+                delete res['body']['refreshToken']
+            }
+        }
+        return res[propName]
+    },
     ignoreRoute: function (req, res) {
         return false
     },
