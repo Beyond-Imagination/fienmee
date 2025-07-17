@@ -15,7 +15,7 @@ export class Schedule extends defaultClasses.TimeStamps {
     @prop({ required: true, ref: User })
     public authorId: mongoose.Types.ObjectId
 
-    @prop({ required: true, ref: Events })
+    @prop({ ref: Events })
     public eventId: mongoose.Types.ObjectId
 
     @prop()

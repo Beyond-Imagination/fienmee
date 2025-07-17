@@ -13,8 +13,8 @@ const initSchedule: IScheduleItem = {
     name: '',
     address: '',
     location: {
-        type: '',
-        coordinates: [],
+        type: 'Point',
+        coordinates: [126.570667, 33.450701],
     },
     startDate: new Date(),
     endDate: new Date(),

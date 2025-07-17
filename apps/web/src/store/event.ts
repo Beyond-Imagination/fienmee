@@ -12,7 +12,7 @@ const initEvent: IEvent = {
     name: '',
     address: '',
     location: {
-        type: '',
+        type: 'Point',
         coordinates: [126.570667, 33.450701],
     },
     startDate: new Date(),
