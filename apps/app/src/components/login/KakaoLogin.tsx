@@ -19,9 +19,7 @@ export function KakaoOauthLogin() {
                 provider: 'KAKAO',
             })
             await setToken(credential)
-            navigation.navigate('Error', {
-                message: 'internal server error',
-            })
+            navigation.navigate('WebView')
         } catch (error) {
             if (isErrorResponse(error)) {
                 if (error.code === 4100 || error.code === 4101) {
@@ -35,7 +33,7 @@ export function KakaoOauthLogin() {
                 }
             } else {
                 navigation.navigate('Error', {
-                    message: (error as any).toString(),
+                    message: '알 수 없는 오류가 발생했습니다. 다시 시도해주세요.',
                 })
             }
         }

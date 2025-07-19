@@ -1,7 +1,6 @@
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { useNavigation } from '@react-navigation/native'
-import type { StaticScreenProps } from '@react-navigation/native'
 import CheckBox from '@react-native-community/checkbox'
 
 import { register, getAgreements } from '@/api'
@@ -11,19 +10,13 @@ import { IDocument, isErrorResponse } from '@fienmee/types/api'
 import { BE_URL } from '@/config'
 import { MarkdownModal } from '@/components/modal/MarkdownModal'
 
-type props = StaticScreenProps<{
-    accessToken: string
-    refreshToken: string
-    provider: string
-}>
-
 const styles = StyleSheet.create({
     container: {
         flex: 1,
     },
 })
 
-export function RegisterScreen({ route }: props) {
+export function RegisterScreen({ route }: RegisterScreenProps) {
     const navigation = useNavigation<RegisterScreenProps['navigation']>()
 
     const [documents, setDocuments] = useState<IDocument[]>([])
@@ -61,7 +54,7 @@ export function RegisterScreen({ route }: props) {
                 navigation.navigate('Error', error)
             } else {
                 navigation.navigate('Error', {
-                    message: (error as any).toString(),
+                    message: '알 수 없는 오류가 발생했습니다. 다시 시도해주세요.',
                 })
             }
         }

@@ -1,16 +1,12 @@
 import React from 'react'
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native'
-import { type StaticScreenProps, useNavigation } from '@react-navigation/native'
+import { useNavigation } from '@react-navigation/native'
 
 import { getToken } from '@/stores'
 import { ErrorScreenProps } from '@/types'
 import { Logo } from '@/components/Logo'
 
-type props = StaticScreenProps<{
-    message: string
-}>
-
-export function ErrorScreen({ route }: props) {
+export function ErrorScreen({ route }: ErrorScreenProps) {
     const navigation = useNavigation<ErrorScreenProps['navigation']>()
 
     const onPress = async () => {
