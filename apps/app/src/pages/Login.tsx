@@ -1,7 +1,8 @@
-import { View, StyleSheet, ScrollView, Image } from 'react-native'
+import { View, StyleSheet, ScrollView } from 'react-native'
 import React from 'react'
 
 import { GoogleOauthLogin, KakaoOauthLogin } from '@/components/login'
+import { Logo } from '@/components/Logo'
 
 const styles = StyleSheet.create({
     container: {
@@ -31,7 +32,7 @@ export function LoginScreen() {
     return (
         <ScrollView contentContainerStyle={styles.scrollContainer} style={styles.container}>
             <View style={styles.logoContainer}>
-                <Image source={require('./../../assets/logo.png')} style={styles.logoImage} resizeMode="contain" />
+                <Logo />
             </View>
             <View style={styles.container}>
                 <KakaoOauthLogin />

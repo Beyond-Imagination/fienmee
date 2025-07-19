@@ -7,7 +7,7 @@ import CheckBox from '@react-native-community/checkbox'
 import { register, getAgreements } from '@/api'
 import { setToken } from '@/stores'
 import { RegisterScreenProps } from '@/types'
-import { IDocument } from '@fienmee/types/api'
+import { IDocument, isErrorResponse } from '@fienmee/types/api'
 import { BE_URL } from '@/config'
 import { MarkdownModal } from '@/components/modal/MarkdownModal'
 
@@ -57,8 +57,13 @@ export function RegisterScreen({ route }: props) {
             await setToken(credential)
             navigation.navigate('WebView')
         } catch (error) {
-            console.log(error)
-            navigation.navigate('Error')
+            if (isErrorResponse(error)) {
+                navigation.navigate('Error', error)
+            } else {
+                navigation.navigate('Error', {
+                    message: (error as any).toString(),
+                })
+            }
         }
     }
 
