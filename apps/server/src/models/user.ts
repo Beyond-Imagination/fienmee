@@ -66,7 +66,7 @@ export class User extends defaultClasses.TimeStamps implements IUser {
         return await this.findByIdAndUpdate(userId, { $pull: { interests: categoryId } }, { new: true }).exec()
     }
 
-    public static async removeDeletedUserInfo(this: ReturnModelType<typeof User>) {
+    public static async removeDeletedUserInfo(this: ReturnModelType<typeof User>): Promise<number> {
         const refDate = new Date()
         refDate.setMonth(refDate.getMonth() - 1)
 
