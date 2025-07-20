@@ -30,10 +30,11 @@ AWS.config.update({
     region: AWS_REGION,
 })
 
-const firebaseServiceAccount =
-    process.env.NODE_ENV === 'production'
-        ? path.resolve(__dirname, '../../firebase-prod-adminsdk.json')
-        : path.resolve(__dirname, '../../firebase-dev-adminsdk.json')
+const firebaseServiceAccount = path.resolve(
+    __dirname,
+    '../../',
+    process.env.NODE_ENV === 'production' ? 'firebase-prod-adminsdk.json' : 'firebase-dev-adminsdk.json',
+)
 
 firebase.initializeApp({
     credential: firebase.credential.cert(firebaseServiceAccount),
