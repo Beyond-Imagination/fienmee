@@ -39,7 +39,7 @@ export class Schedule extends defaultClasses.TimeStamps {
             validator: function (this: Schedule, endDate: Date) {
                 return this.isAllDay || this.startDate < endDate
             },
-            message: 'endDate must be greater than or equal to startDate',
+            message: 'endDate must be greater than startDate',
         },
     })
     public endDate: Date
