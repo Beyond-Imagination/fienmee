@@ -59,6 +59,11 @@ const EventForm: React.FC<EventFormProps> = ({ selectedCategories, handleCategor
     const queryClient = useQueryClient()
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
+        // todo: add logic for validating and organizing request body object
+        if (!formData.isAllDay && formData.endDate <= formData.startDate) {
+            toast.error(<span>종료 날짜와 시간은 시작 날짜와 시간보다 이후여야 합니다.</span>)
+            return
+        }
         try {
             const submissionData = {
                 ...formData,
