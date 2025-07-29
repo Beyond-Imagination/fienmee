@@ -16,3 +16,4 @@ services:
             - "5000:5000"
         volumes:
             - ./apps/server/.env:/fienmee/apps/server/.env
+            - ./apps/server/firebase-dev-adminsdk.json:/fienmee/apps/server/dist/firebase-dev-adminsdk.json
