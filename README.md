@@ -1,7 +1,7 @@
 # fienmee
 
 ## prerequisite
-* node 18
+* node 20
 * pnpm
 * android studio
 * Xcode (macbook 사용자)
