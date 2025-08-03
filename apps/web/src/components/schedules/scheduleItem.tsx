@@ -11,7 +11,7 @@ interface ScheduleProp {
 
 export default function ScheduleItem({ startDate, endDate, title, isAllDay, onClick }: ScheduleProp) {
     const formatTime = (date: Date) => {
-        return format(date, 'MM.dd a h:mm', { locale: ko })
+        return format(new Date(date), 'MM.dd a h:mm', { locale: ko })
     }
     return (
         <div className="flex flex-col" onClick={onClick}>
