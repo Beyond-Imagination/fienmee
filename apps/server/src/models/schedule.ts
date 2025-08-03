@@ -65,7 +65,22 @@ export class Schedule extends defaultClasses.TimeStamps {
             limit: number
         },
     ) {
-        return await this.paginate({ authorId: userId, startDate: { $lt: filterOption.to }, endDate: { $gt: filterOption.from } }, options)
+        return await this.paginate(
+            {
+                authorId: userId,
+                startDate: { $lt: filterOption.to },
+                endDate: { $gt: filterOption.from },
+            },
+            {
+                page: options.page,
+                limit: options.limit,
+                sort: {
+                    isAllDay: -1,
+                    startDate: 1,
+                    endDate: 1,
+                },
+            },
+        )
     }
 
     public static async findDailyCountByUserId(
