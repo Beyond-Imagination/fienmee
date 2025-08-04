@@ -111,6 +111,7 @@ export default function ScheduleList({ date }: Prop) {
                                 key={schedule._id}
                                 title={schedule.name}
                                 startDate={schedule.startDate}
+                                isAllDay={schedule.isAllDay}
                                 endDate={schedule.endDate}
                                 onClick={() => handleClick(i, j)}
                             />
