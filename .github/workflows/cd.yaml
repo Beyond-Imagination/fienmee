@@ -44,8 +44,8 @@ jobs:
               with:
                   images: ${{ matrix.image }}
                   tags: |
-                      type=raw,value=production,enable={{ github.ref == 'refs/heads/main' }}
-                      type=ref,event=branch
+                      ${{ github.ref == 'refs/heads/main' && 'type=raw,value=production' || '' }}
+                      ${{ github.ref == 'refs/heads/develop' && 'type=raw,value=develop' || '' }}
                       type=semver,pattern={{version}}
                       type=sha,prefix=,suffix=,format=short
 
