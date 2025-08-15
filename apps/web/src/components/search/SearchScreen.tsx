@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from 'react'
 import CategoryTabs from '@/components/search/CategoryTabs'
+import SearchResultCard from '@/components/search/SearchResultCard'
 import { SearchIcon } from '@/components/icon'
 import { ClipLoader } from 'react-spinners'
 
@@ -46,7 +47,7 @@ const MOCK: EventItem[] = [
 const CATEGORIES = ['팝업행사', '패션', '스포츠', '야외활동', '문화행사', '음악', '취미'] as const
 const fmtPeriod = ({ start, end }: { start: string; end: string }) => `${start.replaceAll('-', '.')} ~ ${end.replaceAll('-', '.')}`
 
-//주소창 업데이트
+// 주소창 업데이트
 const shallowSetParam = (next: Record<string, string | ''>) => {
     const url = new URL(window.location.href)
     Object.entries(next).forEach(([k, v]) => {
@@ -60,11 +61,11 @@ export default function SearchScreen({ initialQuery = '', initialCategory = '' }
     const [query, setQuery] = useState(initialQuery)
     const [category, setCategory] = useState(initialCategory)
 
-    // 결과 데이터 & 로딩 상태
+    // 결과 & 로딩
     const [items, setItems] = useState<EventItem[]>([])
     const [isLoading, setIsLoading] = useState(true)
 
-    // 필터 함수 (실제 API 연동 시 fetch 대체)
+    // 필터(목데이터)
     const filterLocal = (q: string, c: string): EventItem[] => {
         const ql = q.trim().toLowerCase()
         let filtered = MOCK.filter(e => {
@@ -79,7 +80,7 @@ export default function SearchScreen({ initialQuery = '', initialCategory = '' }
         return filtered
     }
 
-    // 카테고리/검색어 변경 시
+    // 카테고리/검색어 변경 시 결과만 로딩 처리
     useEffect(() => {
         let alive = true
         setIsLoading(true)
@@ -95,17 +96,16 @@ export default function SearchScreen({ initialQuery = '', initialCategory = '' }
         }
     }, [query, category])
 
-    // 검색 제출
     const onSubmit = (e: React.FormEvent) => {
         e.preventDefault()
         shallowSetParam({ query, category })
     }
 
-    // “검색 결과 없음” 판단
     const hasNoResult = useMemo(() => !isLoading && items.length === 0, [isLoading, items])
 
     return (
         <div className="mx-auto w-full max-w-[420px] min-h-screen bg-white overflow-x-hidden">
+            {/* 검색바 */}
             <form onSubmit={onSubmit} className="sticky top-0 z-10 bg-white px-12 pt-4 pb-2 mb-4">
                 <div className="flex items-center gap-3 px-4 py-2 rounded-full bg-[#F5F5F5]">
                     <input
@@ -121,9 +121,9 @@ export default function SearchScreen({ initialQuery = '', initialCategory = '' }
                 </div>
             </form>
 
-            {/* 카테고리 탭*/}
+            {/* 카테고리 탭 */}
             <CategoryTabs
-                items={CATEGORIES as unknown as string[]}
+                items={[...CATEGORIES]} // readonly → 복사로 전달
                 current={category}
                 onChange={c => {
                     const next = c === category ? '' : c
@@ -132,9 +132,10 @@ export default function SearchScreen({ initialQuery = '', initialCategory = '' }
                 }}
             />
 
-            {/* 카테고리와 결과 사이 간격 */}
+            {/* 카테고리와 결과 간격 */}
             <div className="h-2" />
 
+            {/* 결과 */}
             <main className="px-12 py-4">
                 {isLoading ? (
                     <div className="flex justify-center py-10">
@@ -146,15 +147,13 @@ export default function SearchScreen({ initialQuery = '', initialCategory = '' }
                     <ul className="space-y-8">
                         {items.map(it => (
                             <li key={it.id}>
-                                <article className="w-full mt-2">
-                                    <div className="rounded-2xl overflow-hidden mt-1">
-                                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                                        <img src={it.image} alt={it.title} className="w-full h-[300px] object-cover" loading="lazy" />
-                                    </div>
-                                    <h2 className="mt-3 text-[16px] font-semibold">{it.title}</h2>
-                                    <p className="mt-1 text-[13px] text-gray-500">{it.region}</p>
-                                    <p className="mt-1 text-[13px] text-gray-500">{fmtPeriod(it.period)}</p>
-                                </article>
+                                <SearchResultCard
+                                    title={it.title}
+                                    region={it.region}
+                                    period={fmtPeriod(it.period)}
+                                    image={it.image}
+                                    imageHeight={300} // 여기서 카드 이미지 높이 제어
+                                />
                             </li>
                         ))}
                     </ul>
