@@ -123,7 +123,7 @@ export default function SearchScreen({ initialQuery = '', initialCategory = '' }
 
             {/* 카테고리 탭 */}
             <CategoryTabs
-                items={[...CATEGORIES]} // readonly → 복사로 전달
+                items={[...CATEGORIES]}
                 current={category}
                 onChange={c => {
                     const next = c === category ? '' : c
