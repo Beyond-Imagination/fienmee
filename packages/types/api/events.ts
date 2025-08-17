@@ -99,10 +99,14 @@ export interface IComment {
     _id: string
     eventId: string
     comment: string
-    nickname: string
     isAuthor: boolean
     createdAt: Date
     updatedAt: Date
+    userId: {
+        _id: string
+        nickname: string
+        isDeleted: boolean
+    }
 }
 
 export interface IGetEventCommentsResponse {

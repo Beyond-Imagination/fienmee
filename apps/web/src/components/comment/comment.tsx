@@ -41,7 +41,7 @@ export function EventComment({ comment }: Props) {
             {deleteMutation.isPending && <LoadingOverlay />}
             <div className="flex justify-between items-center">
                 <div>
-                    <div className="text-sm text-gray-500">{comment.nickname}</div>
+                    <div className="text-sm text-gray-500">{comment.userId?.isDeleted ? `탈퇴한 회원` : comment.userId?.nickname}</div>
                     {isEdit ? (
                         <CommentUpdateField comment={comment} onSuccess={() => setIsEdit(false)} />
                     ) : (
