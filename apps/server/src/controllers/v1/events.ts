@@ -123,7 +123,7 @@ router.get('/:id/comments', verifyToken, async (req: Request, res: Response) => 
     const result = await CommentsModel.findByEventId(req.params.id, options)
     const modifiedDocs = result.docs.map(comment => ({
         ...comment.toObject(),
-        isAuthor: comment.get('userId').equals(req.user._id),
+        isAuthor: comment.get('userId')?.equals(req.user._id),
         // TODO: add isLiked field
     }))
     res.status(200).json({
