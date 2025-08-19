@@ -4,7 +4,7 @@ import { useEffect } from 'react'
 import { useInfiniteQuery } from '@tanstack/react-query'
 import { useInView } from 'react-intersection-observer'
 
-import { IComment, IGetEventCommentsResponse } from '@fienmee/types'
+import { IGetEventCommentsResponse } from '@fienmee/types'
 import { getEventCommentsByEventId } from '@/api/event'
 import { EventComment } from '@/components/comment/comment'
 
@@ -31,13 +31,7 @@ export function CommentList({ eventId }: CommentListProps) {
     }, [inView, isFetchingNextPage, fetchNextPage])
 
     if (isLoading) {
-        return (
-            <div className="px-4 py-2">
-                {Array.from({ length: 10 }, (_, index) => (
-                    <EventComment key={index} comment={{ nickname: '로딩 중', comment: '...' } as IComment} />
-                ))}
-            </div>
-        )
+        return <div className="px-4 py-2">로딩중...</div>
     }
 
     if (isError) {
@@ -54,7 +48,7 @@ export function CommentList({ eventId }: CommentListProps) {
     return (
         <div className="flex flex-col gap-4">
             {data && data.pages.map(page => page.comments.map(comment => <EventComment key={comment._id} comment={comment} />))}
-            {isFetchingNextPage ? <EventComment comment={{ nickname: '로딩 중', comment: '...' } as IComment} /> : <div ref={ref} />}
+            {isFetchingNextPage ? <div>로딩중...</div> : <div ref={ref} />}
         </div>
     )
 }
