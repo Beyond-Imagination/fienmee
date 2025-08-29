@@ -31,3 +31,11 @@ export class UnauthorizedEvent extends APIError {
         Error.captureStackTrace(this, UnauthorizedEvent)
     }
 }
+
+export class KeywordIsEmptyToSearch extends APIError {
+    constructor(cause: Error | string = null) {
+        super(400, 6004, 'keyword is empty', cause)
+        Object.setPrototypeOf(this, KeywordIsEmptyToSearch.prototype)
+        Error.captureStackTrace(this, KeywordIsEmptyToSearch)
+    }
+}

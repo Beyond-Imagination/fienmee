@@ -7,7 +7,7 @@ import { verifyToken } from '@/middlewares/auth'
 import { CategoryCode, NotificationType } from '@fienmee/types'
 import { verifyCommentAuthor, verifyEventAuthor } from '@/middlewares/events'
 import { TransactionError } from '@/types/errors/database'
-import { EventNotFound } from '@/types/errors/events'
+import { EventNotFound, KeywordIsEmptyToSearch } from '@/types/errors/events'
 
 const router: Router = asyncify(express.Router())
 
@@ -334,5 +334,22 @@ router.get('/category/:category', verifyToken, async (req: Request, res: Respons
         },
     })
 })
+
+router.get(
+    '/search',
+    /*verifyToken,*/ async (req: Request, res: Response) => {
+        const keyword = req.query.keyword as string
+        if (!keyword) {
+            throw new KeywordIsEmptyToSearch()
+        }
+        const condition = {
+            $or: [{ title: { $regex: new RegExp(keyword, 'i') } }, { content: { $regex: new RegExp(keyword, 'i') } }],
+        }
+
+        const result = await EventsModel.find(condition)
+
+        res.status(200).json(result)
+    },
+)
 
 export default router
