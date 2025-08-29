@@ -44,6 +44,26 @@ router.post('/', verifyToken, async (req: Request, res: Response) => {
     res.sendStatus(204)
 })
 
+router.get('/search', async (req: Request, res: Response) => {
+    const keyword = req.query.keyword as string
+    const category = req.query.category as string
+    const page = Number(req.query.page) || 1
+    const limit = Number(req.query.limit) || 10
+    const skip = (page - 1) * limit
+
+    if (!keyword) {
+        throw new KeywordIsEmptyToSearch()
+    }
+    const condition = {
+        $or: [{ name: { $regex: new RegExp(keyword, 'i') } }, { description: { $regex: new RegExp(keyword, 'i') } }],
+        category: category,
+    }
+
+    const result = await EventsModel.find(condition).skip(skip).limit(limit)
+
+    res.status(200).json(result)
+})
+
 router.put('/:id', verifyToken, verifyEventAuthor, async (req: Request, res: Response) => {
     const event = await EventsModel.findOneAndUpdate(
         { _id: req.params.id },
@@ -334,22 +354,5 @@ router.get('/category/:category', verifyToken, async (req: Request, res: Respons
         },
     })
 })
-
-router.get(
-    '/search',
-    /*verifyToken,*/ async (req: Request, res: Response) => {
-        const keyword = req.query.keyword as string
-        if (!keyword) {
-            throw new KeywordIsEmptyToSearch()
-        }
-        const condition = {
-            $or: [{ title: { $regex: new RegExp(keyword, 'i') } }, { content: { $regex: new RegExp(keyword, 'i') } }],
-        }
-
-        const result = await EventsModel.find(condition)
-
-        res.status(200).json(result)
-    },
-)
 
 export default router
