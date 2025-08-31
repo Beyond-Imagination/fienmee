@@ -100,10 +100,10 @@ android {
             def releaseStoreFile = localProperties.getProperty("RELEASE_STORE_FILE")
             if (releaseStoreFile) {
                 storeFile file(releaseStoreFile)
+                storePassword localProperties.getProperty("RELEASE_STORE_PASSWORD")
+                keyAlias localProperties.getProperty("RELEASE_KEY_ALIAS")
+                keyPassword localProperties.getProperty("RELEASE_KEY_PASSWORD")
             }
-            storePassword localProperties.getProperty("RELEASE_STORE_PASSWORD", "")
-            keyAlias localProperties.getProperty("RELEASE_KEY_ALIAS", "")
-            keyPassword localProperties.getProperty("RELEASE_KEY_PASSWORD", "")
         }
         debug {
             storeFile file('debug.keystore')
