@@ -7,10 +7,11 @@ interface InputFieldProps {
     rows?: number
     name: string
     value?: string
+    className?: string
     onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void
 }
 
-const InputField: React.FC<InputFieldProps> = ({ label, placeholder, type = 'text', rows, name, value, onChange }) => {
+const InputField: React.FC<InputFieldProps> = ({ className, label, placeholder, type = 'text', rows, name, value, onChange }) => {
     return (
         <div>
             <label className="block text-base font-medium mb-2">{label}</label>
@@ -18,7 +19,7 @@ const InputField: React.FC<InputFieldProps> = ({ label, placeholder, type = 'tex
                 <textarea
                     name={name}
                     placeholder={placeholder}
-                    className="w-full border rounded-lg px-4 py-2"
+                    className={`${className ?? 'w-full border rounded-lg px-4 py-2'}`}
                     rows={rows}
                     value={value}
                     onChange={onChange}

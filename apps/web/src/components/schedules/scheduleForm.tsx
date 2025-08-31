@@ -36,6 +36,10 @@ export default function ScheduleForm() {
         setFormData(prevState => ({ ...prevState, location: { type: 'Point', coordinates: [position.lng, position.lat] } }))
     }
 
+    const onAddressChange = (address: string) => {
+        setFormData(prevState => ({ ...prevState, address }))
+    }
+
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target
         setFormData(prevState => ({ ...prevState, [name]: value }))
@@ -87,13 +91,12 @@ export default function ScheduleForm() {
                     />
                 </div>
                 {!formData.eventId && (
-                    <div className="flex flex-col mb-6 w-full">
-                        <label className="font-medium">일정 장소</label>
-                        <EventVenueSelector
-                            initialPosition={{ lat: formData.location.coordinates[1], lng: formData.location.coordinates[0] }}
-                            onPositionChange={onPositionChange}
-                        />
-                    </div>
+                    <EventVenueSelector
+                        initialPosition={{ lat: formData.location.coordinates[1], lng: formData.location.coordinates[0] }}
+                        initialAddress={formData.address}
+                        onPositionChange={onPositionChange}
+                        onAddressChange={onAddressChange}
+                    />
                 )}
                 <div className="w-full mt-10 flex flex-row justify-between gap-5 flex-center item-center">
                     <button type="submit" className="w-full bg-[#FF9575] text-white font-semibold p-2 rounded-lg hover:bg-[#FF7A58]">
