@@ -15,6 +15,21 @@ interface PlaceResult {
     y: string
 }
 
+const messages = {
+    NO_RESULT: '장소 검색 결과가 존재하지 않습니다.',
+    SEARCH_ERROR: '장소 검색 중 오류가 발생했습니다.',
+    MARKING_ERROR: '지정된 좌표에 주소 정보를 찾을 수 없습니다.',
+}
+
+const makeErrorMessage = (message: string) => {
+    return {
+        place_name: message,
+        address_name: '',
+        x: '0',
+        y: '0',
+    }
+}
+
 const EventVenueSelector: React.FC<EventVenueSelectorProps> = ({ initialPosition, initialAddress, onPositionChange, onAddressChange }) => {
     const [position, setPosition] = useState(initialPosition)
     const [address, setAddress] = useState(initialAddress ?? '')
@@ -34,23 +49,9 @@ const EventVenueSelector: React.FC<EventVenueSelectorProps> = ({ initialPosition
                 if (status === kakao.maps.services.Status.OK) {
                     setPlaces(data as PlaceResult[])
                 } else if (status === kakao.maps.services.Status.ZERO_RESULT) {
-                    setPlaces([
-                        {
-                            place_name: '장소 검색 결과가 존재하지 않습니다.',
-                            address_name: '',
-                            x: '0',
-                            y: '0',
-                        },
-                    ])
+                    setPlaces([makeErrorMessage(messages.NO_RESULT)])
                 } else if (status === kakao.maps.services.Status.ERROR) {
-                    setPlaces([
-                        {
-                            place_name: '장소 검색 중 오류가 발생했습니다.',
-                            address_name: '',
-                            x: '0',
-                            y: '0',
-                        },
-                    ])
+                    setPlaces([makeErrorMessage(messages.SEARCH_ERROR)])
                 }
             })
         }, 500)
@@ -80,14 +81,7 @@ const EventVenueSelector: React.FC<EventVenueSelectorProps> = ({ initialPosition
             } else {
                 setAddress('')
                 onAddressChange('')
-                setPlaces([
-                    {
-                        place_name: '지정된 좌표에 주소 정보를 찾을 수 없습니다.',
-                        address_name: '',
-                        x: '0',
-                        y: '0',
-                    },
-                ])
+                setPlaces([makeErrorMessage(messages.MARKING_ERROR)])
             }
         })
     }
@@ -126,7 +120,7 @@ const EventVenueSelector: React.FC<EventVenueSelectorProps> = ({ initialPosition
                         <ul className="w-full bg-white rounded-lg shadow-lg max-h-48 overflow-y-auto mt-1">
                             {places.map((place, index) => (
                                 <li
-                                    key={index}
+                                    key={`place-result-${index}`}
                                     className="px-4 py-2 hover:bg-gray-100 cursor-pointer border-b"
                                     onClick={() => handleSelectPlace(place)}
                                 >
