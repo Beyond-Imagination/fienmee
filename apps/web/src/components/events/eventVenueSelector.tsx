@@ -57,7 +57,7 @@ const EventVenueSelector: React.FC<EventVenueSelectorProps> = ({ initialPosition
         return () => {
             clearTimeout(debounceTimer)
         }
-    }, [address, isSelecting])
+    }, [address])
 
     const handleMapClick = (_: kakao.maps.Map, mouseEvent: kakao.maps.event.MouseEvent) => {
         setIsSelecting(true)
