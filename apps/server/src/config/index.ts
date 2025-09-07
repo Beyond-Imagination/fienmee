@@ -13,6 +13,8 @@ export const {
     JWT_SECRET,
     SEOUL_API_KEY,
     SEOUL_API_URL,
+    TOUR_API_KEY,
+    TOUR_API_URL,
     AWS_ACCESS_KEY_ID,
     AWS_SECRET_ACCESS_KEY,
     AWS_REGION,

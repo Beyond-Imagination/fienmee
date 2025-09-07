@@ -14,6 +14,13 @@ export default class DateBatchScheduler {
                 logger.error(`Seoul Data Scheduler failed.`, { error: error })
             }
         })
+        schedule.scheduleJob('0 2 * * *', async () => {
+            try {
+                logger.info('Scheduler job started for Tour Api Data update')
+            } catch (error) {
+                logger.error(`Tour Api Data Scheduler failed.`, { error: error })
+            }
+        })
 
         schedule.scheduleJob('0 3 * * *', async () => {
             try {
