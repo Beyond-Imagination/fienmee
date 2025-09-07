@@ -10,6 +10,30 @@ const defaultParams = {
     _type: 'json',
 }
 
+function checkResponse(data) {
+    if (data.response.header.resultCode !== '0000') {
+        throw new TourDataServerError()
+    }
+}
+
+async function fetchTourApi(endPoint: string, params: URLSearchParams) {
+    const url = `${TOUR_API_URL}${endPoint}?${params.toString()}`
+    const res = await fetch(url, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    })
+
+    if (!res.ok) throw new TourDataServerError()
+    console.log(res)
+
+    const data = await res.json()
+
+    checkResponse(data)
+    return data
+}
+
 export async function getTourFestivalData(startDate: Date, page: number, limit: number): Promise<IResponseFestivalApi> {
     const params = new URLSearchParams({
         ...defaultParams,
@@ -18,17 +42,7 @@ export async function getTourFestivalData(startDate: Date, page: number, limit: 
         numOfRows: String(limit),
         arrange: 'R',
     })
-    const res = await fetch(`${TOUR_API_URL}/searchFestival2?${params.toString()}`, {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-    })
-    const data = (await res.json()) as IResponseFestivalApi
-    if (data.response.header.resultCode !== '0000') {
-        throw new TourDataServerError()
-    }
-    return data
+    return (await fetchTourApi('/searchFestival2', params)) as IResponseFestivalApi
 }
 
 export async function getTourDataDetail(contentId: string): Promise<IResponseFestivalDetailApi> {
@@ -37,17 +51,7 @@ export async function getTourDataDetail(contentId: string): Promise<IResponseFes
         contentId: contentId,
         contentTypeId: '15',
     })
-    const res = await fetch(`${TOUR_API_URL}/detailIntro2?${params.toString()}`, {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-    })
-    const data = (await res.json()) as IResponseFestivalDetailApi
-    if (data.response.header.resultCode !== '0000') {
-        throw new TourDataServerError()
-    }
-    return data
+    return (await fetchTourApi('/detailIntro2', params)) as IResponseFestivalDetailApi
 }
 
 export async function getTourFestivalDataInfo(contentId: string): Promise<IResponseFestivalInfoApi> {
@@ -56,15 +60,5 @@ export async function getTourFestivalDataInfo(contentId: string): Promise<IRespo
         contentId: contentId,
         contentTypeId: '15',
     })
-    const res = await fetch(`${TOUR_API_URL}/detailInfo2?${params.toString()}`, {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-    })
-    const data = (await res.json()) as IResponseFestivalInfoApi
-    if (data.response.header.resultCode !== '0000') {
-        throw new TourDataServerError()
-    }
-    return data
+    return (await fetchTourApi('/detailInfo2', params)) as IResponseFestivalInfoApi
 }

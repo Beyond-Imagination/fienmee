@@ -27,7 +27,7 @@ export class TourDataServerError extends APIError {
 export class TourDataUpdateError extends APIError {
     constructor(cause: Error | string = null) {
         super(500, 5003, 'tour data update error', cause)
-        Object.setPrototypeOf(this, TourDataServerError.prototype)
-        Error.captureStackTrace(this, TourDataServerError)
+        Object.setPrototypeOf(this, TourDataUpdateError.prototype)
+        Error.captureStackTrace(this, TourDataUpdateError)
     }
 }
