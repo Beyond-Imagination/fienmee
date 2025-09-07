@@ -4,7 +4,7 @@ export interface IMakeNewScheduleRequest {
     isAllDay: boolean
     startDate: Date
     endDate: Date
-    address?: string
+    address: string
     location: {
         type: string
         coordinates: number[]

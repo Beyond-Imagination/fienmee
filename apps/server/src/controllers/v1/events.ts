@@ -31,6 +31,7 @@ router.post('/', verifyToken, async (req: Request, res: Response) => {
     await EventsModel.create({
         name: req.body.name,
         authorId: req.user._id,
+        address: req.body.address,
         location: req.body.location,
         startDate: req.body.startDate,
         endDate: req.body.endDate,
@@ -49,6 +50,7 @@ router.put('/:id', verifyToken, verifyEventAuthor, async (req: Request, res: Res
         { _id: req.params.id },
         {
             name: req.body.name,
+            address: req.body.address,
             location: req.body.location,
             startDate: req.body.date,
             endDate: req.body.endDate,
