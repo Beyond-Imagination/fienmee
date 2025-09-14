@@ -31,6 +31,7 @@ router.post('/', verifyToken, async (req: Request, res: Response) => {
     await EventsModel.create({
         name: req.body.name,
         authorId: req.user._id,
+        address: req.body.address,
         location: req.body.location,
         startDate: req.body.startDate,
         endDate: req.body.endDate,
@@ -49,6 +50,7 @@ router.put('/:id', verifyToken, verifyEventAuthor, async (req: Request, res: Res
         { _id: req.params.id },
         {
             name: req.body.name,
+            address: req.body.address,
             location: req.body.location,
             startDate: req.body.date,
             endDate: req.body.endDate,
@@ -97,7 +99,6 @@ router.get('/:id', verifyToken, async (req: Request, res: Response) => {
 router.post('/:id/comments', verifyToken, async (req: Request, res: Response) => {
     const comment = await CommentsModel.create({
         userId: req.user._id,
-        nickname: req.user.nickname,
         eventId: req.params.id,
         comment: req.body.comment,
     })
@@ -123,7 +124,7 @@ router.get('/:id/comments', verifyToken, async (req: Request, res: Response) => 
     }
     const result = await CommentsModel.findByEventId(req.params.id, options)
     const modifiedDocs = result.docs.map(comment => ({
-        ...comment.toJSON(),
+        ...comment.toObject(),
         isAuthor: comment.get('userId')?.equals(req.user._id),
         // TODO: add isLiked field
     }))

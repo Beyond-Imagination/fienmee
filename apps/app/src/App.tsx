@@ -31,31 +31,67 @@ function App(): React.JSX.Element {
     const Stack = createNativeStackNavigator<RootStackParamList>()
 
     useEffect(() => {
-        const createChannel = async () => {
-            const settings = await notifee.requestPermission()
-            if (settings.authorizationStatus >= 1) {
-                await notifee.createChannel({
-                    id: 'default',
-                    name: 'Fienmee',
-                    importance: AndroidImportance.HIGH,
+        const setupNotifications = async () => {
+            try {
+                const settings = await notifee.requestPermission()
+                if (settings.authorizationStatus >= 1) {
+                    await notifee.createChannel({
+                        id: 'default',
+                        name: 'Fienmee',
+                        importance: AndroidImportance.HIGH,
+                    })
+                }
+
+                PushNotificationService.setMessageHandler(
+                    async remoteMessage => {
+                        console.log('Background message received: ', JSON.stringify(remoteMessage))
+                    },
+                    async remoteMessage => {
+                        const { title, body } = remoteMessage.notification ?? {}
+                        try {
+                            await notifee.displayNotification({
+                                title,
+                                body,
+                                android: {
+                                    channelId: 'default',
+                                    smallIcon: 'ic_launcher',
+                                    pressAction: {
+                                        id: 'default',
+                                        launchActivity: 'default',
+                                    },
+                                },
+                            })
+                        } catch (error) {
+                            console.error('Failed to display notification:', error)
+                        }
+                    },
+                )
+
+                PushNotificationService.listenRefreshToken(async token => {
+                    try {
+                        const credential = await getToken()
+
+                        const info = await PushNotificationService.getDeviceInfo()
+                        const request: IRequestNotificationToken = {
+                            body: {
+                                token: token,
+                                deviceId: info.deviceId,
+                                platform: info.platform,
+                            },
+                            accessToken: credential.accessToken,
+                        }
+                        await submitFCMToken(request)
+                    } catch (error) {
+                        // 권한 실패 또는 FCM 토큰 생성 실패 시 에러 로깅 후 무시
+                        console.error('Error during FCM token refresh and submission:', error)
+                    }
                 })
+            } catch (error) {
+                // notifee 채널 생성 실패(foreground message 처리 불가) 시 에러 로깅 후 무시
+                console.error('Initial notification setup failed:', error)
             }
         }
-        createChannel()
-        PushNotificationService.setMessageHandler()
-        PushNotificationService.listenRefreshToken(async token => {
-            const credential = await getToken()
-            const info = await PushNotificationService.getDeviceInfo()
-            const request: IRequestNotificationToken = {
-                body: {
-                    token: token,
-                    deviceId: info.deviceId,
-                    platform: info.platform,
-                },
-                accessToken: credential.accessToken,
-            }
-            await submitFCMToken(request)
-        })
+        setupNotifications()
         GoogleSignin.configure({
             webClientId: GOOGLE_CLIENT_ID,
             offlineAccess: true, // refresh token 받기 위해 필요

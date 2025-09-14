@@ -12,9 +12,6 @@ export class Comments extends defaultClasses.TimeStamps {
     @prop({ ref: User, required: true })
     public userId: mongoose.Types.ObjectId
 
-    @prop({ required: true })
-    public nickname: string
-
     @prop({ ref: Events, required: true })
     public eventId: mongoose.Types.ObjectId
 
@@ -31,7 +28,6 @@ export class Comments extends defaultClasses.TimeStamps {
         return {
             _id: this._id,
             userId: this.userId,
-            nickname: this.nickname,
             eventId: this.eventId,
             comment: this.comment,
             createdAt: this.createdAt,
@@ -47,7 +43,17 @@ export class Comments extends defaultClasses.TimeStamps {
             limit: number
         },
     ): Promise<mongoose.PaginateResult<mongoose.PaginateDocument<typeof Comments, object, object, mongoose.PaginateOptions>>> {
-        return await this.paginate({ eventId: eventId }, options)
+        return await this.paginate(
+            { eventId: eventId },
+            {
+                ...options,
+                populate: {
+                    path: 'userId',
+                    select: 'nickname isDeleted',
+                    model: 'User',
+                },
+            },
+        )
     }
 }
 

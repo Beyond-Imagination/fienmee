@@ -11,3 +11,7 @@ export async function registerUser(oauthUser: IUser): Promise<User> {
     }
     return user
 }
+
+export async function deleteOldDeletedUsers(): Promise<number> {
+    return UserModel.removeDeletedUserInfo()
+}

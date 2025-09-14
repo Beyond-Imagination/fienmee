@@ -1,6 +1,7 @@
 import React, { useRef, useState } from 'react'
 import Link from 'next/link'
 import { format } from 'date-fns'
+import { ko } from 'date-fns/locale'
 
 import { IScheduleItem } from '@fienmee/types'
 import { getEventDetail } from '@/api/event'
@@ -60,7 +61,7 @@ export default function ScheduleDetailModal({ isOpen, onClose, schedule, setModa
 
     const formatTime = (date: Date) => {
         const newDate = new Date(date)
-        return format(newDate, 'MM.dd HH:mm a')
+        return format(newDate, 'MM.dd a h:mm', { locale: ko })
     }
     const timeRange = schedule.isAllDay ? '하루 종일' : `${formatTime(schedule.startDate)} - ${formatTime(schedule.endDate)}`
 

@@ -57,13 +57,18 @@ export function WebviewScreen() {
 
     useEffect(() => {
         const saveFCMToken = async () => {
-            const credential = await getToken()
-            const info = await PushNotificationService.getDeviceInfo()
-            const fcmRequest: IRequestNotificationToken = {
-                body: info,
-                accessToken: credential.accessToken,
+            try {
+                const credential = await getToken()
+                const info = await PushNotificationService.getDeviceInfo()
+                const fcmRequest: IRequestNotificationToken = {
+                    body: info,
+                    accessToken: credential.accessToken,
+                }
+                await submitFCMToken(fcmRequest)
+            } catch (error) {
+                // 권한 실패 또는 FCM 토큰 생성 실패 시 에러 로깅 후 무시
+                console.error('Failed to save FCM token:', error)
             }
-            await submitFCMToken(fcmRequest)
         }
         saveFCMToken()
     }, [])

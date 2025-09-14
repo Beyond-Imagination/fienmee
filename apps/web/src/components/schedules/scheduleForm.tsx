@@ -36,6 +36,10 @@ export default function ScheduleForm() {
         setFormData(prevState => ({ ...prevState, location: { type: 'Point', coordinates: [position.lng, position.lat] } }))
     }
 
+    const onAddressChange = (address: string) => {
+        setFormData(prevState => ({ ...prevState, address }))
+    }
+
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target
         setFormData(prevState => ({ ...prevState, [name]: value }))
@@ -44,6 +48,10 @@ export default function ScheduleForm() {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
         // todo: add logic for validating and organizing request body object
+        if (!formData.isAllDay && formData.endDate <= formData.startDate) {
+            toast.error(<span>종료 날짜와 시간은 시작 날짜와 시간보다 이후여야 합니다.</span>)
+            return
+        }
         try {
             await registerSchedule(formData)
             toast.success(<span>일정이 성공적으로 등록되었어요.</span>)
@@ -83,13 +91,12 @@ export default function ScheduleForm() {
                     />
                 </div>
                 {!formData.eventId && (
-                    <div className="flex flex-col mb-6 w-full">
-                        <label className="font-medium">일정 장소</label>
-                        <EventVenueSelector
-                            initialPosition={{ lat: formData.location.coordinates[1], lng: formData.location.coordinates[0] }}
-                            onPositionChange={onPositionChange}
-                        />
-                    </div>
+                    <EventVenueSelector
+                        initialPosition={{ lat: formData.location.coordinates[1], lng: formData.location.coordinates[0] }}
+                        initialAddress={formData.address}
+                        onPositionChange={onPositionChange}
+                        onAddressChange={onAddressChange}
+                    />
                 )}
                 <div className="w-full mt-10 flex flex-row justify-between gap-5 flex-center item-center">
                     <button type="submit" className="w-full bg-[#FF9575] text-white font-semibold p-2 rounded-lg hover:bg-[#FF7A58]">

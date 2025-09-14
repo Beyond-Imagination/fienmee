@@ -36,6 +36,7 @@ export class User extends defaultClasses.TimeStamps implements IUser {
             _id: this._id,
             nickname: this.nickname,
             provider: this.provider,
+            isDeleted: this.isDeleted,
         }
     }
 
@@ -64,6 +65,18 @@ export class User extends defaultClasses.TimeStamps implements IUser {
 
     public static async removeInterest(this: ReturnModelType<typeof User>, userId: mongoose.Types.ObjectId, categoryId: string): Promise<User> {
         return await this.findByIdAndUpdate(userId, { $pull: { interests: categoryId } }, { new: true }).exec()
+    }
+
+    public static async removeDeletedUserInfo(this: ReturnModelType<typeof User>): Promise<number> {
+        const refDate = new Date()
+        refDate.setMonth(refDate.getMonth() - 1)
+
+        const result = await this.deleteMany({
+            isDeleted: true,
+            updatedAt: { $lt: refDate },
+        }).exec()
+
+        return result.deletedCount
     }
 }
 

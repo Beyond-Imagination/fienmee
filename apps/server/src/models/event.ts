@@ -29,10 +29,18 @@ export class Events extends defaultClasses.TimeStamps {
         coordinates: number[]
     }
 
-    @prop()
+    @prop({ required: true })
     public startDate: Date
 
-    @prop()
+    @prop({
+        required: true,
+        validate: {
+            validator: function (this: Events, endDate: Date) {
+                return this.isAllDay || this.startDate < endDate
+            },
+            message: 'endDate must be greater than startDate',
+        },
+    })
     public endDate: Date
 
     @prop()

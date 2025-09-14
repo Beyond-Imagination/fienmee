@@ -20,7 +20,7 @@ const geistMono = localFont({
     variable: '--font-geist-mono',
     weight: '100 900',
 })
-const KAKAO_SDK_URL = `https://dapi.kakao.com/v2/maps/sdk.js?appkey=${KAKAO_API_KEY}&autoload=false`
+const KAKAO_SDK_URL = `https://dapi.kakao.com/v2/maps/sdk.js?appkey=${KAKAO_API_KEY}&autoload=false&libraries=services`
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
     return (

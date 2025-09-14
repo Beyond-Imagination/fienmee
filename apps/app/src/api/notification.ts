@@ -11,6 +11,4 @@ export async function submitFCMToken(request: IRequestNotificationToken): Promis
     if (!res.ok) {
         throw await res.json()
     }
-
-    return res.json()
 }

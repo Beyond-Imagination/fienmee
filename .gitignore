@@ -1,3 +1,6 @@
+**/release-key.jks
+**/google-services.json
+
 .idea
 .vscode
 
@@ -7,4 +10,4 @@ logs
 
 .env
 newrelic_agent.log
-firebase-dev-adminsdk.json
+firebase-adminsdk.json

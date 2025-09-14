@@ -36,7 +36,7 @@
         "prettier": "^3.3.3"
     },
     "dependencies": {
-        "newrelic": "^12.17.0",
+        "newrelic": "^13.0.0",
         "tslib": "^2.8.1"
     }
 }
