@@ -61,7 +61,7 @@ router.get('/search', async (req: Request, res: Response) => {
         address: ['address'],
     }
 
-    const path = pathMap[target] ?? []
+    const path = pathMap[target]
 
     if (!q) {
         throw new KeywordIsEmptyToSearch()
@@ -77,9 +77,9 @@ router.get('/search', async (req: Request, res: Response) => {
                     path: path,
                 },
             },
-            $skip: skip,
-            $limit: limit,
         },
+        { $skip: skip },
+        { $limit: limit },
     ]
 
     if (category) {
@@ -92,12 +92,20 @@ router.get('/search', async (req: Request, res: Response) => {
         if (startDate > endDate) {
             throw new InvaildDate()
         }
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const filter: any = {}
-        if (startDate) filter.$gte = startDate
-        if (endDate) filter.$gte = endDate
 
-        query.push(filter)
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const dateMap: Record<string, any> = {}
+        if (startDate && endDate) {
+            dateMap.startDate = { $gte: startDate }
+            dateMap.endDate = { $lte: endDate }
+        } else if (startDate) {
+            dateMap.startDate = { $gte: startDate }
+        } else if (endDate) {
+            dateMap.endDate = { $lte: endDate }
+        }
+        query.push({
+            $match: dateMap,
+        })
     }
 
     if (isAllDay) {
