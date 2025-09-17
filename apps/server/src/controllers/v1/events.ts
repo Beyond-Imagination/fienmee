@@ -87,8 +87,7 @@ router.get('/search', async (req: Request, res: Response) => {
         })
     }
 
-    if (startDate || endDate) {
-        if (startDate > endDate) {
+    if (endDate && startDate > endDate) {
             throw new InvaildDate()
         }
 
