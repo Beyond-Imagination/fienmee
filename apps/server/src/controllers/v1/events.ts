@@ -92,8 +92,7 @@ router.get('/search', async (req: Request, res: Response) => {
             throw new InvaildDate()
         }
 
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const dateMap: Record<string, any> = {}
+        const dateMap: mongoose.FilterQuery<Date> = {}
         if (startDate && endDate) {
             dateMap.startDate = { $gte: startDate }
             dateMap.endDate = { $lte: endDate }
