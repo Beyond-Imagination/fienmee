@@ -92,12 +92,10 @@ router.get('/search', async (req: Request, res: Response) => {
         }
 
         const dateMap: mongoose.FilterQuery<Date> = {}
-        if (startDate && endDate) {
+        if (startDate) {
             dateMap.startDate = { $gte: startDate }
-            dateMap.endDate = { $lte: endDate }
-        } else if (startDate) {
-            dateMap.startDate = { $gte: startDate }
-        } else if (endDate) {
+        } 
+        if (endDate) {
             dateMap.endDate = { $lte: endDate }
         }
         query.push({
