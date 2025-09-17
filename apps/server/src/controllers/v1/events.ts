@@ -67,8 +67,7 @@ router.get('/search', async (req: Request, res: Response) => {
         throw new KeywordIsEmptyToSearch()
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const query: any[] = [
+    const query: mongoose.PipelineStage[] = [
         {
             $search: {
                 index: 'korean_events_search',
