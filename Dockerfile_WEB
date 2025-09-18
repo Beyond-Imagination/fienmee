@@ -13,6 +13,8 @@ RUN pnpm build:web
 
 FROM node:20-slim AS web
 
+RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates
+
 COPY --from=build /fienmee/apps/web/.next/standalone /fienmee
 COPY --from=build /fienmee/apps/web/.next/static /fienmee/apps/web/.next/static
 COPY --from=build /fienmee/apps/web/public /fienmee/apps/web/public
