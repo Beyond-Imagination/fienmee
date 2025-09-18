@@ -24,7 +24,7 @@ RUN pnpm build:server
 
 FROM base AS runner
 
-RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates
+RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates && rm -rf /var/lib/apt/lists/*
 
 COPY --from=build /fienmee/apps/server/package.json /fienmee/apps/server/package.json
 COPY --from=build /fienmee/apps/server/dist /fienmee/apps/server/dist
