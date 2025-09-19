@@ -88,13 +88,12 @@ router.get('/search', async (req: Request, res: Response) => {
     }
 
     if (endDate && startDate > endDate) {
-            throw new InvaildDate()
-        }
-
+        throw new InvaildDate()
+    } else {
         const dateMap: mongoose.FilterQuery<Date> = {}
         if (startDate) {
             dateMap.startDate = { $gte: startDate }
-        } 
+        }
         if (endDate) {
             dateMap.endDate = { $lte: endDate }
         }
