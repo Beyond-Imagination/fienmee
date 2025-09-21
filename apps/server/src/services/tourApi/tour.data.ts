@@ -26,7 +26,6 @@ async function fetchTourApi(endPoint: string, params: URLSearchParams) {
     })
 
     if (!res.ok) throw new TourDataServerError()
-    console.log(res)
 
     const data = await res.json()
 
