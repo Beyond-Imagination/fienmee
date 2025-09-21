@@ -200,7 +200,7 @@ router.get('/:id/comments', verifyToken, async (req: Request, res: Response) => 
     const modifiedDocs = result.docs.map(comment => ({
         ...comment.toObject(),
         isAuthor: comment.get('userId')?.equals(req.user._id),
-        // TODO: add isLiked field
+        isLiked: comment.get('likes')?.includes(req.user._id),
     }))
     res.status(200).json({
         comments: modifiedDocs,
