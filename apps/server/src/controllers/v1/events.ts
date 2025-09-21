@@ -7,7 +7,7 @@ import { verifyToken } from '@/middlewares/auth'
 import { CategoryCode, NotificationType } from '@fienmee/types'
 import { verifyCommentAuthor, verifyEventAuthor } from '@/middlewares/events'
 import { TransactionError } from '@/types/errors/database'
-import { EventNotFound } from '@/types/errors/events'
+import { EventNotFound, InvaildDate, KeywordIsEmptyToSearch } from '@/types/errors/events'
 
 const router: Router = asyncify(express.Router())
 
@@ -43,6 +43,80 @@ router.post('/', verifyToken, async (req: Request, res: Response) => {
         isAllDay: req.body.isAllDay,
     })
     res.sendStatus(204)
+})
+
+router.get('/search', async (req: Request, res: Response) => {
+    const { q, category } = req.query
+    const target = (req.query.target as string) || 'default'
+    const sort = req.query.sort || 'default'
+    const startDate = req.query.startDate ? new Date(req.query.startDate as string) : new Date()
+    const endDate = req.query.endDate ? new Date(req.query.endDate as string) : undefined
+    const isAllDay = req.query.isAllDay === 'true'
+    const page = Number(req.query.page) || 1
+    const limit = Number(req.query.limit) || 10
+    const skip = (page - 1) * limit
+
+    const pathMap: Record<string, string[]> = {
+        default: ['name', 'description'],
+        name: ['name'],
+        address: ['address'],
+    }
+
+    const path = pathMap[target]
+
+    if (!q) {
+        throw new KeywordIsEmptyToSearch()
+    }
+
+    const query: mongoose.PipelineStage[] = [
+        {
+            $search: {
+                index: 'korean_events_search',
+                text: {
+                    query: q,
+                    path: path,
+                },
+            },
+        },
+        { $skip: skip },
+        { $limit: limit },
+    ]
+
+    if (category) {
+        query.push({
+            $match: { category },
+        })
+    }
+
+    if (endDate && startDate > endDate) {
+        throw new InvaildDate()
+    } else {
+        const dateMap: mongoose.FilterQuery<Date> = {}
+        if (startDate) {
+            dateMap.startDate = { $gte: startDate }
+        }
+        if (endDate) {
+            dateMap.endDate = { $lte: endDate }
+        }
+        query.push({
+            $match: dateMap,
+        })
+    }
+
+    if (isAllDay) {
+        query.push({
+            $match: { isAllDay: isAllDay },
+        })
+    }
+
+    if (sort === 'default') query.push({ $sort: { popularity: -1 } })
+    else if (sort === 'hot') query.push({ $sort: { likes: -1 } })
+    else if (sort === 'startDate') query.push({ $sort: { startDate: -1 } })
+    else if (sort === 'endDate') query.push({ $sort: { endDate: -1 } })
+
+    const result = await EventsModel.aggregate(query)
+
+    res.status(200).json(result)
 })
 
 router.put('/:id', verifyToken, verifyEventAuthor, async (req: Request, res: Response) => {
