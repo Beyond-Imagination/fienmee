@@ -1,7 +1,7 @@
 import { useNavigation } from '@react-navigation/native'
 import { Image, StyleSheet, Text, TouchableOpacity } from 'react-native'
 import React from 'react'
-import { login as kakaoLogin } from '@react-native-seoul/kakao-login'
+import { KakaoOAuthToken, login as kakaoLogin } from '@react-native-seoul/kakao-login'
 
 import { isErrorResponse } from '@fienmee/types'
 
@@ -12,7 +12,17 @@ import { LoginScreenProps } from '@/types'
 export function KakaoOauthLogin() {
     const navigation = useNavigation<LoginScreenProps['navigation']>()
     const onPress = async () => {
-        const token = await kakaoLogin()
+        let token!: KakaoOAuthToken
+        try {
+            token = await kakaoLogin()
+        } catch (error) {
+            console.log(error) // TODO: collect error with newrelic
+            navigation.navigate('Error', {
+                message: '소셜 로그인 오류가 발생했습니다. 잠시후 다시 시도해주세요.',
+            })
+            return
+        }
+
         try {
             const credential = await login({
                 ...token,
