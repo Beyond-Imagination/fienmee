@@ -169,6 +169,24 @@ router.delete('/:id/comments/:commentId', verifyToken, verifyCommentAuthor, asyn
     }
 })
 
+router.post('/:id/comments/:commentId/likes', verifyToken, async (req: Request, res: Response) => {
+    const comment = await CommentsModel.findById(req.params.commentId).populate<{ eventId: { name: string } }>({ path: 'eventId', select: 'name' })
+
+    const prevLiked = comment.likes.includes(req.user._id)
+    const updateLiked = prevLiked ? { $pull: { likes: req.user._id } } : { $push: { likes: req.user._id } }
+
+    await CommentsModel.updateOne({ _id: req.params.commentId }, updateLiked)
+    if (comment.userId && !prevLiked && !comment.userId.equals(req.user._id)) {
+        await NotificationModel.createAndSendNotification(
+            NotificationType.LIKE,
+            comment.userId,
+            '누군가가 내가 등록한 댓글에 좋아요를 눌렀어요!',
+            `${comment.eventId.name} 행사 댓글에 좋아요가 눌렸어요!`,
+            `events:detail:${req.params.id}`,
+        )
+    }
+})
+
 router.post('/:id/likes', verifyToken, async (req: Request, res: Response) => {
     const event = await EventsModel.findById(req.params.id)
 
