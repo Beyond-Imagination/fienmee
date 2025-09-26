@@ -1,7 +1,7 @@
 import React from 'react'
 import { Image, StyleSheet, Text, TouchableOpacity } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
-import { GoogleSignin, isErrorWithCode, SignInSuccessResponse, statusCodes } from '@react-native-google-signin/google-signin'
+import { GetTokensResponse, GoogleSignin, isErrorWithCode, SignInSuccessResponse, statusCodes } from '@react-native-google-signin/google-signin'
 
 import { LoginScreenProps } from '@/types'
 import { getGoogleRefreshToken, login } from '@/api'
@@ -11,14 +11,26 @@ import { setToken } from '@/stores'
 export function GoogleOauthLogin() {
     const navigation = useNavigation<LoginScreenProps['navigation']>()
     const onPress = async () => {
-        const userInfo = (await GoogleSignin.signIn()) as SignInSuccessResponse & { serverAuthCode?: string }
-        const serverAuthCode = userInfo.data.serverAuthCode
-        if (!serverAuthCode) {
-            throw new Error('Server Auth Code is missing')
+        let tokens: GetTokensResponse
+        let refreshToken: string
+
+        try {
+            const userInfo = (await GoogleSignin.signIn()) as SignInSuccessResponse & { serverAuthCode?: string }
+            const serverAuthCode = userInfo.data.serverAuthCode
+            if (!serverAuthCode) {
+                throw new Error('Server Auth Code is missing')
+            }
+
+            tokens = await GoogleSignin.getTokens()
+            refreshToken = await getGoogleRefreshToken(serverAuthCode)
+        } catch (error) {
+            console.log(error) // TODO: collect error with newrelic
+            navigation.navigate('Error', {
+                message: '소셜 로그인 오류가 발생했습니다. 잠시후 다시 시도해주세요.',
+            })
+            return
         }
 
-        const tokens = await GoogleSignin.getTokens()
-        const refreshToken = await getGoogleRefreshToken(serverAuthCode)
         try {
             const credential = await login({
                 ...tokens,
