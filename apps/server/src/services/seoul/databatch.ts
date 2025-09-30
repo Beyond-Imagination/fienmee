@@ -52,9 +52,9 @@ async function saveSeoulData(data: Array<ICulturalEvent>, today: Date): Promise<
                     upsert: true,
                 },
             })
-        } catch {
+        } catch (error) {
             // 원천 데이터 필드 누락 혹은 잘못된 정보로 인한 오류 시 해당 데이터 패스
-            continue
+            logger.warn('Skipping a seoul event due to a processing error', { error, event })
         }
     }
     try {
