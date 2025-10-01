@@ -24,6 +24,8 @@ function getCopyrightText(cpyrhDivCd: string): string {
 }
 
 function makeDescription(eventDescription: ITourDataInfo[]) {
+    if (!eventDescription) return ''
+
     const description = []
     eventDescription.sort((a, b) => parseInt(a.serialnum) - parseInt(b.serialnum))
     eventDescription.forEach(item => description.push(`${item.infoname}: ${item.infotext}`))
@@ -33,42 +35,48 @@ function makeDescription(eventDescription: ITourDataInfo[]) {
 async function saveTourData(data: ITourFestivalData[], today: Date) {
     const bulkOps = []
     for (const event of data) {
-        const startDate = toZonedTime(parseDate(event.eventstartdate), 'Asia/Seoul')
-        const endDate = parseEndDate(event.eventenddate)
-        if (startDate < today && endDate < today) continue
+        try {
+            const startDate = toZonedTime(parseDate(event.eventstartdate), 'Asia/Seoul')
+            const endDate = parseEndDate(event.eventenddate)
+            if (startDate < today && endDate < today) continue
 
-        const [eventDetail, eventDescription] = await Promise.all([getTourDataDetail(event.contentid), getTourFestivalDataInfo(event.contentid)])
+            const [eventDetail, eventDescription] = await Promise.all([getTourDataDetail(event.contentid), getTourFestivalDataInfo(event.contentid)])
 
-        const registeredAt = toZonedTime(parse(event.createdtime, 'yyyyMMddHHmmss', new Date()), 'Asia/Seoul')
-        const images = []
-        if (event.firstimage) images.push(event.firstimage)
-        else if (event.firstimage2) images.push(event.firstimage2)
+            const registeredAt = toZonedTime(parse(event.createdtime, 'yyyyMMddHHmmss', new Date()), 'Asia/Seoul')
+            const images = []
+            if (event.firstimage) images.push(event.firstimage)
+            else if (event.firstimage2) images.push(event.firstimage2)
 
-        bulkOps.push({
-            updateOne: {
-                filter: {
-                    name: event.title,
-                    registeredAt: registeredAt,
-                },
-                update: {
-                    name: event.title,
-                    address: `${event.addr1}${event.addr2 === '' ? '' : `(${event.addr2})`}`,
-                    location: {
-                        type: 'Point',
-                        coordinates: [parseFloat(event.mapx), parseFloat(event.mapy)],
+            bulkOps.push({
+                updateOne: {
+                    filter: {
+                        name: event.title,
+                        registeredAt: registeredAt,
                     },
-                    startDate: startDate,
-                    endDate: endDate,
-                    description: `${makeDescription(eventDescription.response.body.items.item)}\n${getCopyrightText(event.cpyrhDivCd)}`,
-                    photo: images,
-                    cost: eventDetail.response.body.items.item.usetimefestival || '',
-                    category: [categoryMapTourCodeToCode[event.lclsSystm3] || CategoryCode.OTHERS],
-                    targetAudience: [eventDetail.response.body.items.item.agelimit],
-                    registeredAt: registeredAt,
+                    update: {
+                        name: event.title,
+                        address: `${event.addr1}${event.addr2 === '' ? '' : `(${event.addr2})`}`,
+                        location: {
+                            type: 'Point',
+                            coordinates: [parseFloat(event.mapx), parseFloat(event.mapy)],
+                        },
+                        startDate: startDate,
+                        endDate: endDate,
+                        description: `${makeDescription(eventDescription.response.body.items.item)}\n${getCopyrightText(event.cpyrhDivCd)}`,
+                        photo: images,
+                        cost: eventDetail.response.body.items.item?.usetimefestival || '',
+                        category: [categoryMapTourCodeToCode[event.lclsSystm3] || CategoryCode.OTHERS],
+                        targetAudience: eventDetail.response.body.items.item?.agelimit
+                            ? [String(eventDetail.response.body.items.item?.agelimit)]
+                            : [],
+                        registeredAt: registeredAt,
+                    },
+                    upsert: true,
                 },
-                upsert: true,
-            },
-        })
+            })
+        } catch (error) {
+            logger.warn('Skipping a tour event due to a processing error', { error, event })
+        }
     }
     try {
         if (bulkOps.length > 0) {

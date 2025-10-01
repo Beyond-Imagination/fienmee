@@ -18,39 +18,44 @@ async function saveSeoulData(data: Array<ICulturalEvent>, today: Date): Promise<
     const bulkOps = []
 
     for (const event of data) {
-        const startDate = toZonedTime(event.STRTDATE, 'Asia/Seoul')
-        const endDate = parseEndDate(event.END_DATE)
-        if (startDate < today && endDate < today) {
-            continue
-        }
+        try {
+            const startDate = toZonedTime(event.STRTDATE, 'Asia/Seoul')
+            const endDate = parseEndDate(event.END_DATE)
+            if (startDate < today && endDate < today) {
+                continue
+            }
 
-        const registeredAt = toZonedTime(event.RGSTDATE, 'Asia/Seoul')
-        bulkOps.push({
-            updateOne: {
-                filter: {
-                    name: event.TITLE,
-                    registeredAt: registeredAt,
-                },
-                update: {
-                    name: event.TITLE,
-                    address: `서울시 ${event.GUNAME} ${event.PLACE}`,
-                    location: {
-                        type: 'Point',
-                        coordinates: [parseFloat(event.LAT), parseFloat(event.LOT)], // API 값이 위도 경도 값이 바껴있음
+            const registeredAt = toZonedTime(event.RGSTDATE, 'Asia/Seoul')
+            bulkOps.push({
+                updateOne: {
+                    filter: {
+                        name: event.TITLE,
+                        registeredAt: registeredAt,
                     },
-                    startDate: startDate,
-                    endDate: endDate,
-                    // TODO: change url to hyperlink
-                    description: `프로그램 소개: ${event.PROGRAM}\n${event.ETC_DESC && `기타내용: ${event.ETC_DESC}\n`}${event.PLAYER && `공연자: ${event.PLAYER}\n`}\n상세정보보기: ${event.HMPG_ADDR}\n주최기관: ${event.ORG_NAME}(${event.ORG_LINK})`,
-                    photo: [event.MAIN_IMG],
-                    cost: event.IS_FREE === '무료' ? '무료' : event.USE_FEE,
-                    category: [categoryMapTitleToCode[event.CODENAME] || CategoryCode.OTHERS],
-                    targetAudience: [event.USE_TRGT],
-                    registeredAt: registeredAt,
+                    update: {
+                        name: event.TITLE,
+                        address: `서울시 ${event.GUNAME} ${event.PLACE}`,
+                        location: {
+                            type: 'Point',
+                            coordinates: [parseFloat(event.LAT), parseFloat(event.LOT)], // API 값이 위도 경도 값이 바껴있음
+                        },
+                        startDate: startDate,
+                        endDate: endDate,
+                        // TODO: change url to hyperlink
+                        description: `프로그램 소개: ${event.PROGRAM}\n${event.ETC_DESC && `기타내용: ${event.ETC_DESC}\n`}${event.PLAYER && `공연자: ${event.PLAYER}\n`}\n상세정보보기: ${event.HMPG_ADDR}\n주최기관: ${event.ORG_NAME}(${event.ORG_LINK})`,
+                        photo: [event.MAIN_IMG],
+                        cost: event.IS_FREE === '무료' ? '무료' : event.USE_FEE,
+                        category: [categoryMapTitleToCode[event.CODENAME] || CategoryCode.OTHERS],
+                        targetAudience: [event.USE_TRGT],
+                        registeredAt: registeredAt,
+                    },
+                    upsert: true,
                 },
-                upsert: true,
-            },
-        })
+            })
+        } catch (error) {
+            // 원천 데이터 필드 누락 혹은 잘못된 정보로 인한 오류 시 해당 데이터 패스
+            logger.warn('Skipping a seoul event due to a processing error', { error, event })
+        }
     }
     try {
         if (bulkOps.length > 0) {
@@ -73,8 +78,9 @@ export async function fetchAndSaveSeoulData(): Promise<void> {
         const end = Math.min((index + 1) * BATCH_SIZE, dataCount)
         const result = await getSeoulData(st, end)
         await saveSeoulData(result.culturalEventInfo.row, today)
-        await new Promise(resolve => setTimeout(resolve, 500)) // 각 요청마다 500ms 간격 추가 (동시 요청 불가능)
+        await new Promise(resolve => setTimeout(resolve, 1000)) // 각 요청마다 1000ms 간격 추가 (동시 요청 불가능)
         if (index === 0) {
+            if (!result.culturalEventInfo.list_total_count) break
             dataCount = result.culturalEventInfo.list_total_count
         }
         index++
