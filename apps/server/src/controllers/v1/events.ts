@@ -7,7 +7,7 @@ import { verifyToken } from '@/middlewares/auth'
 import { CategoryCode, NotificationType } from '@fienmee/types'
 import { verifyCommentAuthor, verifyEventAuthor } from '@/middlewares/events'
 import { TransactionError } from '@/types/errors/database'
-import { EventNotFound, InvaildDate, KeywordIsEmptyToSearch } from '@/types/errors/events'
+import { CommentNotFound, EventNotFound, InvaildDate, KeywordIsEmptyToSearch } from '@/types/errors/events'
 
 const router: Router = asyncify(express.Router())
 
@@ -246,6 +246,9 @@ router.delete('/:id/comments/:commentId', verifyToken, verifyCommentAuthor, asyn
 router.post('/:id/comments/:commentId/likes', verifyToken, async (req: Request, res: Response) => {
     const comment = await CommentsModel.findById(req.params.commentId).populate<{ eventId: { name: string } }>({ path: 'eventId', select: 'name' })
 
+    if (!comment) {
+        throw new CommentNotFound()
+    }
     const prevLiked = comment.likes.includes(req.user._id)
     const updateLiked = prevLiked ? { $pull: { likes: req.user._id } } : { $push: { likes: req.user._id } }
 
@@ -259,6 +262,8 @@ router.post('/:id/comments/:commentId/likes', verifyToken, async (req: Request, 
             `events:detail:${req.params.id}`,
         )
     }
+
+    res.sendStatus(204)
 })
 
 router.post('/:id/likes', verifyToken, async (req: Request, res: Response) => {

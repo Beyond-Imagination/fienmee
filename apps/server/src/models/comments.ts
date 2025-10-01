@@ -24,7 +24,7 @@ export class Comments extends defaultClasses.TimeStamps {
     @prop()
     public updatedAt: Date
 
-    @prop({ ref: User })
+    @prop({ ref: User, default: [] })
     public likes: mongoose.Types.ObjectId[]
 
     public toJSON(): object {
