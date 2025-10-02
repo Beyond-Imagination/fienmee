@@ -107,6 +107,8 @@ export interface IComment {
         nickname: string
         isDeleted: boolean
     }
+    likeCount: number
+    isLiked: boolean
 }
 
 export interface IGetEventCommentsResponse {

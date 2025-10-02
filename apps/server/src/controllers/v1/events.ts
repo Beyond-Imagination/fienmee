@@ -7,7 +7,7 @@ import { verifyToken } from '@/middlewares/auth'
 import { CategoryCode, NotificationType } from '@fienmee/types'
 import { verifyCommentAuthor, verifyEventAuthor } from '@/middlewares/events'
 import { TransactionError } from '@/types/errors/database'
-import { EventNotFound, InvaildDate, KeywordIsEmptyToSearch } from '@/types/errors/events'
+import { CommentNotFound, EventNotFound, InvaildDate, KeywordIsEmptyToSearch } from '@/types/errors/events'
 
 const router: Router = asyncify(express.Router())
 
@@ -200,7 +200,7 @@ router.get('/:id/comments', verifyToken, async (req: Request, res: Response) => 
     const modifiedDocs = result.docs.map(comment => ({
         ...comment.toObject(),
         isAuthor: comment.get('userId')?.equals(req.user._id),
-        // TODO: add isLiked field
+        isLiked: comment.get('likes')?.includes(req.user._id),
     }))
     res.status(200).json({
         comments: modifiedDocs,
@@ -241,6 +241,29 @@ router.delete('/:id/comments/:commentId', verifyToken, verifyCommentAuthor, asyn
     } finally {
         await session.endSession()
     }
+})
+
+router.post('/:id/comments/:commentId/likes', verifyToken, async (req: Request, res: Response) => {
+    const comment = await CommentsModel.findById(req.params.commentId).populate<{ eventId: { name: string } }>({ path: 'eventId', select: 'name' })
+
+    if (!comment) {
+        throw new CommentNotFound()
+    }
+    const prevLiked = comment.likes.includes(req.user._id)
+    const updateLiked = prevLiked ? { $pull: { likes: req.user._id } } : { $push: { likes: req.user._id } }
+
+    await CommentsModel.updateOne({ _id: req.params.commentId }, updateLiked)
+    if (comment.userId && !prevLiked && !comment.userId.equals(req.user._id)) {
+        await NotificationModel.createAndSendNotification(
+            NotificationType.LIKE,
+            comment.userId,
+            '누군가가 내가 등록한 댓글에 좋아요를 눌렀어요!',
+            `${comment.eventId.name} 행사 댓글에 좋아요가 눌렸어요!`,
+            `events:detail:${req.params.id}`,
+        )
+    }
+
+    res.sendStatus(204)
 })
 
 router.post('/:id/likes', verifyToken, async (req: Request, res: Response) => {
