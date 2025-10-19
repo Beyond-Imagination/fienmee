@@ -42,7 +42,7 @@ export function EventComment({ comment }: Props) {
             await queryClient.invalidateQueries({ queryKey: ['comments', comment.eventId] })
         },
         onError: () => {
-            toast.error(<span>좋아요 처리에 실패했습니다.</span>)
+            toast.error(<span>좋아요가 제대로 반영되지 않았어요. 다시 시도해주세요.</span>)
         },
     })
 
