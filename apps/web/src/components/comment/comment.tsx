@@ -3,10 +3,10 @@ import { IComment, IDeleteCommentRequest } from '@fienmee/types'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'react-toastify'
 
-import { deleteEventCommentById } from '@/api/event'
+import { deleteEventCommentById, toggleEventCommentLike } from '@/api/event'
 import CommentOption from '@/components/comment/commentOption'
 import CommentUpdateField from '@/components/comment/commentUpdateField'
-import { UnlikeIcon } from '@/components/icon'
+import { LikeIcon, UnlikeIcon } from '@/components/icon'
 import LoadingOverlay from '@/components/comment/commentLoadingOverlay'
 
 interface Props {
@@ -36,6 +36,21 @@ export function EventComment({ comment }: Props) {
         })
     }
 
+    const likeMutation = useMutation({
+        mutationFn: ({ eventId, commentId }: { eventId: string; commentId: string }) => toggleEventCommentLike(eventId, commentId),
+        onSuccess: async () => {
+            await queryClient.invalidateQueries({ queryKey: ['comments', comment.eventId] })
+        },
+        onError: () => {
+            toast.error(<span>좋아요가 제대로 반영되지 않았어요. 다시 시도해주세요.</span>)
+        },
+    })
+
+    const handleToggleLike = () => {
+        if (likeMutation.isPending) return
+        likeMutation.mutate({ eventId: comment.eventId, commentId: comment._id })
+    }
+
     return (
         <div className="flex flex-col gap-6 py-2 relative">
             {deleteMutation.isPending && <LoadingOverlay />}
@@ -49,7 +64,16 @@ export function EventComment({ comment }: Props) {
                     )}
                 </div>
                 <div className="flex flex-row justify-center items-center gap-2">
-                    <UnlikeIcon width="1.5rem" height="1.25rem" />
+                    <button
+                        aria-label="toggle comment like"
+                        onClick={handleToggleLike}
+                        disabled={likeMutation.isPending}
+                        className="disabled:opacity-50"
+                        type="button"
+                    >
+                        {comment.isLiked ? <LikeIcon width="1.5rem" height="1.25rem" /> : <UnlikeIcon width="1.5rem" height="1.25rem" />}
+                    </button>
+                    <span className="text-sm">{comment.likeCount}</span>
                     {comment.isAuthor && (
                         <CommentOption onEdit={() => setIsEdit(true)} onDelete={handleDelete} isDeleteDisabled={deleteMutation.isPending} />
                     )}
