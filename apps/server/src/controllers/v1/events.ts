@@ -7,7 +7,7 @@ import { verifyToken } from '@/middlewares/auth'
 import { CategoryCode, NotificationType } from '@fienmee/types'
 import { verifyCommentAuthor, verifyEventAuthor } from '@/middlewares/events'
 import { TransactionError } from '@/types/errors/database'
-import { EventNotFound } from '@/types/errors/events'
+import { CommentNotFound, EventNotFound, InvaildDate, KeywordIsEmptyToSearch } from '@/types/errors/events'
 
 const router: Router = asyncify(express.Router())
 
@@ -31,6 +31,7 @@ router.post('/', verifyToken, async (req: Request, res: Response) => {
     await EventsModel.create({
         name: req.body.name,
         authorId: req.user._id,
+        address: req.body.address,
         location: req.body.location,
         startDate: req.body.startDate,
         endDate: req.body.endDate,
@@ -44,11 +45,86 @@ router.post('/', verifyToken, async (req: Request, res: Response) => {
     res.sendStatus(204)
 })
 
+router.get('/search', async (req: Request, res: Response) => {
+    const { q, category } = req.query
+    const target = (req.query.target as string) || 'default'
+    const sort = req.query.sort || 'default'
+    const startDate = req.query.startDate ? new Date(req.query.startDate as string) : new Date()
+    const endDate = req.query.endDate ? new Date(req.query.endDate as string) : undefined
+    const isAllDay = req.query.isAllDay === 'true'
+    const page = Number(req.query.page) || 1
+    const limit = Number(req.query.limit) || 10
+    const skip = (page - 1) * limit
+
+    const pathMap: Record<string, string[]> = {
+        default: ['name', 'description'],
+        name: ['name'],
+        address: ['address'],
+    }
+
+    const path = pathMap[target]
+
+    if (!q) {
+        throw new KeywordIsEmptyToSearch()
+    }
+
+    const query: mongoose.PipelineStage[] = [
+        {
+            $search: {
+                index: 'korean_events_search',
+                text: {
+                    query: q,
+                    path: path,
+                },
+            },
+        },
+        { $skip: skip },
+        { $limit: limit },
+    ]
+
+    if (category) {
+        query.push({
+            $match: { category },
+        })
+    }
+
+    if (endDate && startDate > endDate) {
+        throw new InvaildDate()
+    } else {
+        const dateMap: mongoose.FilterQuery<Date> = {}
+        if (startDate) {
+            dateMap.startDate = { $gte: startDate }
+        }
+        if (endDate) {
+            dateMap.endDate = { $lte: endDate }
+        }
+        query.push({
+            $match: dateMap,
+        })
+    }
+
+    if (isAllDay) {
+        query.push({
+            $match: { isAllDay: isAllDay },
+        })
+    }
+
+    if (sort === 'default') query.push({ $sort: { popularity: -1 } })
+    else if (sort === 'hot') query.push({ $sort: { likes: -1 } })
+    else if (sort === 'startDate') query.push({ $sort: { startDate: -1 } })
+    else if (sort === 'endDate') query.push({ $sort: { endDate: -1 } })
+
+    const result = await EventsModel.aggregate(query)
+
+    res.status(200).json(result)
+})
+
 router.put('/:id', verifyToken, verifyEventAuthor, async (req: Request, res: Response) => {
     const event = await EventsModel.findOneAndUpdate(
         { _id: req.params.id },
         {
             name: req.body.name,
+            address: req.body.address,
             location: req.body.location,
             startDate: req.body.date,
             endDate: req.body.endDate,
@@ -97,7 +173,6 @@ router.get('/:id', verifyToken, async (req: Request, res: Response) => {
 router.post('/:id/comments', verifyToken, async (req: Request, res: Response) => {
     const comment = await CommentsModel.create({
         userId: req.user._id,
-        nickname: req.user.nickname,
         eventId: req.params.id,
         comment: req.body.comment,
     })
@@ -123,9 +198,10 @@ router.get('/:id/comments', verifyToken, async (req: Request, res: Response) => 
     }
     const result = await CommentsModel.findByEventId(req.params.id, options)
     const modifiedDocs = result.docs.map(comment => ({
-        ...comment.toJSON(),
+        ...comment.toObject(),
         isAuthor: comment.get('userId')?.equals(req.user._id),
-        // TODO: add isLiked field
+        isLiked: comment.get('likes')?.includes(req.user._id),
+        likeCount: comment.get('likes')?.length || 0,
     }))
     res.status(200).json({
         comments: modifiedDocs,
@@ -166,6 +242,29 @@ router.delete('/:id/comments/:commentId', verifyToken, verifyCommentAuthor, asyn
     } finally {
         await session.endSession()
     }
+})
+
+router.post('/:id/comments/:commentId/likes', verifyToken, async (req: Request, res: Response) => {
+    const comment = await CommentsModel.findById(req.params.commentId).populate<{ eventId: { name: string } }>({ path: 'eventId', select: 'name' })
+
+    if (!comment) {
+        throw new CommentNotFound()
+    }
+    const prevLiked = comment.likes.includes(req.user._id)
+    const updateLiked = prevLiked ? { $pull: { likes: req.user._id } } : { $push: { likes: req.user._id } }
+
+    await CommentsModel.updateOne({ _id: req.params.commentId }, updateLiked)
+    if (comment.userId && !prevLiked && !comment.userId.equals(req.user._id)) {
+        await NotificationModel.createAndSendNotification(
+            NotificationType.LIKE,
+            comment.userId,
+            '누군가가 내가 등록한 댓글에 좋아요를 눌렀어요!',
+            `${comment.eventId.name} 행사 댓글에 좋아요가 눌렸어요!`,
+            `events:detail:${req.params.id}`,
+        )
+    }
+
+    res.sendStatus(204)
 })
 
 router.post('/:id/likes', verifyToken, async (req: Request, res: Response) => {

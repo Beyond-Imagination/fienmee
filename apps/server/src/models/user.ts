@@ -36,6 +36,7 @@ export class User extends defaultClasses.TimeStamps implements IUser {
             _id: this._id,
             nickname: this.nickname,
             provider: this.provider,
+            isDeleted: this.isDeleted,
         }
     }
 

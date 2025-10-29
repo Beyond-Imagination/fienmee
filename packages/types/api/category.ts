@@ -38,6 +38,29 @@ export const categoryMapTitleToCode = {
     클래식: CategoryCode.MUSIC,
 }
 
+export const categoryMapTourCodeToCode = {
+    EV010100: CategoryCode.ARTS, // 문화관광축제
+    EV010200: CategoryCode.ARTS, // 문화예술축제
+    EV010300: CategoryCode.FOOD_DRINKS, // 지역특산물축제
+    EV010400: CategoryCode.OTHERS, // 전통역사 축제
+    EV010500: CategoryCode.NATURE_OUTDOORS, // 생태자연축제
+    EV010600: CategoryCode.OTHERS, // 기타 축제
+    EV020100: CategoryCode.ARTS, // 전통공연
+    EV020200: CategoryCode.ARTS, // 연극
+    EV020300: CategoryCode.MUSIC, // 뮤지컬
+    EV020400: CategoryCode.MUSIC, // 오페라
+    EV020500: CategoryCode.MUSIC, // 무용
+    EV020600: CategoryCode.MUSIC, // 클래식음악회
+    EV020700: CategoryCode.MUSIC, // 대중콘서트
+    EV020800: CategoryCode.MOVIE_TV, // 영화
+    EV020900: CategoryCode.OTHERS, // 기타 공연
+    EV021000: CategoryCode.ARTS, // 넌버벌
+    EV030100: CategoryCode.ARTS, // 전시회
+    EV030200: CategoryCode.OTHERS, // 박람회
+    EV030300: CategoryCode.SPORTS, // 스포츠경기
+    EV030400: CategoryCode.OTHERS, // 기타행사
+}
+
 export const fixedCategory = {
     [CategoryCode.MYEVENT]: { title: '내가 등록한 행사', code: CategoryCode.MYEVENT, type: 'special' },
     [CategoryCode.HOTEVENT]: { title: '인기 행사', code: CategoryCode.HOTEVENT, type: 'special' },

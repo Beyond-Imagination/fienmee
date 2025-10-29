@@ -131,3 +131,13 @@ export async function deleteEventCommentById(request: IDeleteCommentRequest): Pr
     }
     return
 }
+
+export async function toggleEventCommentLike(eventId: string, commentId: string): Promise<void> {
+    const res = await fetch(`${SERVER_URL}/v1/events/${eventId}/comments/${commentId}/likes`, {
+        method: 'POST',
+    })
+    if (!res.ok) {
+        throw await res.json()
+    }
+    return
+}

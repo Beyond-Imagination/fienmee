@@ -3,6 +3,7 @@ export interface IReview {
     userId: {
         _id: string
         nickname: string
+        isDeleted: boolean
     }
     rating: number
     body: string

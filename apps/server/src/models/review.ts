@@ -48,7 +48,7 @@ export class Reviews extends defaultClasses.TimeStamps {
                 ...options,
                 populate: {
                     path: 'userId',
-                    select: 'nickname',
+                    select: 'nickname isDeleted',
                     model: 'User',
                 },
             },

@@ -32,7 +32,7 @@ export default function Review({ review }: Props) {
     return (
         <div className="flex flex-col w-full gap-2.5 pt-2.5 overflow-hidden">
             <div className="flex flex-col gap-[0.3125rem] px-2.5 pt-[0.3125rem]">
-                <span className="text-sm">{review.userId.nickname}</span>
+                <span className="text-sm">{review.userId.isDeleted ? `탈퇴한 회원` : review.userId.nickname}</span>
                 <div className="flex flex-row justify-between">
                     <div className="flex flex-row gap-1.5">
                         <div className="flex flex-row gap-[0.1875rem]">

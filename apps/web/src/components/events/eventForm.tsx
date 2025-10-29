@@ -56,6 +56,10 @@ const EventForm: React.FC<EventFormProps> = ({ selectedCategories, handleCategor
         setFormData(prevState => ({ ...prevState, isAllDay: !prevState.isAllDay }))
     }
 
+    const onAddressChange = (address: string): void => {
+        setFormData(prevState => ({ ...prevState, address }))
+    }
+
     const queryClient = useQueryClient()
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
@@ -128,10 +132,12 @@ const EventForm: React.FC<EventFormProps> = ({ selectedCategories, handleCategor
                         onEndDateChange={onEndDateTimeChange}
                     />
                 </div>
-                <div>
-                    <label className="font-medium">행사 장소</label>
-                    <EventVenueSelector initialPosition={position} onPositionChange={setPosition} />
-                </div>
+                <EventVenueSelector
+                    initialPosition={position}
+                    initialAddress={formData.address}
+                    onPositionChange={setPosition}
+                    onAddressChange={onAddressChange}
+                />
                 <InputField label="이용 요금" placeholder="₩ 이용 요금을 입력해주세요" value={formData.cost} name="cost" onChange={handleChange} />
                 <InputField
                     label="이용 대상"

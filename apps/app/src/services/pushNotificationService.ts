@@ -1,8 +1,15 @@
-import { AuthorizationStatus, deleteToken, getMessaging, getToken, onTokenRefresh, requestPermission } from '@react-native-firebase/messaging'
+import {
+    AuthorizationStatus,
+    deleteToken,
+    FirebaseMessagingTypes,
+    getMessaging,
+    getToken,
+    onTokenRefresh,
+    requestPermission,
+} from '@react-native-firebase/messaging'
 import { getUniqueId } from 'react-native-device-info'
 import { Platform } from 'react-native'
 import { INotificationToken, PlatformType } from '@fienmee/types/api/notification'
-import notifee from '@notifee/react-native'
 
 class PushNotificationService {
     private messaging = getMessaging()
@@ -12,12 +19,18 @@ class PushNotificationService {
             const authStatus = await requestPermission(this.messaging)
             return authStatus === AuthorizationStatus.AUTHORIZED || authStatus === AuthorizationStatus.PROVISIONAL
         } catch (error) {
-            throw error // TODO: 권한 요청 실패 시 처리 로직 필요
+            console.error('Failed to request notification permission:', error)
+            return false
         }
     }
 
-    async getFcmToken(): Promise<string> {
-        return await getToken(this.messaging)
+    async getFcmToken(): Promise<string | null> {
+        try {
+            return await getToken(this.messaging)
+        } catch (error) {
+            console.error('Failed to get FCM token: ', error)
+            return null
+        }
     }
 
     async getDeviceInfo(): Promise<INotificationToken> {
@@ -26,6 +39,9 @@ class PushNotificationService {
             throw new Error('Notification permission denied')
         }
         const token = await this.getFcmToken()
+        if (!token) {
+            throw new Error('FCM token is not available')
+        }
         const deviceId = await getUniqueId()
         const platform = Platform.OS === 'ios' ? PlatformType.IOS : PlatformType.ANDROID
         return {
@@ -43,25 +59,12 @@ class PushNotificationService {
         return onTokenRefresh(this.messaging, callback)
     }
 
-    setMessageHandler() {
-        this.messaging.setBackgroundMessageHandler(async remoteMessage => {
-            console.log('Background message received: ', JSON.stringify(remoteMessage))
-        })
-        this.messaging.onMessage(async remoteMessage => {
-            const { title, body } = remoteMessage.notification ?? {}
-            await notifee.displayNotification({
-                title,
-                body,
-                android: {
-                    channelId: 'default',
-                    smallIcon: 'ic_launcher', // TODO: add logo img in android/app/src/main/res/drawable
-                    pressAction: {
-                        id: 'default',
-                        launchActivity: 'default',
-                    },
-                },
-            })
-        })
+    setMessageHandler(
+        backgroundHandler: (message: FirebaseMessagingTypes.RemoteMessage) => Promise<any>,
+        foregroundHandler: (message: FirebaseMessagingTypes.RemoteMessage) => Promise<any>,
+    ) {
+        this.messaging.setBackgroundMessageHandler(backgroundHandler)
+        this.messaging.onMessage(foregroundHandler)
     }
 }
 

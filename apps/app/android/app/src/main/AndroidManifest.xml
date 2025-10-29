@@ -33,7 +33,7 @@
             <category android:name="android.intent.category.DEFAULT" />
             <category android:name="android.intent.category.BROWSABLE" />
 
-            <!-- Redirect URI: "kakao{NATIVE_APP_KEY}://oauth“ -->
+            <!-- Redirect URI: "kakao{NATIVE_APP_KEY}://oauth"-->
             <data android:host="oauth"
                   android:scheme="kakao6754084b45fdd747c58d0b8ce588e70b" />
         </intent-filter>
@@ -48,12 +48,5 @@
       <service
         android:name="io.invertase.firebase.messaging.ReactNativeFirebaseMessagingHeadlessService"
         android:exported="false" />
-      <receiver android:name="app.notifee.receivers.NotificationReceiver" android:exported="true" />
-      <receiver android:name="app.notifee.receivers.BootReceiver" android:enabled="true" android:exported="true">
-        <intent-filter>
-          <action android:name="android.intent.action.BOOT_COMPLETED"/>
-          <action android:name="android.intent.action.MY_PACKAGE_REPLACED"/>
-        </intent-filter>
-      </receiver>
     </application>
 </manifest>

@@ -49,6 +49,14 @@ export default function ScheduleUpdateModal({ isOpen, onClose, initSchedule, set
         setScheduleForm(prevState => ({ ...prevState, endDate: new Date(dateTime) }))
     }
 
+    const onPositionChange = (position: { lat: number; lng: number }): void => {
+        setScheduleForm(prev => ({ ...prev!, location: { type: 'Point', coordinates: [position.lng, position.lat] } }))
+    }
+
+    const onAddressChange = (address: string) => {
+        setScheduleForm(prevState => ({ ...prevState, address }))
+    }
+
     if (!isOpen || !schedule) return null
 
     return (
@@ -78,32 +86,15 @@ export default function ScheduleUpdateModal({ isOpen, onClose, initSchedule, set
                                 onEndDateChange={onEndDateTimeChange}
                             />
                             <div className="mb-4 py-2">
-                                <div className="mt-2 mb-4">
-                                    <InputField
-                                        label="장소"
-                                        placeholder="장소를 입력해주세요"
-                                        value={schedule.address}
-                                        name="address"
-                                        onChange={handleChange}
-                                    />
-                                </div>
-                                <div className="mt-2 border border-gray-200 rounded-lg h-32 overflow-hidden">
-                                    <EventVenueSelector
-                                        initialPosition={{
-                                            lat: schedule.location.coordinates[1],
-                                            lng: schedule.location.coordinates[0],
-                                        }}
-                                        onPositionChange={newPosition =>
-                                            setScheduleForm(prev => ({
-                                                ...prev!,
-                                                location: {
-                                                    type: 'Point',
-                                                    coordinates: [newPosition.lng, newPosition.lat],
-                                                },
-                                            }))
-                                        }
-                                    />
-                                </div>
+                                <EventVenueSelector
+                                    initialPosition={{
+                                        lat: schedule.location.coordinates[1],
+                                        lng: schedule.location.coordinates[0],
+                                    }}
+                                    initialAddress={schedule.address}
+                                    onPositionChange={onPositionChange}
+                                    onAddressChange={onAddressChange}
+                                />
                             </div>
 
                             <hr className="border-t border-gray-300 mb-4" />
