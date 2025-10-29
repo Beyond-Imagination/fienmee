@@ -3,32 +3,19 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import Image from 'next/image'
 import { CATEGORY_ICON } from '@/components/icon/Categoryicon'
+import type { StaticImageData } from 'next/image'
 
-// 1) 허용 카테고리(아이콘이 있는 것만)
-const VALID = ['문화행사', '스포츠', '야외활동', '음악', '취업', '팝업행사', '패션'] as const
-type CategoryName = (typeof VALID)[number]
+// 서버 타이틀을 그대로 사용
+const ALIAS: Record<string, string> = {}
 
-// 2) 별칭(들어오면 매핑해서 사용) — 필요 시 추가
-const ALIAS: Record<string, CategoryName> = {
-    취미: '문화행사',
-    레저: '야외활동',
-    공연음악: '음악',
-}
-
-const VALID_SET = new Set<string>(VALID)
-
-function normalizeList(list: string[]): CategoryName[] {
-    // 별칭→정규명 → 유효한 것만 → 중복 제거
-    const mapped = list
-        .map(n => ALIAS[n] ?? n) // 별칭 치환
-        .filter((n): n is CategoryName => VALID_SET.has(n)) // 유효만
+function normalizeList(list: string[]): string[] {
+    const mapped = list.map(n => ALIAS[n] ?? n)
     return Array.from(new Set(mapped))
 }
 
-function normalizeOne(name?: string): CategoryName | undefined {
+function normalizeOne(name?: string): string | undefined {
     if (!name) return undefined
-    const n = ALIAS[name] ?? name
-    return VALID_SET.has(n) ? (n as CategoryName) : undefined
+    return ALIAS[name] ?? name
 }
 
 export default function CategoryTabs({ items, current, onChange }: { items: string[]; current?: string; onChange: (value: string) => void }) {
@@ -37,7 +24,6 @@ export default function CategoryTabs({ items, current, onChange }: { items: stri
     const btnRefs = useRef<(HTMLButtonElement | null)[]>([])
     const lblRefs = useRef<(HTMLSpanElement | null)[]>([])
 
-    // 정규화된 목록/현재값
     const normItems = useMemo(() => normalizeList(items), [items])
     const normCurrent = useMemo(() => normalizeOne(current), [current])
 
@@ -97,7 +83,7 @@ export default function CategoryTabs({ items, current, onChange }: { items: stri
                                 onClick={() => onChange(active ? '' : name)}
                                 className="flex flex-col items-center px-2 py-1 shrink-0"
                             >
-                                <div className="mb-2 leading-none">{iconByName(name, active)}</div>
+                                {hasIcon(name) ? <div className="mb-2 leading-none">{iconByName(name, active)}</div> : null}
                                 <span
                                     ref={el => {
                                         lblRefs.current[i] = el
@@ -111,10 +97,8 @@ export default function CategoryTabs({ items, current, onChange }: { items: stri
                     })}
                 </div>
 
-                {/* 회색 베이스 라인 */}
                 <div className="absolute left-[-24px] right-[-24px] bottom-0 h-[2px] bg-gray-100 z-0" />
 
-                {/* 주황 인디케이터 라인 */}
                 <span
                     className="absolute bottom-0 h-[3px] rounded-full bg-[#FF9575] z-10 transition-[left] duration-200"
                     style={{ left, width: INDICATOR_W }}
@@ -124,10 +108,14 @@ export default function CategoryTabs({ items, current, onChange }: { items: stri
     )
 }
 
-function iconByName(name: CategoryName, active: boolean) {
-    const src = CATEGORY_ICON[name] ?? CATEGORY_ICON['문화행사']
-    const size = name === '팝업행사' ? 21 : 20
+function hasIcon(name: string) {
+    return Object.prototype.hasOwnProperty.call(CATEGORY_ICON, name)
+}
 
+function iconByName(name: string, active: boolean) {
+    const src: StaticImageData | undefined = CATEGORY_ICON[name as keyof typeof CATEGORY_ICON]
+    if (!src) return null
+    const size = 20
     return (
         <Image
             src={src}
