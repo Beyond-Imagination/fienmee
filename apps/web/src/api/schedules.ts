@@ -56,8 +56,12 @@ export async function updateSchedule(schedule: IScheduleItem): Promise<ISchedule
 }
 
 export async function getDailyScheduleCount(from: Date, to: Date): Promise<IGetDailyScheduleCountResponse> {
-    const timezone = encodeURIComponent(Intl.DateTimeFormat().resolvedOptions().timeZone)
-    const res = await fetch(`${SERVER_URL}/v1/schedules/dailyCount?from=${from.toISOString()}&to=${to.toISOString()}&timezone=${timezone}`, {
+    const params = new URLSearchParams({
+        from: from.toISOString(),
+        to: to.toISOString(),
+        timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+    })
+    const res = await fetch(`${SERVER_URL}/v1/schedules/dailyCount?${params.toString()}`, {
         method: 'GET',
     })
     if (!res.ok) {
