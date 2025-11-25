@@ -22,6 +22,7 @@
         "dotenv": "^16.4.5",
         "express": "^4.21.2",
         "express-asyncify": "^2.1.2",
+        "express-cargo": "^0.4.0",
         "express-winston": "^4.2.0",
         "firebase-admin": "^13.4.0",
         "helmet": "^8.0.0",
@@ -33,6 +34,7 @@
         "mongoose-paginate-v2": "^1.8.5",
         "node-fetch": "^2.7.0",
         "node-schedule": "^2.1.1",
+        "reflect-metadata": "^0.2.2",
         "winston": "^3.16.0",
         "winston-daily-rotate-file": "^5.0.0"
     },

@@ -1,13 +1,16 @@
 import express, { Router } from 'express'
 import asyncify from 'express-asyncify'
+import { bindingCargo, getCargo } from 'express-cargo'
 
 import { NotificationModel, NotificationTokenModel } from '@/models'
 import { verifyToken } from '@/middlewares/auth'
+import { GetNotificationPayload, PostNotificationReadPayload, PutNotificationTokenPayload } from '@/types/payload'
 
 const router: Router = asyncify(express.Router())
 
-router.get('/', verifyToken, async (req, res) => {
-    const options = { sort: { createdAt: -1 }, page: Number(req.query.page) || 1, limit: Number(req.query.limit) || 10 }
+router.get('/', verifyToken, bindingCargo(GetNotificationPayload), async (req, res) => {
+    const { page, limit } = getCargo<GetNotificationPayload>(req)
+    const options = { sort: { createdAt: -1 }, page, limit }
     const result = await NotificationModel.findByUserId(req.user._id, options)
     res.status(200).json({
         notifications: result.docs,
@@ -22,12 +25,13 @@ router.get('/', verifyToken, async (req, res) => {
     })
 })
 
-router.put('/token', verifyToken, async (req, res) => {
+router.put('/token', verifyToken, bindingCargo(PutNotificationTokenPayload), async (req, res) => {
+    const { deviceId, token, platform } = getCargo<PutNotificationTokenPayload>(req)
     await NotificationTokenModel.findOneAndUpdate(
-        { deviceId: req.body.deviceId },
+        { deviceId: deviceId },
         {
-            token: req.body.token,
-            platform: req.body.platform,
+            token: token,
+            platform: platform,
             userId: req.user._id,
         },
         {
@@ -37,8 +41,9 @@ router.put('/token', verifyToken, async (req, res) => {
     res.sendStatus(204)
 })
 
-router.post('/:id/read', verifyToken, async (req, res) => {
-    await NotificationModel.updateOne({ _id: req.params.id }, { isRead: true })
+router.post('/:id/read', verifyToken, bindingCargo(PostNotificationReadPayload), async (req, res) => {
+    const { id } = getCargo<PostNotificationReadPayload>(req)
+    await NotificationModel.updateOne({ _id: id }, { isRead: true })
     res.sendStatus(204)
 })
 
