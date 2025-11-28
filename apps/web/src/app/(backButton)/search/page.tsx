@@ -1,4 +1,4 @@
-// apps/web/src/app/(navigation)/search/page.tsx
+// apps/web/src/app/(backButton)/search/page.tsx
 import SearchScreen from '@/components/search/SearchScreen'
 
 type SearchParams = Promise<Record<string, string | string[] | undefined>>

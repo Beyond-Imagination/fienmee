@@ -1,5 +1,12 @@
 'use client'
 
+import { useMemo } from 'react'
+import { ClipLoader } from 'react-spinners'
+
+import { useImageLoader } from '@/hooks/s3/useImageLoader'
+
+const FALLBACK_IMAGE = 'https://picsum.photos/seed/fallback/600/400'
+
 export default function SearchResultCard({
     title,
     region,
@@ -13,11 +20,24 @@ export default function SearchResultCard({
     image: string
     imageHeight?: number
 }) {
+    const { imageUrl, isLoading } = useImageLoader(image)
+
+    const resolvedSrc = useMemo(() => {
+        if (imageUrl) return imageUrl
+        return FALLBACK_IMAGE
+    }, [imageUrl])
+
     return (
         <article className="w-full">
-            <div className="rounded-2xl overflow-hidden">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={image} alt={title} className="w-full object-cover" style={{ height: imageHeight }} loading="lazy" />
+            <div className="rounded-2xl overflow-hidden" style={{ height: imageHeight }}>
+                {isLoading ? (
+                    <div className="flex h-full items-center justify-center bg-gray-100">
+                        <ClipLoader color="#FF6B6B" size={28} />
+                    </div>
+                ) : (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img src={resolvedSrc} alt={title} className="w-full h-full object-cover" loading="lazy" />
+                )}
             </div>
 
             <h2 className="mt-3 text-[16px] font-semibold">{title}</h2>

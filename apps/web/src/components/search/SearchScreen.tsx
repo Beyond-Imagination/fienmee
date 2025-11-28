@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { getEventsByCategory, getEventsCategories } from '@/api/event'
@@ -20,7 +20,12 @@ type EventItem = {
 }
 
 // 기간 포맷
-const fmtPeriod = ({ start, end }: { start: string; end: string }) => `${start.replaceAll('-', '.')} ~ ${end.replaceAll('-', '.')}`
+const fmtPeriod = ({ start, end }: { start: string; end: string }) => {
+    const s = start?.trim()
+    const e = end?.trim()
+    if (!s && !e) return '일정 미정'
+    return `${s || '미정'} ~ ${e || '미정'}`
+}
 
 // 주소창 파라미터만 얕게 갱신
 const shallowSetParam = (next: Record<string, string | ''>) => {
@@ -193,13 +198,17 @@ function titleToCode(title: string): string | undefined {
 }
 
 function mapEventToItem(e: IEvent): EventItem {
-    const img = Array.isArray(e.photo) && e.photo.length > 0 ? e.photo[0] : 'https://picsum.photos/seed/fallback/600/400'
-    const fmt = (d: Date | string) => new Date(d).toISOString().slice(0, 10).replaceAll('-', '.')
+    const img = Array.isArray(e.photo) && e.photo.length > 0 ? e.photo[0] : ''
+    const formatDate = (d: Date | string | undefined) => {
+        if (!d) return ''
+        const dt = d instanceof Date ? d : new Date(d)
+        return Number.isNaN(dt.getTime()) ? '' : dt.toISOString().slice(0, 10)
+    }
     return {
         id: e._id,
         title: e.name,
         region: e.address ?? '',
-        period: { start: fmt(e.startDate), end: fmt(e.endDate) },
+        period: { start: formatDate(e.startDate), end: formatDate(e.endDate) },
         image: img,
         category: Array.isArray(e.category) && e.category[0]?.title ? e.category[0].title : '',
     }

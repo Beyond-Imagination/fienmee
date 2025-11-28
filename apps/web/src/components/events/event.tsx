@@ -24,6 +24,20 @@ export default function Event({ event }: Props) {
         )
     }
 
+    const toDate = (value: Date | string | undefined) => {
+        if (!value) return undefined
+        const d = value instanceof Date ? value : new Date(value)
+        return Number.isNaN(d.getTime()) ? undefined : d
+    }
+
+    const formatRange = (start: Date | string | undefined, end: Date | string | undefined) => {
+        const s = toDate(start)
+        const e = toDate(end)
+        if (!s && !e) return '날짜 미정'
+        const render = (d?: Date) => (d ? format(d, 'yyyy-MM-dd') : '미정')
+        return `${render(s)}~${render(e)}`
+    }
+
     const { setEvent } = eventStore()
     const { setTitle } = titleStore()
     const onClick = () => {
@@ -39,7 +53,7 @@ export default function Event({ event }: Props) {
         >
             <div className="flex flex-col min-h-32 w-2/3 ps-2">
                 <div className="text-lg font-semibold">{event.name}</div>
-                <div className="text-base text-gray-600">{`${format(event.startDate, 'yyyy-MM-dd')}~${format(event.endDate, 'yyyy-MM-dd')}`}</div>
+                <div className="text-base text-gray-600">{formatRange(event.startDate, event.endDate)}</div>
                 <div className="text-base text-gray-600">{event.address}</div>
             </div>
             <div className="flex-1 h-36 bg-[#D9D9D9] overflow-hidden mt-1 me-2 rounded">
