@@ -1,12 +1,15 @@
 import express, { Router } from 'express'
 import asyncify from 'express-asyncify'
+import { bindingCargo, getCargo } from 'express-cargo'
+
 import { s3 } from '@/services/aws'
 import { AWS_S3_BUCKET } from '@/config'
+import { GetS3UploadUrlPayload, GetS3ViewUrlPayload } from '@/types/payload'
 
 const router: Router = asyncify(express.Router())
 
-router.get('/upload-url', async (req, res) => {
-    const fileName = String(req.query.fileName)
+router.get('/upload-url', bindingCargo(GetS3UploadUrlPayload), async (req, res) => {
+    const { fileName } = getCargo<GetS3UploadUrlPayload>(req)
 
     const params = {
         Bucket: AWS_S3_BUCKET!,
@@ -18,8 +21,8 @@ router.get('/upload-url', async (req, res) => {
     res.json({ presignedUrl })
 })
 
-router.get('/view-url', async (req, res) => {
-    const key = req.query.key as string
+router.get('/view-url', bindingCargo(GetS3ViewUrlPayload), async (req, res) => {
+    const { key } = getCargo<GetS3ViewUrlPayload>(req)
 
     const params = {
         Bucket: AWS_S3_BUCKET!,

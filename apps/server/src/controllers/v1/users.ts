@@ -1,7 +1,7 @@
-import asyncify from 'express-asyncify'
 import express, { Request, Response, Router } from 'express'
-
-import { loginRequest, loginResponse, refreshResponse, registerRequest, registerResponse } from '@fienmee/types'
+import asyncify from 'express-asyncify'
+import { bindingCargo, getCargo } from 'express-cargo'
+import { loginResponse, refreshResponse, registerResponse } from '@fienmee/types'
 
 import { DeletedUserError, UnknownUserError } from '@/types/errors/oauth'
 import { InvalidTokenTypeError } from '@/types/errors'
@@ -9,11 +9,12 @@ import { UserModel } from '@/models'
 import { issueAccessToken, getOAuthUser, expireJwt, issueRefreshToken, unlinkUser } from '@/services/oauth'
 import { verifyToken } from '@/middlewares/auth'
 import { registerUser } from '@/services/user'
+import { PostRegisterPayload, PostUserGoogleTokenPayload, PostUserInterestPayload, PostUserLoginPayload } from '@/types/payload'
 
 const router: Router = asyncify(express.Router())
 
-router.post('/login', async (req: Request, res: Response) => {
-    const request: loginRequest = req.body
+router.post('/login', bindingCargo(PostUserLoginPayload), async (req: Request, res: Response) => {
+    const request = getCargo<PostUserLoginPayload>(req)
 
     const oauthUser = await getOAuthUser(request)
     const user = await UserModel.findByProviderId(oauthUser.providerId)
@@ -41,11 +42,9 @@ router.delete('/logout', async (req: Request, res: Response) => {
     res.sendStatus(204)
 })
 
-router.post('/register', async (req: Request, res: Response) => {
-    const request: registerRequest = req.body
-
+router.post('/register', bindingCargo(PostRegisterPayload), async (req: Request, res: Response) => {
+    const request = getCargo<PostRegisterPayload>(req)
     const oauthUser = await getOAuthUser(request)
-
     const user = await registerUser(oauthUser)
 
     const accessToken = issueAccessToken(user)
@@ -92,8 +91,8 @@ router.delete('/', verifyToken, async (req: Request, res: Response) => {
     res.sendStatus(204)
 })
 
-router.post('/google-token', async (req: Request, res: Response) => {
-    const serverAuthCode = req.body.code as string
+router.post('/google-token', bindingCargo(PostUserGoogleTokenPayload), async (req: Request, res: Response) => {
+    const { code: serverAuthCode } = getCargo<PostUserGoogleTokenPayload>(req)
 
     const params = new URLSearchParams()
     params.append('code', serverAuthCode)
@@ -114,13 +113,14 @@ router.post('/google-token', async (req: Request, res: Response) => {
     res.json(data.refresh_token)
 })
 
-router.put('/interest', verifyToken, async (req: Request, res: Response) => {
-    const isInterested = req.user.interests.some(category => category._id === req.body.interest)
+router.put('/interest', verifyToken, bindingCargo(PostUserInterestPayload), async (req: Request, res: Response) => {
+    const { interest } = getCargo<PostUserInterestPayload>(req)
+    const isInterested = req.user.interests.some(category => category._id === interest)
 
     if (isInterested) {
-        await UserModel.removeInterest(req.user._id, req.body.interest)
+        await UserModel.removeInterest(req.user._id, interest)
     } else {
-        await UserModel.addInterest(req.user._id, req.body.interest)
+        await UserModel.addInterest(req.user._id, interest)
     }
 
     res.sendStatus(204)

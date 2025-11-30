@@ -1,7 +1,6 @@
 import { ICategory } from './category'
 
-export interface IEvent {
-    _id: string
+export interface IEventBase {
     name: string
     address: string
     location: {
@@ -13,13 +12,17 @@ export interface IEvent {
     description: string
     photo: string[]
     cost: string
+    targetAudience: string[]
+    isAllDay: boolean
+}
+
+export interface IEvent extends IEventBase {
+    _id: string
     likeCount: number
     commentCount: number
     category: ICategory[]
-    targetAudience: string[]
     createdAt: Date
     isAuthor: boolean
-    isAllDay: boolean
     isLiked: boolean
 }
 
@@ -35,26 +38,12 @@ export interface IGetEventsByCategoryResponse {
     events: IEvent[]
 }
 
+export interface IPostEventRequestBody extends IEventBase {
+    category: string[]
+}
+
 export interface IPostEventRequest {
-    body: {
-        name: string
-        address: string
-        location: {
-            type: string
-            coordinates: number[]
-        }
-        startDate: Date
-        endDate: Date
-        description: string
-        photo: string[]
-        cost: string
-        likeCount: number
-        commentCount: number
-        category: string[]
-        targetAudience: string[]
-        createdAt: Date
-        isAllDay: boolean
-    }
+    body: IPostEventRequestBody
 }
 
 export interface IPutEventRequest extends IPostEventRequest {

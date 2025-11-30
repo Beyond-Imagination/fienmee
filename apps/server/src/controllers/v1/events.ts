@@ -1,13 +1,30 @@
 import express, { Request, Response, Router } from 'express'
 import asyncify from 'express-asyncify'
+import { bindingCargo, getCargo } from 'express-cargo'
 import mongoose from 'mongoose'
+import { CategoryCode, NotificationType } from '@fienmee/types'
 
 import { CategoryModel, Events, EventsModel, ReviewsModel, CommentsModel, NotificationModel } from '@/models'
 import { verifyToken } from '@/middlewares/auth'
-import { CategoryCode, NotificationType } from '@fienmee/types'
 import { verifyCommentAuthor, verifyEventAuthor } from '@/middlewares/events'
 import { TransactionError } from '@/types/errors/database'
 import { CommentNotFound, EventNotFound, InvaildDate, KeywordIsEmptyToSearch } from '@/types/errors/events'
+import {
+    EventCommentIdPayload,
+    EventIdPayload,
+    GetEventCategoryPayload,
+    GetEventCommentPayload,
+    GetEventDateCategoryPayload,
+    GetEventHotCategoryPayload,
+    GetEventInterestCategoryPayload,
+    GetEventReviewPayload,
+    GetEventSearchPayload,
+    PostEventCommentPayload,
+    PostEventPayload,
+    PostEventReviewPayload,
+    PutEventCommentPayload,
+    PutEventPayload,
+} from '@/types/payload'
 
 const router: Router = asyncify(express.Router())
 
@@ -27,34 +44,18 @@ router.get('/categories', verifyToken, async (req: Request, res: Response) => {
     })
 })
 
-router.post('/', verifyToken, async (req: Request, res: Response) => {
+router.post('/', verifyToken, bindingCargo(PostEventPayload), async (req: Request, res: Response) => {
+    const cargo = getCargo<PostEventPayload>(req)
+
     await EventsModel.create({
-        name: req.body.name,
+        ...cargo,
         authorId: req.user._id,
-        address: req.body.address,
-        location: req.body.location,
-        startDate: req.body.startDate,
-        endDate: req.body.endDate,
-        photo: req.body.photo,
-        cost: req.body.cost,
-        description: req.body.description,
-        category: req.body.category,
-        targetAudience: req.body.targetAudience,
-        isAllDay: req.body.isAllDay,
     })
     res.sendStatus(204)
 })
 
-router.get('/search', async (req: Request, res: Response) => {
-    const { q, category } = req.query
-    const target = (req.query.target as string) || 'default'
-    const sort = req.query.sort || 'default'
-    const startDate = req.query.startDate ? new Date(req.query.startDate as string) : new Date()
-    const endDate = req.query.endDate ? new Date(req.query.endDate as string) : undefined
-    const isAllDay = req.query.isAllDay === 'true'
-    const page = Number(req.query.page) || 1
-    const limit = Number(req.query.limit) || 10
-    const skip = (page - 1) * limit
+router.get('/search', bindingCargo(GetEventSearchPayload), async (req: Request, res: Response) => {
+    const { q, category, target, sort, startDate, endDate, isAllDay, limit, skip } = getCargo<GetEventSearchPayload>(req)
 
     const pathMap: Record<string, string[]> = {
         default: ['name', 'description'],
@@ -119,22 +120,11 @@ router.get('/search', async (req: Request, res: Response) => {
     res.status(200).json(result)
 })
 
-router.put('/:id', verifyToken, verifyEventAuthor, async (req: Request, res: Response) => {
+router.put('/:id', verifyToken, bindingCargo(PutEventPayload), verifyEventAuthor, async (req: Request, res: Response) => {
+    const { id, ...updateData } = getCargo<PutEventPayload>(req)
     const event = await EventsModel.findOneAndUpdate(
-        { _id: req.params.id },
-        {
-            name: req.body.name,
-            address: req.body.address,
-            location: req.body.location,
-            startDate: req.body.date,
-            endDate: req.body.endDate,
-            photo: req.body.photo,
-            cost: req.body.cost,
-            description: req.body.description,
-            category: req.body.category,
-            targetAudience: req.body.targetAudience,
-            isAllDay: req.body.isAllDay,
-        },
+        { _id: id },
+        updateData,
         { returnDocument: 'after' },
     )
     res.status(200).json({
@@ -144,12 +134,13 @@ router.put('/:id', verifyToken, verifyEventAuthor, async (req: Request, res: Res
     })
 })
 
-router.delete('/:id', verifyToken, verifyEventAuthor, async (req: Request, res: Response) => {
+router.delete('/:id', verifyToken, bindingCargo(EventIdPayload), verifyEventAuthor, async (req: Request, res: Response) => {
+    const { id } = getCargo<EventIdPayload>(req)
     const session = await mongoose.startSession()
     try {
         session.startTransaction()
-        await EventsModel.deleteOne({ _id: req.params.id }, { session })
-        await CommentsModel.deleteMany({ eventId: req.params.id }, { session })
+        await EventsModel.deleteOne({ _id: id }, { session })
+        await CommentsModel.deleteMany({ eventId: id }, { session })
         await session.commitTransaction()
         res.sendStatus(204)
     } catch (error) {
@@ -160,8 +151,9 @@ router.delete('/:id', verifyToken, verifyEventAuthor, async (req: Request, res: 
     }
 })
 
-router.get('/:id', verifyToken, async (req: Request, res: Response) => {
-    const event = await EventsModel.findById(req.params.id)
+router.get('/:id', verifyToken, bindingCargo(EventIdPayload), async (req: Request, res: Response) => {
+    const { id } = getCargo<EventIdPayload>(req)
+    const event = await EventsModel.findById(id)
 
     res.status(200).json({
         ...event.toJSON(),
@@ -170,14 +162,15 @@ router.get('/:id', verifyToken, async (req: Request, res: Response) => {
     })
 })
 
-router.post('/:id/comments', verifyToken, async (req: Request, res: Response) => {
+router.post('/:id/comments', verifyToken, bindingCargo(PostEventCommentPayload), async (req: Request, res: Response) => {
+    const cargo = getCargo<PostEventCommentPayload>(req)
     const comment = await CommentsModel.create({
         userId: req.user._id,
-        eventId: req.params.id,
-        comment: req.body.comment,
+        eventId: cargo.id,
+        comment: cargo.comment,
     })
 
-    const event = await EventsModel.findByIdAndUpdate(req.params.id, { $push: { comments: comment._id } })
+    const event = await EventsModel.findByIdAndUpdate(cargo.id, { $push: { comments: comment._id } })
     if (event.authorId && !event.authorId.equals(req.user._id)) {
         await NotificationModel.createAndSendNotification(
             NotificationType.COMMENT,
@@ -191,12 +184,9 @@ router.post('/:id/comments', verifyToken, async (req: Request, res: Response) =>
     res.sendStatus(204)
 })
 
-router.get('/:id/comments', verifyToken, async (req: Request, res: Response) => {
-    const options = {
-        page: Number(req.query.page) || 1,
-        limit: Number(req.query.limit) || 10,
-    }
-    const result = await CommentsModel.findByEventId(req.params.id, options)
+router.get('/:id/comments', verifyToken, bindingCargo(GetEventCommentPayload), async (req: Request, res: Response) => {
+    const { id, page, limit } = getCargo<GetEventCommentPayload>(req)
+    const result = await CommentsModel.findByEventId(id, { page, limit })
     const modifiedDocs = result.docs.map(comment => ({
         ...comment.toObject(),
         isAuthor: comment.get('userId')?.equals(req.user._id),
@@ -216,36 +206,44 @@ router.get('/:id/comments', verifyToken, async (req: Request, res: Response) => 
     })
 })
 
-router.put('/:id/comments/:commentId', verifyToken, verifyCommentAuthor, async (req: Request, res: Response) => {
-    await CommentsModel.updateOne(
-        {
-            _id: req.params.commentId,
-        },
-        {
-            comment: req.body.comment,
-        },
-    )
-    res.sendStatus(204)
-})
-
-router.delete('/:id/comments/:commentId', verifyToken, verifyCommentAuthor, async (req: Request, res: Response) => {
-    const session = await mongoose.startSession()
-    try {
-        session.startTransaction()
-        await CommentsModel.deleteOne({ _id: req.params.commentId }, { session })
-        await EventsModel.updateOne({ _id: req.params.id }, { $pull: { comments: new mongoose.Types.ObjectId(req.params.commentId) } }, { session })
-        await session.commitTransaction()
+router.put(
+    '/:id/comments/:commentId',
+    verifyToken,
+    bindingCargo(PutEventCommentPayload),
+    verifyCommentAuthor,
+    async (req: Request, res: Response) => {
+        const { commentId, comment } = getCargo<PutEventCommentPayload>(req)
+        await CommentsModel.updateOne({ _id: commentId }, { comment })
         res.sendStatus(204)
-    } catch (error) {
-        await session.abortTransaction()
-        throw new TransactionError(error)
-    } finally {
-        await session.endSession()
-    }
-})
+    },
+)
 
-router.post('/:id/comments/:commentId/likes', verifyToken, async (req: Request, res: Response) => {
-    const comment = await CommentsModel.findById(req.params.commentId).populate<{ eventId: { name: string } }>({ path: 'eventId', select: 'name' })
+router.delete(
+    '/:id/comments/:commentId',
+    verifyToken,
+    bindingCargo(EventCommentIdPayload),
+    verifyCommentAuthor,
+    async (req: Request, res: Response) => {
+        const { id, commentId } = getCargo<EventCommentIdPayload>(req)
+        const session = await mongoose.startSession()
+        try {
+            session.startTransaction()
+            await CommentsModel.deleteOne({ _id: commentId }, { session })
+            await EventsModel.updateOne({ _id: id }, { $pull: { comments: new mongoose.Types.ObjectId(commentId) } }, { session })
+            await session.commitTransaction()
+            res.sendStatus(204)
+        } catch (error) {
+            await session.abortTransaction()
+            throw new TransactionError(error)
+        } finally {
+            await session.endSession()
+        }
+    },
+)
+
+router.post('/:id/comments/:commentId/likes', verifyToken, bindingCargo(EventCommentIdPayload), async (req: Request, res: Response) => {
+    const { id, commentId } = getCargo<EventCommentIdPayload>(req)
+    const comment = await CommentsModel.findById(commentId).populate<{ eventId: { name: string } }>({ path: 'eventId', select: 'name' })
 
     if (!comment) {
         throw new CommentNotFound()
@@ -253,28 +251,30 @@ router.post('/:id/comments/:commentId/likes', verifyToken, async (req: Request, 
     const prevLiked = comment.likes.includes(req.user._id)
     const updateLiked = prevLiked ? { $pull: { likes: req.user._id } } : { $push: { likes: req.user._id } }
 
-    await CommentsModel.updateOne({ _id: req.params.commentId }, updateLiked)
+    await CommentsModel.updateOne({ _id: commentId }, updateLiked)
     if (comment.userId && !prevLiked && !comment.userId.equals(req.user._id)) {
         await NotificationModel.createAndSendNotification(
             NotificationType.LIKE,
             comment.userId,
             '누군가가 내가 등록한 댓글에 좋아요를 눌렀어요!',
             `${comment.eventId.name} 행사 댓글에 좋아요가 눌렸어요!`,
-            `events:detail:${req.params.id}`,
+            `events:detail:${id}`,
         )
     }
 
     res.sendStatus(204)
 })
 
-router.post('/:id/likes', verifyToken, async (req: Request, res: Response) => {
-    const event = await EventsModel.findById(req.params.id)
+router.post('/:id/likes', verifyToken, bindingCargo(EventIdPayload), async (req: Request, res: Response) => {
+    const { id } = getCargo<EventIdPayload>(req)
+    const event = await EventsModel.findById(id)
+    const userId = req.user._id
 
-    const prevLiked = event.likes.includes(req.user._id)
-    const update = prevLiked ? { $pull: { likes: req.user._id } } : { $push: { likes: req.user._id } }
+    const prevLiked = event.likes.includes(userId)
+    const update = prevLiked ? { $pull: { likes: userId } } : { $push: { likes: userId } }
 
-    await EventsModel.updateOne({ _id: req.params.id }, update)
-    if (event.authorId && !prevLiked && !event.authorId.equals(req.user._id)) {
+    await EventsModel.updateOne({ _id: id }, update)
+    if (event.authorId && !prevLiked && !event.authorId.equals(userId)) {
         await NotificationModel.createAndSendNotification(
             NotificationType.LIKE,
             event.authorId,
@@ -287,14 +287,15 @@ router.post('/:id/likes', verifyToken, async (req: Request, res: Response) => {
     res.sendStatus(204)
 })
 
-router.post('/:id/reviews', verifyToken, async (req: Request, res: Response) => {
-    const event = await EventsModel.findById(req.params.id)
+router.post('/:id/reviews', verifyToken, bindingCargo(PostEventReviewPayload), async (req: Request, res: Response) => {
+    const { id, rating, photo, body } = getCargo<PostEventReviewPayload>(req)
+    const event = await EventsModel.findById(id)
     const review = await ReviewsModel.create({
         eventId: event._id,
         userId: req.user._id,
-        rating: req.body.rating,
-        photo: req.body.photo,
-        body: req.body.body,
+        rating,
+        photo,
+        body,
     })
 
     if (event.authorId && !event.authorId.equals(req.user._id)) {
@@ -311,12 +312,14 @@ router.post('/:id/reviews', verifyToken, async (req: Request, res: Response) => 
     })
 })
 
-router.get('/:id/reviews', verifyToken, async (req: Request, res: Response) => {
-    const event = await EventsModel.findById(req.params.id)
+router.get('/:id/reviews', verifyToken, bindingCargo(GetEventReviewPayload), async (req: Request, res: Response) => {
+    const { id, page, limit } = getCargo<GetEventReviewPayload>(req)
+
+    const event = await EventsModel.findById(id)
     if (!event) {
         throw new EventNotFound()
     }
-    const options = { sort: { createdAt: -1 }, page: Number(req.query.page) || 1, limit: Number(req.query.limit) || 10 }
+    const options = { sort: { createdAt: -1 }, page: page, limit: limit }
     const result = await ReviewsModel.findByEventId(event._id, options)
     res.status(200).json({
         reviews: result.docs,
@@ -331,15 +334,13 @@ router.get('/:id/reviews', verifyToken, async (req: Request, res: Response) => {
     })
 })
 
-router.get('/category/dates', verifyToken, async (req: Request, res: Response) => {
+router.get('/category/dates', verifyToken, bindingCargo(GetEventDateCategoryPayload), async (req: Request, res: Response) => {
+    const { from: fromString, to: toString, limit, page } = getCargo<GetEventDateCategoryPayload>(req)
     const today = new Date()
-    const from = req.query.from ? new Date(req.query.from as string) : new Date(today.getFullYear(), today.getMonth(), today.getDate())
-    const to = req.query.to ? new Date(req.query.to as string) : new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1)
-    const limit = req.query.limit ? Number(req.query.limit) : 0
-    const page = req.query.page ? Number(req.query.page) : 1
+    const from = fromString ?? new Date(today.getFullYear(), today.getMonth(), today.getDate())
+    const to = toString ?? new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1)
 
     const result = await EventsModel.findByDates(from, to, limit, page)
-
     const events = result.docs.map(event => ({
         ...event.toJSON(),
         isAuthor: event.get('authorId')?.equals(req.user._id),
@@ -349,7 +350,8 @@ router.get('/category/dates', verifyToken, async (req: Request, res: Response) =
     res.status(200).json({ events: events })
 })
 
-router.get('/category/interest', verifyToken, async (req: Request, res: Response) => {
+router.get('/category/interest', verifyToken, bindingCargo(GetEventInterestCategoryPayload), async (req: Request, res: Response) => {
+    const { limit, page } = getCargo<GetEventInterestCategoryPayload>(req)
     const interests = req.user.interests as unknown as string[]
 
     if (interests.length === 0) {
@@ -357,7 +359,7 @@ router.get('/category/interest', verifyToken, async (req: Request, res: Response
         return
     }
 
-    const options = { sort: { startDate: 1, endDate: 1, createdAt: -1 }, page: Number(req.query.page) || 1, limit: Number(req.query.limit) || 10 }
+    const options = { sort: { startDate: 1, endDate: 1, createdAt: -1 }, page, limit }
     const result = await EventsModel.findByCategory(interests, options)
 
     const events = result.docs.map(event => ({
@@ -379,15 +381,13 @@ router.get('/category/interest', verifyToken, async (req: Request, res: Response
     })
 })
 
-router.get(`/category/${CategoryCode.HOTEVENT}`, verifyToken, async (req: Request, res: Response) => {
+router.get(`/category/${CategoryCode.HOTEVENT}`, verifyToken, bindingCargo(GetEventHotCategoryPayload), async (req: Request, res: Response) => {
+    const { from: fromString, to: toString, limit, page } = getCargo<GetEventDateCategoryPayload>(req)
     const today = new Date()
-    const from = req.query.from ? new Date(req.query.from as string) : new Date(today.getFullYear(), today.getMonth(), today.getDate())
-    const to = req.query.to ? new Date(req.query.to as string) : new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1)
-    const limit = req.query.limit ? Number(req.query.limit) : 3
-    const page = req.query.page ? Number(req.query.page) : 1
+    const from = fromString ?? new Date(today.getFullYear(), today.getMonth(), today.getDate())
+    const to = toString ?? new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1)
 
     const result = await EventsModel.findHot(from, to, limit, page)
-
     const events = result.docs.map(event => ({
         ...event,
         isAuthor: event['authorId']?.equals(req.user._id),
@@ -407,14 +407,15 @@ router.get(`/category/${CategoryCode.HOTEVENT}`, verifyToken, async (req: Reques
     })
 })
 
-router.get('/category/:category', verifyToken, async (req: Request, res: Response) => {
-    const options = { sort: { startDate: 1, endDate: 1, createdAt: -1 }, page: Number(req.query.page) || 1, limit: Number(req.query.limit) || 10 }
+router.get('/category/:category', verifyToken, bindingCargo(GetEventCategoryPayload), async (req: Request, res: Response) => {
+    const { category, limit, page } = getCargo<GetEventCategoryPayload>(req)
+    const options = { sort: { startDate: 1, endDate: 1, createdAt: -1 }, page, limit }
 
     let result: mongoose.PaginateResult<mongoose.PaginateDocument<typeof Events, object, object, mongoose.PaginateOptions>>
-    if (req.params.category === CategoryCode.MYEVENT) {
+    if (category === CategoryCode.MYEVENT) {
         result = await EventsModel.findByAuthor(req.user._id, options)
     } else {
-        result = await EventsModel.findByCategory([req.params.category], options)
+        result = await EventsModel.findByCategory([category], options)
     }
     const events = result.docs.map(event => ({
         ...event.toJSON(),
