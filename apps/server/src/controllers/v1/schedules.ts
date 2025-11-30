@@ -29,11 +29,7 @@ router.post('/', bindingCargo(PostSchedulePayload), middlewares.schedules.addSch
 })
 
 router.get('/', bindingCargo(GetSchedulePayload), async (req: Request, res: Response) => {
-    const { from: fromString, to: toString, page, limit } = getCargo<GetSchedulePayload>(req)
-    const today = new Date()
-    const from = fromString ? new Date(fromString) : new Date(today.getFullYear(), today.getMonth(), today.getDate())
-    const to = toString ? new Date(toString) : new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1)
-
+    const { from, to, page, limit } = getCargo<GetSchedulePayload>(req)
     const userId = req.user?._id.toString()
     const schedules = await ScheduleModel.findByUserId(userId, { from, to }, { page, limit })
 
@@ -41,11 +37,7 @@ router.get('/', bindingCargo(GetSchedulePayload), async (req: Request, res: Resp
 })
 
 router.get('/dailyCount', bindingCargo(GetScheduleDailyCountPayload), async (req: Request, res: Response) => {
-    const { from: fromString, to: toString, timezone } = getCargo<GetScheduleDailyCountPayload>(req)
-    const today = new Date()
-    const from = fromString ? new Date(fromString) : new Date(today.getFullYear(), today.getMonth(), today.getDate())
-    const to = toString ? new Date(toString) : new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1)
-
+    const { from, to, timezone } = getCargo<GetScheduleDailyCountPayload>(req)
     const dailyScheduleCount = await getUserDailyScheduleCount(req.user, from, to, timezone)
     res.status(200).json(dailyScheduleCount)
 })

@@ -121,22 +121,10 @@ router.get('/search', bindingCargo(GetEventSearchPayload), async (req: Request, 
 })
 
 router.put('/:id', verifyToken, bindingCargo(PutEventPayload), verifyEventAuthor, async (req: Request, res: Response) => {
-    const cargo = getCargo<PutEventPayload>(req)
+    const { id, ...updateData } = getCargo<PutEventPayload>(req)
     const event = await EventsModel.findOneAndUpdate(
-        { _id: cargo.id },
-        {
-            name: cargo.name,
-            address: cargo.address,
-            location: cargo.location,
-            startDate: cargo.startDate,
-            endDate: cargo.endDate,
-            photo: cargo.photo,
-            cost: cargo.cost,
-            description: cargo.description,
-            category: cargo.category,
-            targetAudience: cargo.targetAudience,
-            isAllDay: cargo.isAllDay,
-        },
+        { _id: id },
+        updateData,
         { returnDocument: 'after' },
     )
     res.status(200).json({
@@ -347,7 +335,11 @@ router.get('/:id/reviews', verifyToken, bindingCargo(GetEventReviewPayload), asy
 })
 
 router.get('/category/dates', verifyToken, bindingCargo(GetEventDateCategoryPayload), async (req: Request, res: Response) => {
-    const { from, to, limit, page } = getCargo<GetEventDateCategoryPayload>(req)
+    const { from: fromString, to: toString, limit, page } = getCargo<GetEventDateCategoryPayload>(req)
+    const today = new Date()
+    const from = fromString ?? new Date(today.getFullYear(), today.getMonth(), today.getDate())
+    const to = toString ?? new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1)
+
     const result = await EventsModel.findByDates(from, to, limit, page)
     const events = result.docs.map(event => ({
         ...event.toJSON(),
@@ -390,7 +382,11 @@ router.get('/category/interest', verifyToken, bindingCargo(GetEventInterestCateg
 })
 
 router.get(`/category/${CategoryCode.HOTEVENT}`, verifyToken, bindingCargo(GetEventHotCategoryPayload), async (req: Request, res: Response) => {
-    const { from, to, page, limit } = getCargo<GetEventHotCategoryPayload>(req)
+    const { from: fromString, to: toString, limit, page } = getCargo<GetEventDateCategoryPayload>(req)
+    const today = new Date()
+    const from = fromString ?? new Date(today.getFullYear(), today.getMonth(), today.getDate())
+    const to = toString ?? new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1)
+
     const result = await EventsModel.findHot(from, to, limit, page)
     const events = result.docs.map(event => ({
         ...event,
