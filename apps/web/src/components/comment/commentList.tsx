@@ -33,7 +33,7 @@ export function CommentList({ eventId }: CommentListProps) {
 
     if (isLoading) {
         return (
-            <div className="px-4 py-2">
+            <div className="flex justify-center px-4 py-2">
                 <ClipLoader color="#FF6B6B" size={50} />
             </div>
         )
@@ -54,7 +54,7 @@ export function CommentList({ eventId }: CommentListProps) {
         <div className="flex flex-col gap-4">
             {data && data.pages.map(page => page.comments.map(comment => <EventComment key={comment._id} comment={comment} />))}
             {isFetchingNextPage ? (
-                <div>
+                <div className="flex justify-center">
                     <ClipLoader color="#FF6B6B" size={50} />
                 </div>
             ) : (

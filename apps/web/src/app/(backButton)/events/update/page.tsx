@@ -9,7 +9,13 @@ import { ClipLoader } from 'react-spinners'
 
 export default function EventUpdate() {
     return (
-        <Suspense fallback={<ClipLoader color="#FF6B6B" size={50} />}>
+        <Suspense
+            fallback={
+                <div className="flex min-h-screen items-center justify-center">
+                    <ClipLoader color="#FF6B6B" size={50} />
+                </div>
+            }
+        >
             <UpdatePageContent />
         </Suspense>
     )
