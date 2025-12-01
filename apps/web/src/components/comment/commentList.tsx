@@ -7,6 +7,7 @@ import { useInView } from 'react-intersection-observer'
 import { IGetEventCommentsResponse } from '@fienmee/types'
 import { getEventCommentsByEventId } from '@/api/event'
 import { EventComment } from '@/components/comment/comment'
+import { ClipLoader } from 'react-spinners'
 
 interface CommentListProps {
     eventId: string
@@ -31,7 +32,11 @@ export function CommentList({ eventId }: CommentListProps) {
     }, [inView, isFetchingNextPage, fetchNextPage])
 
     if (isLoading) {
-        return <div className="px-4 py-2">로딩중...</div>
+        return (
+            <div className="flex justify-center px-4 py-2">
+                <ClipLoader color="#FF6B6B" size={50} />
+            </div>
+        )
     }
 
     if (isError) {
@@ -48,7 +53,13 @@ export function CommentList({ eventId }: CommentListProps) {
     return (
         <div className="flex flex-col gap-4">
             {data && data.pages.map(page => page.comments.map(comment => <EventComment key={comment._id} comment={comment} />))}
-            {isFetchingNextPage ? <div>로딩중...</div> : <div ref={ref} />}
+            {isFetchingNextPage ? (
+                <div className="flex justify-center">
+                    <ClipLoader color="#FF6B6B" size={50} />
+                </div>
+            ) : (
+                <div ref={ref} />
+            )}
         </div>
     )
 }

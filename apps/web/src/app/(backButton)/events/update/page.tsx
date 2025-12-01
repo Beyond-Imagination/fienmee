@@ -5,10 +5,17 @@ import { Suspense, useState } from 'react'
 import { ICategory } from '@fienmee/types'
 import EventForm from '@/components/events/eventForm'
 import { eventStore } from '@/store'
+import { ClipLoader } from 'react-spinners'
 
 export default function EventUpdate() {
     return (
-        <Suspense fallback={<div>Loading...</div>}>
+        <Suspense
+            fallback={
+                <div className="flex min-h-screen items-center justify-center">
+                    <ClipLoader color="#FF6B6B" size={50} />
+                </div>
+            }
+        >
             <UpdatePageContent />
         </Suspense>
     )
