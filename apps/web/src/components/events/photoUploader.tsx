@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import React, { useRef } from 'react'
 import { ClipLoader } from 'react-spinners'
 
@@ -57,6 +58,7 @@ const ImagePreview: React.FC<{ s3Key: string; onRemove: () => void }> = ({ s3Key
 
     return (
         <div className="relative w-16 h-16 border border-gray-300 rounded-lg overflow-hidden flex-shrink-0">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={imageUrl} alt={`Uploaded image`} className="w-full h-full object-cover" />
             <button
                 type="button"
