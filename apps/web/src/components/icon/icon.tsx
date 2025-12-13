@@ -225,3 +225,16 @@ export function InfoIcon({ color, stroke, width, height }: CustomIconProps) {
         </svg>
     )
 }
+
+export function ErrorIcon({ width, height }: IconProps) {
+    return (
+        <svg width={width} height={height} viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="20" cy="20" r="20" fill="#FF9575" />
+            <path
+                d="M20 10C20.5523 10 21 10.4477 21 11V23C21 23.5523 20.5523 24 20 24C19.4477 24 19 23.5523 19 23V11C19 10.4477 19.4477 10 20 10Z"
+                fill="white"
+            />
+            <circle cx="20" cy="29" r="2" fill="white" />
+        </svg>
+    )
+}
